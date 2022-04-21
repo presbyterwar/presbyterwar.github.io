@@ -6,21 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>sqi | Hexo</title>
+  <title>XSS | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="sqlimap思维导图">
+  <meta name="description" content="Less1在url上写一个弹窗脚本 alert()  Less2输入的&lt;被进行HTML实体编码“&gt;alert() Less3value输入的内容进行了过滤构造一个payload‘ onclick&#x3D;alert() ‘ Less4输入脚本的后，点击搜索，可以看见原本的&lt;直接被过滤“ onclick&#x3D;alert(1) “ Less5“ &#x2F;&gt;  Les">
 <meta property="og:type" content="article">
-<meta property="og:title" content="sqi">
-<meta property="og:url" content="http://example.com/2022/03/31/sqi/index.html">
+<meta property="og:title" content="XSS">
+<meta property="og:url" content="http://example.com/2022/04/21/XSS/XSS/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="sqlimap思维导图">
+<meta property="og:description" content="Less1在url上写一个弹窗脚本 alert()  Less2输入的&lt;被进行HTML实体编码“&gt;alert() Less3value输入的内容进行了过滤构造一个payload‘ onclick&#x3D;alert() ‘ Less4输入脚本的后，点击搜索，可以看见原本的&lt;直接被过滤“ onclick&#x3D;alert(1) “ Less5“ &#x2F;&gt;  Les">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2022/03/31/sqi/sqlmap.jpg">
-<meta property="article:published_time" content="2022-03-31T11:15:02.000Z">
-<meta property="article:modified_time" content="2022-03-31T11:17:53.010Z">
+<meta property="article:published_time" content="2022-04-21T14:17:16.000Z">
+<meta property="article:modified_time" content="2022-04-21T14:17:30.384Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2022/03/31/sqi/sqlmap.jpg">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -156,27 +154,38 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-sqi" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-XSS/XSS" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      sqi
+      XSS
     </h1>
   
 
         
-        <a href="/2022/03/31/sqi/" class="archive-article-date">
-  	<time datetime="2022-03-31T11:15:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-31</time>
+        <a href="/2022/04/21/XSS/XSS/" class="archive-article-date">
+  	<time datetime="2022-04-21T14:17:16.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-04-21</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>sqlimap思维导图<br><img src="/2022/03/31/sqi/sqlmap.jpg"></p>
+        <p>Less1<br>在url上写一个弹窗脚本</p>
+<script>alert()</script>
+
+<p>Less2<br>输入的&lt;被进行HTML实体编码<br>“&gt;<script>alert()</script></p>
+<p>Less3<br>value输入的内容进行了过滤<br>构造一个payload<br>‘ onclick&#x3D;alert() ‘</p>
+<p>Less4<br>输入脚本的后，点击搜索，可以看见原本的&lt;直接被过滤<br>“ onclick&#x3D;alert(1) “</p>
+<p>Less5<br>“ &#x2F;&gt; <a href="javascript:alert()"></a></p>
+<p>Less6<br>将内容进行了过滤,只有Javascript 没被过滤<br>“ &#x2F;&gt; <a href="javascript:alert()"></a></p>
+<p>Leve7<br>“&gt;<scrscriptipt>alert()</scrscriptipt></p>
+<p>Less8<br>java&amp;#115;&amp;#99;&amp;#114;&amp;#105;&amp;#112;&amp;#116;:alert()</p>
+<p>Less9<br>java&amp;#115;&amp;#99;&amp;#114;&amp;#105;&amp;#112;&amp;#116;:alert()&#x2F;&#x2F;http:&#x2F;&#x2F;</p>
+<p>Less10<br>t_sort&#x3D;” οnclick&#x3D;alert() type&#x3D;”button””</p>
 
       
 
@@ -256,7 +265,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/03/31/sqi/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/04/21/XSS/XSS/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -270,18 +279,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2022/04/21/XSS/XSS/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          XSS
-        
-      </div>
-    </a>
   
-  
-    <a href="/2022/03/25/sqli/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">sqli</div>
+    <a href="/2022/03/31/sqi/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">sqi</div>
       <i class="icon-circle-right"></i>
     </a>
   
