@@ -174,7 +174,16 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p>传统的医学图像配准算法主要包括以下几个步骤：<br>（1）规定一种类似 B样条变换、刚体变换或者弹性变换等空间变换规则；<br>（2）规定线性插值、卷积插值或者最近邻插值等的一种插值类型；<br>（3）规定一种评价两幅图像相似性的测度，例如归一化互信息测度；<br>（4）求一个最优的变换参数，常用的优化算法有梯度下降、Powell 算法等；</p>
+<p>传统的医学图像配准算法由几何变换模块（Transform）、图像插值模块(Interpolator)、相似性测度模块(Similarity Meric)和优化算法模块(Optimizer)四部分组成。</p>
+<p>医学图像配准算法的流程大致可以归纳位以下六步：<br><img src="/2023/09/10/deep-learning/%E5%8C%BB%E5%AD%A6%E5%9B%BE%E5%83%8F%E9%85%8D%E5%87%86%E7%AE%97%E6%B3%95%E6%B5%81%E7%A8%8B%E5%9B%BE.jpg"></p>
+<p>传统医学图像配准算法的弊端几乎不适合临床应用，因此提出深度学习的方法，大大提高配准的速度，精度也有所提高。</p>
+<p>基于深度学习的医学图像配准方法分为有监督、弱监督和无监督的方法。一般尝试用弱监督的配准方法，将图像分割的标签来作为间的信息。相比之下，无监督学习的方法具有快速、无需标注信息的特点。</p>
+<p>目前的无监督医学图像配准框架大致可以分为三步：<br>（1）对浮动图像和固定图像进行特征提取，并计算形变场；<br>（2）空间变换网络根据形变场对浮动图像进行变换，提高形变能力；<br>（3）根据配准后的图像效果和损失函数，调整网络参数，建立配准模型。<br><img src="/2023/09/10/deep-learning/%E5%8C%BB%E5%AD%A6%E5%9B%BE%E5%83%8F%E9%85%8D%E5%87%86%E6%A1%86%E6%9E%B6%E5%9B%BE.jpg"><br>&#x2F;*<br>对齐解刨结构的过程就叫配准<br><img src="/2023/09/10/deep-learning/%E9%85%8D%E5%87%86%E8%BF%87%E7%A8%8B.jpg"><br>固定图像（Fixed Volume）：在配准过程中，保持不动的图像<br>浮动图像（Moving Volume）：在配准过程中，动来动去的图像。<br>*&#x2F;</p>
+<p>voxelmorph配准模型，将图像配准定义为一个参数函数，并针对一组图像对起参数进行优化<br>（1）配准包括线性配准和非线性配准两种。具体而言，线性配准通常包括平移、旋转、缩放，非线性配准通常包括形变配准、仿射配准等，本文的研究对象是形变配准。</p>
+<p>（2）形变配准在医学领域有着广泛的应用，目前人们常用的方法为-基于数学优化思想的传统算法，其对每个图像进行迭代优化，效果好且稳定，但耗费时间较长。因此，提出一种配准效果好且耗时低的方法是很重要的。</p>
+<p>输入图像包括浮动图像和固定图像，其中浮动图像经过类似Unet网络结构之后，输出浮动图像相对固定图像的形变场，之后，浮动图像和形变场经过Spatial Transform操作，得到浮动图像最终经过形变配准之后的浮动图像。<br><img src="/2023/09/10/deep-learning/VoxelMorph%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84.jpg"></p>
+
       
 
       
@@ -187,7 +196,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">多模态医学图像配准</a>
         		</li>
       		
 		</ul>
@@ -736,7 +745,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+                <a href="javascript:void(0)" class="js-tag color5">多模态医学图像配准</a>
               </li>
             
             <div class="clearfix"></div>
