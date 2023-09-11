@@ -1,32 +1,292 @@
-extends includes/layout.pug
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 5.4.1">
 
-block content
-  #post
-    if top_img === false
-      include includes/header/post-info.pug
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
 
-    article#article-container.post-content!=page.content
-    include includes/post/post-copyright.pug
-    .tag_share
-      if (theme.post_meta.post.tags)
-        .post-meta__tag-list
-          each item, index in page.tags.data
-            a(href=url_for(item.path)).post-meta__tags #[=item.name]
-      include includes/third-party/share/index.pug
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"example.com","root":"/","images":"/images","scheme":"Muse","darkmode":false,"version":"8.18.1","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="数据库: 数据库是一些关联表的集合。数据表: 表是数据的矩阵。在一个数据库中的表看起来像一个简单的电子表格。列: 一列(数据元素) 包含了相同类型的数据, 例如邮政编码的数据。行：一行（&#x3D;元组，或记录）是一组相关的数据，例如一条用户订阅的数据。冗余：存储两倍数据，冗余降低了性能，但提高了数据的安全性。主键：主键是唯一的。一个数据表中只能包含一个主键。你可以使用主键来查询数据。外键：外键用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysqlnote">
+<meta property="og:url" content="http://example.com/2022/03/17/mysql-note/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="数据库: 数据库是一些关联表的集合。数据表: 表是数据的矩阵。在一个数据库中的表看起来像一个简单的电子表格。列: 一列(数据元素) 包含了相同类型的数据, 例如邮政编码的数据。行：一行（&#x3D;元组，或记录）是一组相关的数据，例如一条用户订阅的数据。冗余：存储两倍数据，冗余降低了性能，但提高了数据的安全性。主键：主键是唯一的。一个数据表中只能包含一个主键。你可以使用主键来查询数据。外键：外键用">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-17T15:31:16.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:42:33.269Z">
+<meta property="article:author" content="presbyter">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="http://example.com/2022/03/17/mysql-note/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2022/03/17/mysql-note/","path":"2022/03/17/mysql-note/","title":"mysqlnote"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>mysqlnote | Hexo</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hexo</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+</header>
         
-    if theme.reward.enable && theme.reward.QR_code
-      !=partial('includes/post/reward', {}, {cache: true})
+  
+  <aside class="sidebar">
 
-    //- ad
-    if theme.ad && theme.ad.post
-      .ads-wrap!=theme.ad.post
+    <div class="sidebar-inner sidebar-overview-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
 
-    if theme.post_pagination
-      include includes/pagination.pug
-    if theme.related_post && theme.related_post.enable
-      != related_posts(page,site.posts)
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+        </div>
+        <!--/noindex-->
 
-    if page.comments !== false && theme.comments && theme.comments.use
-      - var commentsJsLoad = true
-      !=partial('includes/third-party/comments/index', {}, {cache: true})
-      
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">presbyter</p>
+  <div class="site-description" itemprop="description">presbyter的博客</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/17/mysql-note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="presbyter">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+      <meta itemprop="description" content="presbyter的博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="mysqlnote | Hexo">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          mysqlnote
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-03-17 23:31:16" itemprop="dateCreated datePublished" datetime="2022-03-17T23:31:16+08:00">2022-03-17</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-03-22 19:42:33" itemprop="dateModified" datetime="2022-03-22T19:42:33+08:00">2022-03-22</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>数据库: 数据库是一些关联表的集合。<br>数据表: 表是数据的矩阵。在一个数据库中的表看起来像一个简单的电子表格。<br>列: 一列(数据元素) 包含了相同类型的数据, 例如邮政编码的数据。<br>行：一行（&#x3D;元组，或记录）是一组相关的数据，例如一条用户订阅的数据。<br>冗余：存储两倍数据，冗余降低了性能，但提高了数据的安全性。<br>主键：主键是唯一的。一个数据表中只能包含一个主键。你可以使用主键来查询数据。<br>外键：外键用于关联两个表。<br>复合键：复合键（组合键）将多个列作为一个索引键，一般用于复合索引。<br>索引：使用索引可快速访问数据库表中的特定信息。索引是对数据库表中一列或多列的值进行排序的一种结构。类似于书籍的目录。<br>参照完整性: 参照的完整性要求关系中不允许引用不存在的实体。与实体完整性是关系模型必须满足的完整性约束条件，目的是保证数据的一致性。</p>
+<p>2.Mysql用户设置</p>
+<p>root@host# mysql -u root -p<br>Enter password:*******<br>mysql&gt; use mysql;<br>Database changed</p>
+<p>mysql&gt; INSERT INTO user<br>          (host, user, password,<br>           select_priv, insert_priv, update_priv)<br>           VALUES (‘localhost’, ‘guest’,<br>           PASSWORD(‘guest123’), ‘Y’, ‘Y’, ‘Y’);<br>Query OK, 1 row affected (0.20 sec)</p>
+<p>mysql&gt; FLUSH PRIVILEGES;<br>Query OK, 1 row affected (0.01 sec)</p>
+<p>mysql&gt; SELECT host, user, password FROM user WHERE user &#x3D; ‘guest’;<br>+———–+———+——————+<br>| host      | user    | password         |<br>+———–+———+——————+<br>| localhost | guest | 6f8c114b58f2ce9e |<br>+———–+———+——————+<br>1 row in set (0.00 sec)</p>
+<p>PHP脚本链接mysql<br>语法：mysqli_connect(host, username, password, dbname,port, socket);<br>参数说明：</p>
+<p>参数    描述<br>host    可选。规定主机名或 IP 地址。<br>username    可选。规定 MySQL 用户名。<br>password    可选。规定 MySQL 密码。<br>dbname    可选。规定默认使用的数据库。<br>port    可选。规定尝试连接到 MySQL 服务器的端口号。<br>socket    可选。规定 socket 或要使用的已命名 pipe。</p>
+<p>连接Mysql<br>&lt;?php<br>$dbhost &#x3D; ‘localhost’;  &#x2F;&#x2F; mysql服务器主机地址<br>$dbuser &#x3D; ‘root’;            &#x2F;&#x2F; mysql用户名<br>$dbpass &#x3D; ‘123456’;          &#x2F;&#x2F; mysql用户名密码<br>$conn &#x3D; mysqli_connect($dbhost, $dbuser, $dbpass);<br>if(! $conn )<br>{<br>    die(‘Could not connect: ‘ . mysqli_error());<br>}</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/03/22/hello-world/" rel="next" title="Hello World">
+                  Hello World <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">presbyter</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/muse/" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/schemes/muse.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
