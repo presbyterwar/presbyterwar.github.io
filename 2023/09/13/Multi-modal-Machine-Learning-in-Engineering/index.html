@@ -2,19 +2,19 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Multi-modal Machine Learning in Engineering | Hexo</title>
+  <title>Multi-modal Machine Learning in Engineering、MRI | Hexo</title>
   <meta name="keywords" content=" 多模态机器学习 ">
-  <meta name="description" content="Multi-modal Machine Learning in Engineering | Hexo">
+  <meta name="description" content="Multi-modal Machine Learning in Engineering、MRI | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://example.com/categories/index.html">
+<meta property="og:title" content="tags">
+<meta property="og:url" content="http://example.com/tags/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
+<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -334,7 +334,7 @@
            href="/2023/09/13/Multi-modal-Machine-Learning-in-Engineering/"
            data-tag="多模态机器学习"
            data-author="" >
-            <span class="post-title" title="Multi-modal Machine Learning in Engineering">Multi-modal Machine Learning in Engineering</span>
+            <span class="post-title" title="Multi-modal Machine Learning in Engineering、MRI">Multi-modal Machine Learning in Engineering、MRI</span>
             <span class="post-date" title="2023-09-13 16:58:19">2023/09/13</span>
         </a>
         
@@ -421,7 +421,7 @@
     <div class="pjax">
         <article id="post-Multi-modal-Machine-Learning-in-Engineering" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Multi-modal Machine Learning in Engineering</h1>
+        <h1 class="article-title">Multi-modal Machine Learning in Engineering、MRI</h1>
     
     <div class="article-meta">
         
@@ -438,7 +438,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-09-13 22:22:14'>2023-09-13 16:58</time>
+            发布时间 : <time class="date" title='最后更新: 2023-09-14 19:04:56'>2023-09-13 16:58</time>
         
     </div>
     <div class="article-meta">
@@ -480,6 +480,11 @@
 <p>多模态融合涉及来自多个模态的信息的组合，用于诸如分类或回归的预测任务。它通过三个关键方面提高预测质量：1）由于多模态信息冗余而提高的鲁棒性; 2）通过利用多模态信息互补性来提高准确性; 3）在没有特定模态的情况下进行预测的能力。鉴于近年来DNN在各种任务中的主导地位，我们的重点是DL内的多模态信息融合。基于先前的定义，我们将多模态信息融合分为三种类型：基于操作、双线性池化和基于图的融合，如图3所示。</p>
 <p>Bilinear Pooling Fusion(双线性池融合)<br>双线性池化融合<br><img src="/2023/09/13/Multi-modal-Machine-Learning-in-Engineering/%E5%8F%8C%E7%BA%BF%E6%80%A7%E6%B1%A0%E8%9E%8D%E5%90%88.png"><br>也称为基于张量的或基于双线性模型的融合，通过计算单峰特征向量的外或克罗内克乘积来集成单峰特征向量。这种方法捕获模态之间的高阶乘法交互，产生高度表达的多模态表示。特征向量通常被扩展为附加值1以保留单峰特征。尽管其优点，但处理由高维输入产生的大张量可能在计算上要求很高或不切实际。这促使采用低维近似，即，将高维张量分解为多个低维张量，以平衡表现力和计算效率</p>
 <p>多模态预测技术，如分类和回归，利用各种数据模态来提高理解的全面性和预测的准确性。领先模型通常使用联合表示对多模态数据进行编码，然后进行预测。模型之间的关键区别在于它们的编码策略和方法。</p>
+<p>MRI是磁共振成像(Megnetic Resonace Imaging)，原理是依据释放的能量（也可称信号）在物质内部不同结结构环境中有不同的衰减，通过外加的磁场检测所发射出的电磁波，可以得知构成该物体原子核的位置和种类，从而绘制物体内部的结构图像。</p>
+<p>在MRI成像的过程中，通过改变MR信号的影响因素，可以得到不同的影像，这些不同的影像就称之为序列。如根据T1值加权，可得到T1序列，根据T2值加权可得到T2序列。一个病例可以有多个序列，每个序列由许多切片组成。<br><img src="/2023/09/13/Multi-modal-Machine-Learning-in-Engineering/MRI%E5%9B%BE%E5%83%8F%E7%A4%BA%E4%BE%8B.jpg"><br>标签图中，高亮部分（白色）为增强肿瘤，包围着的一圈为坏疽部分，坏疽是指组织坏死后发腐呈现黑色，外面一圈（灰色）为浮肿区域。</p>
+<p>T1、T2是用于测量电磁波的物理量，他们可以作为成像的数据.根据T1来成像，就叫”T1加权成像”，临床工作中简称”T1”，T2同理。</p>
+<p>从下图可以看到，T1图像整体感官跟“临床图像”的“习惯配色风格”非常接近，白质是白的，灰质是灰的,脑脊液是黑的,所以T1图像可以看出各种断层解剖图,于是”T1看解剖结构”。<br><img src="/2023/09/13/Multi-modal-Machine-Learning-in-Engineering/T1%E5%9B%BE%E5%83%8F.jpg"></p>
+<p>T2信号跟水含量有关,许多病灶的T2信号要强于周围的正常组织,常呈高亮状态，因此从T2序列中可以清楚的看到病灶所处位置、大小。但对比标签图可发现，增强肿瘤周围的浮肿区域在T2序列中较为模糊，难以清晰勾勒出浮肿区域轮廓。<br><img src="/2023/09/13/Multi-modal-Machine-Learning-in-Engineering/T2%E5%9B%BE%E5%83%8F.jpg"></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
