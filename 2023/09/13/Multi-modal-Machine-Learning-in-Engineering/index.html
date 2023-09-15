@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Multi-modal Machine Learning、MRI | Hexo</title>
+  <title>Multi-modal MRI | Hexo</title>
   <meta name="keywords" content=" 2204.13656 ">
-  <meta name="description" content="Multi-modal Machine Learning、MRI | Hexo">
+  <meta name="description" content="Multi-modal MRI | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
@@ -334,7 +334,7 @@
            href="/2023/09/13/Multi-modal-Machine-Learning-in-Engineering/"
            data-tag="2204.13656"
            data-author="" >
-            <span class="post-title" title="Multi-modal Machine Learning、MRI">Multi-modal Machine Learning、MRI</span>
+            <span class="post-title" title="Multi-modal MRI">Multi-modal MRI</span>
             <span class="post-date" title="2023-09-13 16:58:19">2023/09/13</span>
         </a>
         
@@ -421,7 +421,7 @@
     <div class="pjax">
         <article id="post-Multi-modal-Machine-Learning-in-Engineering" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Multi-modal Machine Learning、MRI</h1>
+        <h1 class="article-title">Multi-modal MRI</h1>
     
     <div class="article-meta">
         
@@ -438,7 +438,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-09-14 22:08:57'>2023-09-13 16:58</time>
+            发布时间 : <time class="date" title='最后更新: 2023-09-15 23:36:55'>2023-09-13 16:58</time>
         
     </div>
     <div class="article-meta">
@@ -486,6 +486,14 @@
 <p>从下图可以看到，T1图像整体感官跟“临床图像”的“习惯配色风格”非常接近，白质是白的，灰质是灰的,脑脊液是黑的,所以T1图像可以看出各种断层解剖图,于是”T1看解剖结构”。<br><img src="/2023/09/13/Multi-modal-Machine-Learning-in-Engineering/T1%E5%9B%BE%E5%83%8F.jpg"></p>
 <p>T2信号跟水含量有关,许多病灶的T2信号要强于周围的正常组织,常呈高亮状态，因此从T2序列中可以清楚的看到病灶所处位置、大小。但对比标签图可发现，增强肿瘤周围的浮肿区域在T2序列中较为模糊，难以清晰勾勒出浮肿区域轮廓。<br><img src="/2023/09/13/Multi-modal-Machine-Learning-in-Engineering/T2%E5%9B%BE%E5%83%8F.jpg"></p>
 <p>基于翻译的方法使用生成对抗网络（GAN）模式来将图像从源模态翻译到目标模态。GAN由生成器和鉴别器组成，其中生成器学习生成可信数据，鉴别器惩罚生成器产生不切实际的结果。<br><img src="/2023/09/13/Multi-modal-Machine-Learning-in-Engineering/GAN.jpg"></p>
+<p>SAM 架构主要包含三个部分：图像编码器；提示编码器；以及掩码解码器。包含一个强大的图像编码器（计算图像嵌入），一个提示编码器（计算提示嵌入），一个轻量级掩码解码器（实时预测掩码）。在使用时，只需要对图像提取一次图像嵌入，可以在不同的提示下重复使用。给定一个图像嵌入，提示编码器和掩码解码器可以在浏览器中在~50毫秒内根据提示预测掩码。<br>1.图像编码器：基于可扩展和强大的预训练方法，研究者使用MAE预训练的ViT，最小限度地适用于处理高分辨率输入。图像编码器对每张图像运行一次，在提示模型之前进行应用。</p>
+<p>2.提示编码器：考虑两组prompt：稀疏（点、框、文本）和密集（掩码）。研究者通过位置编码来表示点和框，并将对每个提示类型的学习嵌入和自由形式的文本与CLIP中的现成文本编码相加。密集的提示（即掩码）使用卷积进行嵌入，并通过图像嵌入进行元素求和。</p>
+<p>3.掩码解码器：掩码解码器有效地将图像嵌入、提示嵌入和输出token映射到掩码。</p>
+<p>&#x2F;*<br>论文创新点：<br>我们将四种模态分为基于T1的模态（由T1和T1ce组成）和基于T2的模态（由T2和Flair组成）。由于SAM模型的原始输入是具有三个RGB通道的真实世界图像，因此我们使用初始化的1x1卷积层将输入的通道数从2更改为3。之后，我们使用两个预先训练的SAM图像编码器来分别处理这两种模态。在这个过程中，我们将跨模态注意适配器模块添加到前n个SAM的ViT编码器块，以在两个模态之间交互信息。</p>
+<p>![](.&#x2F;Multi-modal-Machine-Learning-in-Engineering&#x2F;Overview of the proposed method.jpg)</p>
+<p>*&#x2F;</p>
+<p>&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;<br>笔记：</p>
+<p>提出了一种基于Transformer的多模态融合网络PT-Net。PT-Net的编码器从MRI的三种模态中提取并融合上下文信息，从粗到细，以获得跨模态和多尺度的肿瘤信息。<br>解码器堆叠不同模态的特征图，并使用信道注意机制来校准多模态信息。其次，考虑到分割模型容易受到相似解剖结构的干扰而做出错误的预测，通过计算预测分割的激活区域与地面实况之间的距离，我们的损失函数迫使模型区分与肿瘤相似的解剖结构并做出正确的预测。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
