@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://example.com/tags/index.html">
+<meta property="og:title" content="categories">
+<meta property="og:url" content="http://example.com/categories/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
+<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -438,7 +438,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-09-15 23:39:02'>2023-09-13 16:58</time>
+            发布时间 : <time class="date" title='最后更新: 2023-09-16 19:43:28'>2023-09-13 16:58</time>
         
     </div>
     <div class="article-meta">
@@ -494,6 +494,13 @@
 <p>*&#x2F;</p>
 <p>&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;&#x2F;<br>笔记：</p>
 <p>提出了一种基于Transformer的多模态融合网络PT-Net。PT-Net的编码器从MRI的三种模态中提取并融合上下文信息，从粗到细，以获得跨模态和多尺度的肿瘤信息。<br>解码器堆叠不同模态的特征图，并使用信道注意机制来校准多模态信息。其次，考虑到分割模型容易受到相似解剖结构的干扰而做出错误的预测，通过计算预测分割的激活区域与地面实况之间的距离，我们的损失函数迫使模型区分与肿瘤相似的解剖结构并做出正确的预测。</p>
+<p>网络的编码器构建在Transformer上，而解码器是基于CNN的架构。编码器提取和合并上下文信息，从三个modalityspecific腮腺MRI在不同的尺度。它可以更好地获得跨模态和多尺度的肿瘤信息。解码器堆叠各种模态的特征图，并使用信道注意机制来校准多模态信息。</p>
+<p>解剖结构感知的损失，用于指导深层模型区分腮腺解剖结构与肿瘤。（基于距离的损失函数）</p>
+<p><img src="/2023/09/13/Multi-modal-Machine-Learning-in-Engineering/PT-Net.jpg"></p>
+<p>所提出的PT-Net的概述，其由基于变换器的编码器和基于CNN的解码器组成。卷积：卷积块。MFB：多模态融合块。SWB：移动窗口块。PM：补丁合并。ICM：信息校准模块。</p>
+<p>PT-Net遵循编码器-解码器架构的设计，使用CNN和Transformer来建模低级特征和长期依赖关系。</p>
+<p>在每个卷积层之后，我们执行GELU激活函数<br><img src="/2023/09/13/Multi-modal-Machine-Learning-in-Engineering/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0.jpg"><br><img src="/2023/09/13/Multi-modal-Machine-Learning-in-Engineering/GELU%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0.jpg"></p>
+<p>每个模态独立编码器的输入由主分支的一个模态和次分支的两个模态组成。<br><img src="/2023/09/13/Multi-modal-Machine-Learning-in-Engineering/PT-Net%E5%A4%9A%E6%A8%A1%E6%80%81%E8%9E%8D%E5%90%88%E5%9D%97%E6%9E%B6%E6%9E%84.jpg"></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
