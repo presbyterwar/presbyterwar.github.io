@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://example.com/categories/index.html">
+<meta property="og:title" content="tags">
+<meta property="og:url" content="http://example.com/tags/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
+<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -438,7 +438,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-09-16 19:43:28'>2023-09-13 16:58</time>
+            发布时间 : <time class="date" title='最后更新: 2023-09-17 16:03:04'>2023-09-13 16:58</time>
         
     </div>
     <div class="article-meta">
@@ -501,6 +501,16 @@
 <p>PT-Net遵循编码器-解码器架构的设计，使用CNN和Transformer来建模低级特征和长期依赖关系。</p>
 <p>在每个卷积层之后，我们执行GELU激活函数<br><img src="/2023/09/13/Multi-modal-Machine-Learning-in-Engineering/%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0.jpg"><br><img src="/2023/09/13/Multi-modal-Machine-Learning-in-Engineering/GELU%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0.jpg"></p>
 <p>每个模态独立编码器的输入由主分支的一个模态和次分支的两个模态组成。<br><img src="/2023/09/13/Multi-modal-Machine-Learning-in-Engineering/PT-Net%E5%A4%9A%E6%A8%A1%E6%80%81%E8%9E%8D%E5%90%88%E5%9D%97%E6%9E%B6%E6%9E%84.jpg"></p>
+<p>在解码器组件中，我们主要使用CNN来形成我们的PT-Net的主干。这有两个原因。首先，CNN中的卷积运算比纯Transformer架构具有更强的提取局部信息的能力。其次，纯Transformer结构消耗大量计算资源，引入大量模型参数，使网络更难收敛。我们在下面描述模型的具体实现。</p>
+<p>&#x2F;*<br>归一化：<br>Batch Normalization（批量归一化）<br>批量归一化是用于训练深度学习模型的流行归一化方法之一。它通过在训练阶段稳定层输入的分布，使深度神经网络的训练更加快速和稳定。这种方法主要与内部协方差(internal covariate shift，ICS)有关，其中内部协方差指的是前几层更新时引起的层输入分布的变化。为了提高模型的训练效果，减少内部协方差偏移很重要。批量归一化在这里的作用是通过增加网络层，控制层输入的均值和方差来减少内部协方差偏移。</p>
+<p>优点：（1）批量归一化降低了内部协方差（ICS），加速了深度神经网络的训练。（2）减少了梯度对参数规模或其初始值的依赖性，从而提高了学习率，且没有发散（divergence）的风险。（3）批量归一化通过防止网络陷入饱和模式，使得使用饱和非线性（saturating nonlinearities）成为可能。</p>
+<p>Weight Normalization（权重归一化）<br>权重归一化是对深度神经网络中的权重向量进行重新参数化的过程，其工作原理是将这些权重向量的长度与其方向解耦（decoupling）。简单来说，我们可以将权重归一化定义为提高神经网络模型的权重可优化性的方法。</p>
+<p>优点：（1）权重归一化可以改善优化问题的条件，并加快随机梯度下降的收敛速度。（2）它可以成功地应用于循环模型，如LSTMs，以及深度强化学习或生成模型</p>
+<p>Layer Normalization（层归一化）<br>层归一化是一种提高各种神经网络模型训练速度的方法。与批归一化不同的是，这种方法直接从隐藏层内神经元的输入之和估计归一化统计量。层归一化基本上是为了克服批归一化的缺点，如依赖小批量等</p>
+<p>优点：通过在每个时间步长分别计算归一化统计量，可以很容易地将层归一化应用于递归神经网络。这种方法能有效稳定循环网络中的隐藏状态动态。</p>
+<p>Instance Normalization（实例归一化）<br>实例归一化又称对比归一化（contrast normalization），与层归一化几乎相似。与批量归一化不同的是，实例归一化是应用于整批图像而不是单个图像。</p>
+<p>优点：这种归一化简化了模型的学习过程。实例归一化可以在测试时应用。</p>
+<p>*&#x2F;</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
