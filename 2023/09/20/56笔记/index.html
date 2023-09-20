@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>56笔记 | Hexo</title>
-  <meta name="keywords" content="">
+  <meta name="keywords" content=" Multimodal MRI ">
   <meta name="description" content="56笔记 | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
@@ -322,6 +322,10 @@
                 <i class="iconfont icon-tag"></i><a>deep learning</a>
             </li>
         
+            <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>Multimodal MRI</a>
+            </li>
+        
     </div>
 
 </div>
@@ -332,7 +336,7 @@
         
         <a  class="全部文章 "
            href="/2023/09/20/56%E7%AC%94%E8%AE%B0/"
-           data-tag=""
+           data-tag="Multimodal MRI"
            data-author="" >
             <span class="post-title" title="56笔记">56笔记</span>
             <span class="post-date" title="2023-09-20 21:40:08">2023/09/20</span>
@@ -437,10 +441,17 @@
         
         
         
+        <span class="tag">
+            <i class="iconfont icon-tag"></i>
+            
+            <a class="color5">Multimodal MRI</a>
+            
+        </span>
+        
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-09-20 21:40:08'>2023-09-20 21:40</time>
+            发布时间 : <time class="date" title='最后更新: 2023-09-20 23:31:26'>2023-09-20 21:40</time>
         
     </div>
     <div class="article-meta">
@@ -478,7 +489,22 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p>随机森林（RF）：RF用了改进的CART决策树来作为弱学习器<br>（1）CART决策树</p>
+<p>CART决策树是在给定输入随机变量X的条件下输出随机变量Y的条件概率分布的学习方法</p>
+<p>CART假设决策树全是二叉树（即其结点只有两种选择：“是” or “否”）：决策树递归二分每个特征，最终得到决策树，通过不断的划分，将特征空间划分为有限个单元，并在这些单元上确定预测的概率分布<br>（2）RF中的CART决策树</p>
+<p>普通决策树：在节点上所有的n个样本特征中选择一个最优特征来作为决策树的左右子树划分</p>
+<p>RF：随机选择节点上的一部分样本特征，假设为t个特征（t &lt; n），然后在这些随机选择样本特征中，选择一个最优的特征来作为决策树的左右子树划分，这样进一步增强了模型的泛化能力</p>
+<p>随即森林，通过多棵树来进行决策。森林中的每棵树不都是一样的，构建每棵树的特征集、样本集都是所给的数据的特征集、样本集的随机子集，所有树的输出结果整合起来就是随机森林的输出结果。</p>
+<p>“随机”表现在：<br>1、训练数据的随机选取：既用于训练单颗树的数据应该是随机、有放回的从全部数据中选取和构建单颗树时训练数据相同的数据量。<br>2、待选特征的随机选取：使得森林中的各颗树都能够彼此不同，展现了系统的多样性，从而提升分类性能。</p>
+<p>支持向量机（support vector machine，SVM）是一种二分类模型，其基本模型定义为与特征空间上的间隔最大的线性分类器，其学习策略便是间隔最大化，最终可转化为一个凸二次规划问题的求解。支持向量机的学习算法是求解凸二次规划的最优化算法。</p>
+<pre><code>基础的SVM算法是一个二分类算法，至于多分类任务，可以通过对此使用SVM进行解决。
+</code></pre>
+<p>1、线性可分<br>对于一个数据集合可以画一条直线将两组数据点分开，这样的数据称为线性可分，如下所示：<br><img src="/2023/09/20/56%E7%AC%94%E8%AE%B0/%E7%BA%BF%E6%80%A7%E5%8F%AF%E5%88%86.jpg"><br>1.分割超平面：将上述数据集分隔开来的直线成为分隔超平面。对于二维平面来说，分隔超平面就是一条直线。对于三维及三维以上的数据来说，分隔数据的是个平面，称为超平面，也就是分类的决策边界。</p>
+<p>2.间隔：点到分割面的距离，称为点相对于分割面的间隔。数据集所有点到分隔面的最小间隔的2倍，称为分类器或数据集的间隔。论文中提到的间隔多指这个间隔。SVM分类器就是要找最大的数据集间隔。</p>
+<p>3.支持向量：离分隔超平面最近的那些点。</p>
+<p>SVM所做的工作就是找这样超平面，能够将两个不同类别的样本划分开来。</p>
+<p>AE是一种特殊类型的神经网络，具有用于表示学习任务的无监督学习技术。它被训练来尝试将其输入复制到其输出。AE通过训练网络忽略不重要的信息（“噪声”）来学习一组数据的表示（编码），通常用于降维。</p>
+
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
     </div>
