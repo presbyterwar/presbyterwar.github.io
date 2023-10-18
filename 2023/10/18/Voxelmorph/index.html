@@ -323,6 +323,10 @@
             </li>
         
             <li class="article-tag-list-item">
+                <i class="iconfont icon-tag"></i><a>multimodal MRI</a>
+            </li>
+        
+            <li class="article-tag-list-item">
                 <i class="iconfont icon-tag"></i><a>Multimodal MRI</a>
             </li>
         
@@ -345,7 +349,7 @@
         
         <a  class="全部文章 "
            href="/2023/10/09/summarize/"
-           data-tag=""
+           data-tag="multimodal MRI"
            data-author="" >
             <span class="post-title" title="summarize">summarize</span>
             <span class="post-date" title="2023-10-09 21:29:43">2023/10/09</span>
@@ -471,7 +475,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-10-18 22:10:11'>2023-10-18 22:10</time>
+            发布时间 : <time class="date" title='最后更新: 2023-10-18 23:40:23'>2023-10-18 22:10</time>
         
     </div>
     <div class="article-meta">
@@ -509,7 +513,12 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p>传统的配准方法为每对图像优化一个目标函数，对于大数据集或丰富的变形模型来说，这可能是耗时的。因此提出了VoxelMorph，这是一个基于学习的快速可变形、成对医学图像配准框架。</p>
+<p>在基于学习的方法的基础上，将配准表示为将输入的图像对映射到对准这些图像的变形场的函数。通过卷积神经网路（CNN）对函数进行参数化，在并在一组图像上对神经网络的参数进行优化。给出一对新的扫描，Voxelmorph通过直接计算函数来快速计算变形场。</p>
+<p>在这项工作中，我们探索了两种不同的培训策略。在第一个(无监督)设置中，我们训练模型以最大化基于图像强度的标准图像匹配目标函数。在第二个设置中，我们利用训练数据中可用的辅助分段。我们证明，无监督模型的精度与最先进的方法相当，而运算速度要快几个数量级。我们还证明了使用辅助数据训练的VoxelMorph在测试时提高了配准精度，并评估了训练集大小对配准的影响。我们的方法承诺加快医学图像分析和处理流水线，同时促进基于学习的配准及其应用的新方向。</p>
+<p>在可变形配准中，在诸如3D磁共振(MR)脑扫描的一对图像之间建立了密集的、非线性的对应关系。</p>
+<p>传统的配准方法通过将外观相似的体素对齐，同时对配准映射施加约束来解决每个体积对的优化问题。不幸的是，求解成对优化可能是计算密集型的，因此在实践中速度很慢。</p>
+
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
     </div>
