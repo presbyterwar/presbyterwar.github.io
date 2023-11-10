@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://example.com/tags/index.html">
+<meta property="og:title" content="categories">
+<meta property="og:url" content="http://example.com/categories/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
+<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -510,7 +510,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-10-30 23:17:22'>2023-10-29 21:30</time>
+            发布时间 : <time class="date" title='最后更新: 2023-11-10 23:36:57'>2023-10-29 21:30</time>
         
     </div>
     <div class="article-meta">
@@ -562,6 +562,15 @@
 <p>下游上游的取名就在于下游任务往往是先用上游任务得到的模型（一般会称为backbone，主干网络）提取图像特征，然后再从这些特征中得到我们想要的结果</p>
 <p>*&#x2F;<br>文章提出的无监督解缠和对比表示的多通道图像翻译方法，该方法改进了下游分割模型，因为它可以利用充分学习的解剖学知识结合最初缺失的输入通道。<br><img src="/2023/10/29/MouseGan-Note/%E4%B8%8B%E6%B8%B8%E5%88%86%E5%89%B2%E6%A8%A1%E5%9E%8B.png"></p>
 <p>文章进一步提出了两种新的无监督对比学习策略：一种用于属性学习，另一种用于内容学习。因为属性对比学习迫使通道特定的特征在潜在属性空间中是可分离的，而内容对比学习确保主题特定的特征在内容空间中对齐。</p>
+<p><img src="/2023/10/29/MouseGan-Note/%E4%B8%A4%E7%A7%8D%E8%BE%A8%E5%88%AB%E5%9B%BE%E8%A7%A3.png"><br>图解对比学习实现的属性辨别(左)和内容辨别(右)。在属性空间中，来自相同模式的样本被定义为正对并被相互驱动，而来自不同模式的样本被定义为负对并被彼此推开。在内容空间中，同一主题的样本被定义为正对，在嵌入空间中应该具有相似的特征，而来自不同主题的样本形成具有不同特征的负对。</p>
+<p><img src="/2023/10/29/MouseGan-Note/%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84.png"></p>
+<p>在医学图像合成中，如何在翻译过程中保持解剖结构信息的保真度是最需要解决的问题之一。<br>最近的许多图像合成方法主要关注全局视觉相似性或感知的合理性。这些方法对于自然图像可能工作得很好，但在实践中很难转移到医学图像。</p>
+<p>由于双向重建损失通过协同更新块之间的梯度传播进一步鼓励去纠缠。</p>
+<p>MouseGan++性能更好的一个根本原因是属性和内容解缠，这使得能够更精确地翻译到不同的模式。</p>
+<p>&#x2F;*<br>SSIM,即为结构相似性，是衡量图像质量的指标之一。给定两张图像x和y，其结构相似性可以定义为：</p>
+<p><img src="/2023/10/29/MouseGan-Note/SSIM.png"></p>
+<p>SSIM的范围为[0,1]，其值越大，表示图像的质量越好。当两张图像一模一样时，此时SSIM&#x3D;1。</p>
+<p>LPIPS 比传统方法（比如L2&#x2F;PSNR, SSIM, FSIM）更符合人类的感知情况。LPIPS的值越低表示两张图像越相似，反之，则差异越大。<br><img src="/2023/10/29/MouseGan-Note/LPIPS.png"><br>*&#x2F;</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
