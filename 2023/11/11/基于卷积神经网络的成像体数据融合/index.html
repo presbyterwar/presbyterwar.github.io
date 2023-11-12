@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://example.com/tags/index.html">
+<meta property="og:title" content="categories">
+<meta property="og:url" content="http://example.com/categories/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
+<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -526,7 +526,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-11-11 23:41:25'>2023-11-11 22:57</time>
+            发布时间 : <time class="date" title='最后更新: 2023-11-12 22:17:09'>2023-11-11 22:57</time>
         
     </div>
     <div class="article-meta">
@@ -570,6 +570,14 @@
 <p>所提出的解决方法：<br>文章提出一种基于端到端卷积神经网络（CNN）的多模MRI体数据融合方法。</p>
 <p>1.在网络中，为了更有效地学习特征，提出了一种基于注意力的多通道特征融合(MMFF)模块。<br>2.此外，还设计了一种特殊的损失函数，该函数考虑了不同MRI模式的特点，以保存模式信息。</p>
 <p>肿瘤体积和神经肿瘤学中的反应评估(RANO)指标(例如，最大二维直径的乘积)，这些指标进一步用于治疗反应评估任务，如确定进展时间和预测总生存期。</p>
+<p>使用二维融合方法进行三维图像融合的一种常见方法是进行单独的二维切片融合，但它存在一个明显的缺点，即忽略了相邻切片之间的相关性。因此，体数据的空间上下文信息不能被很好地提取，导致三维融合图像中边缘或轮廓等重要空间特征的丢失，这将降低融合结果的质量，从而影响其在相关临床问题中的潜在应用。</p>
+<p>基于传统的二维图像表示方法的扩展，包括梯度表示法、MST和SR。在这些方法中，不同的源图像采用相同的图像分解方法和各向同性的融合策略，即采用对称的融合模式。从融合算法的角度来看，当改变源图像的输入顺序时，融合结果保持不变。这种方式的主要缺点是没有充分考虑不同源模式的具体特性，导致模式信息的丢失。此外，这些常规方法需要人工设计融合策略，很难综合考虑融合过程中的所有关键因素。</p>
+<p>对于二位医学图像融合问题，基于DL的方法的数量也远远少于其他类型的图像融合问题，如多聚焦图像融合、红外和可见光图像融合等。潜在的原因可能包括英语训练的大规模数据集的缺乏、该问题的无监督性质、医学成像中的高度复杂性等。正因为这些原因，大多数基于DL的二维医学图像融合的方法是同时甚至主要针对其他图像融合问题而设计的通用方法。</p>
+<p><img src="/2023/11/11/%E5%9F%BA%E4%BA%8E%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E6%88%90%E5%83%8F%E4%BD%93%E6%95%B0%E6%8D%AE%E8%9E%8D%E5%90%88/%E5%9F%BA%E4%BA%8E%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E4%B8%89%E7%BB%B4%E5%A4%9A%E6%A8%A1%E5%BC%8F%E7%A3%81%E5%85%B1%E6%8C%AF%E5%9B%BE%E5%83%8F%E8%9E%8D%E5%90%88%E6%94%BE%E6%B3%95%E7%9A%84%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84.png"></p>
+<p>主要由三部分组成：特征提取、特征融合和图像重建。特征提取部分旨在从不同模式的源图像中提取特征。然后，将提取的特征输入到设计的MMFF模块中。最后，由融合后的特征重建融合图像。</p>
+<p>在特征融合部分，对从不同模式提取的源特征进行融合。设计了一个特定的MMFF模块来实现特征融合过程，以获得更好的性能。</p>
+<p><img src="/2023/11/11/%E5%9F%BA%E4%BA%8E%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E6%88%90%E5%83%8F%E4%BD%93%E6%95%B0%E6%8D%AE%E8%9E%8D%E5%90%88/MMFF%E6%A8%A1%E5%9D%97.png"></p>
+<p>不是直接从特征回归融合图像，而是采用加权平均策略，基于Sigmoid层生成的掩码m来重建融合图像。采用这种方式的主要原因详述如下。在多模式磁共振图像融合中，背景区域中的大量体素在所有源图像中都具有零值强度。直接从特征中回归融合图像可能会导致背景区域的非零值预测，这是不合适的，会影响融合质量。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
