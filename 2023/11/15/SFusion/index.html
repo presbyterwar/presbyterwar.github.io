@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>sqi | Hexo</title>
+  <title>SFusion | Hexo</title>
   <meta name="keywords" content="">
-  <meta name="description" content="sqi | Hexo">
+  <meta name="description" content="SFusion | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
@@ -516,9 +516,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-sqi" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-SFusion" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">sqi</h1>
+        <h1 class="article-title">SFusion</h1>
     
     <div class="article-meta">
         
@@ -528,7 +528,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2022-03-31 19:17:53'>2022-03-31 19:15</time>
+            发布时间 : <time class="date" title='最后更新: 2023-11-15 18:40:34'>2023-11-15 17:01</time>
         
     </div>
     <div class="article-meta">
@@ -566,7 +566,21 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>sqlimap思维导图<br><img src="/2022/03/31/sqi/sqlmap.jpg"></p>
+        <p>提出的问题：<br>    当存在丢失的模式时，可用模式的数量在不同的情况下是不同的，这导致了N对1的融合问题。<br>解决方法：<br>    为了解决这一问题，我们提出了一种基于自我注意的融合块SFusion。<br>    与预置公式或基于卷积的方法不同，所提出的块自动学习融合可用模式，而不合成或补零丢失的模式。具体地说，从上游处理模型中提取的特征表示被投影为令牌，并被馈送到自我注意模块以产生潜在的多模式关联。在此基础上，引入了一种通道注意机制来构建共享表征，并将其应用于下游决策模型。</p>
+<p>&#x2F;*<br>在医学图像处理和机器学习领域，特别是在使用深度学习模型如卷积神经网络（CNN）或者Transformer模型时，”特征表示”（feature representations）是指从数据中自动学习到的高维特征，这些特征捕捉了数据的重要信息，可以用于后续的分析或决策任务。</p>
+<p>当我们说”从上游处理模型中提取的特征表示被投影为tokens”时，这里的”tokens”通常指的是一种可以被模型进一步处理的数据格式。在深度学习中，尤其是在使用类似于Transformer的模型时，”token”这个术语经常被用来描述输入数据的离散单元。以下是这个过程的一般理解：</p>
+<ol>
+<li><p><strong>特征提取</strong>：上游处理模型（如CNN）会从原始图像中提取特征。这些特征通常是高维的，并且包含了图像的关键信息，比如边缘、纹理、形状等。</p>
+</li>
+<li><p><strong>特征表示</strong>：提取的特征会被编码成一系列的特征向量，每个向量代表图像中的一部分或某些特性。这些向量就是特征表示。</p>
+</li>
+<li><p><strong>投影为Tokens</strong>：在某些深度学习模型，尤其是Transformer模型中，输入需要被分割成一系列的小块或单元，这些单元被称为”tokens”。特征表示被转换（或投影）成这种格式，以便它们可以被模型接受和处理。在图像处理的上下文中，这可能意味着将特征向量转换为一系列可以被Transformer模型处理的序列。</p>
+</li>
+<li><p><strong>模型处理</strong>：一旦特征表示被转换为tokens，它们就可以被输入到下游模型中（如Transformer的编码器），在那里它们会被用于进一步的分析，比如分类、检测或分割任务。</p>
+</li>
+</ol>
+<p>这个过程允许模型利用上游处理模型提取的复杂特征，并通过下游模型进行高级的理解和决策。在医学图像处理中，这种方法可以帮助提高疾病诊断的准确性，通过更好地理解和利用图像数据中的复杂模式。</p>
+<p>*&#x2F;</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
