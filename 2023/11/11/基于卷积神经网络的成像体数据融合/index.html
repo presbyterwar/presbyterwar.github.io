@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://example.com/tags/index.html">
+<meta property="og:title" content="categories">
+<meta property="og:url" content="http://example.com/categories/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
+<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -526,7 +526,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-11-13 21:35:54'>2023-11-11 22:57</time>
+            发布时间 : <time class="date" title='最后更新: 2023-11-15 17:00:58'>2023-11-11 22:57</time>
         
     </div>
     <div class="article-meta">
@@ -580,6 +580,8 @@
 <p>不是直接从特征回归融合图像，而是采用加权平均策略，基于Sigmoid层生成的掩码m来重建融合图像。采用这种方式的主要原因详述如下。在多模式磁共振图像融合中，背景区域中的大量体素在所有源图像中都具有零值强度。直接从特征中回归融合图像可能会导致背景区域的非零值预测，这是不合适的，会影响融合质量。</p>
 <p>文章将T1和T2融合，T1c和T2 FLAIR融合.将图像融合度量分为四类：基于信息论的、基于图像特征的、基于结构相似性的、基于人类视觉感知的。</p>
 <p>T1图像可以很好地描述组织的解剖结构，而T2图像则擅长突出水和液体。为了获得高质量的融合结果，需要同时保留T1图像中的坏死组织特征和T2图像中包含的明亮的水肿区信息。</p>
+<p>将融合方法应用于脑肿瘤分割的想法很简单。也就是说，通过融合方法获得的融合后的模态被补充作为分割模型的附加输入。此外，输入模式的添加可以被视为一种数据增强方法。</p>
+<p>本文章使用dice系数和Hausdoff距离评估性能。众所周知，骰子得分侧重于区域之间的相似性，而Hausdorff距离对边界更为敏感。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
