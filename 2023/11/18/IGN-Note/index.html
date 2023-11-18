@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>CNL-UNet | Hexo</title>
-  <meta name="keywords" content=" lightweight multimodal MRI ">
-  <meta name="description" content="CNL-UNet | Hexo">
+  <title>IGN Note | Hexo</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="IGN Note | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
@@ -534,26 +534,19 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-CNL-UNet" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-IGN-Note" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">CNL-UNet</h1>
+        <h1 class="article-title">IGN Note</h1>
     
     <div class="article-meta">
         
         
         
-        
-        <span class="tag">
-            <i class="iconfont icon-tag"></i>
-            
-            <a class="color2">lightweight multimodal MRI</a>
-            
-        </span>
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-11-08 16:57:46'>2023-11-05 21:49</time>
+            发布时间 : <time class="date" title='最后更新: 2023-11-18 22:11:46'>2023-11-18 22:11</time>
         
     </div>
     <div class="article-meta">
@@ -591,19 +584,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>文章提出了一种适用于二维多模式生物医学图像分割的轻量级结构CNL-UNET。</p>
-<p>所提出的CNL-UNET具有一个预先训练的编码器，其丰富的迁移学习技术使其能够充分地从少量数据中学习。它修改了跳过连接，以减少编解码层的相应级别之间的语义差距。此外，提出的体系结构还增加了一个新的分类器和定位器(CNL)模块。此模块为我们提供更准确的其他分类和本地化信息。将这些信息与分割输出进行融合，CNL-UNET可以抑制假阳性和假阴性。</p>
-<p>我们使用改进的跳过连接来减少长跳过连接之间的语义差距。修改后的跳跃连接有助于提高模型的精度。我们还在提出的模型中添加了一个分类器和定位器(CNL)模块。通过将CNL输出与分割输出合并来生成最终输出。CNL模块帮助模型抑制可能误导诊断和治疗的虚假声明的积极或消极输出。（为了解决更简单的分割问题，可以从模型中删除CNL模块，使其更轻。）</p>
-<p><img src="/2023/11/05/CNL-UNet/architecture.png"></p>
-<p>预先训练的编码器从输入图像中提取特征，解码器生成分割输出，CNL模块生成分类和定位输出。最后，将分割输出与分类定位输出进行合并。</p>
-<p>文章在模型中引入了一个额外的CNL模块，该模块执行分类任务，区分假阳性和假阴性。将分类器与网络相结合，通过分类输出来指导实际的分割结果。</p>
-<p>当分类结果为否定，但分割结果为阳性时，我们认为这是假阳性。为了减少误报，两个输出通过将早熟分割结果与分类结果相乘来合并，从而得到最终输出。<br><img src="/2023/11/05/CNL-UNet/%E5%81%87%E9%98%B3%E6%80%A7.png"><br>另一方面，如果分类结果是阳性的，但分割结果是否定的，我们认为它是假阴性。在这种情况下，CNL模块为我们提供感兴趣区域的精确定位信息。然后，通过使用定位信息在过早分割输出上绘制边界框来合并两个输出。<br><img src="/2023/11/05/CNL-UNet/%E5%81%87%E9%98%B4%E6%80%A7.png"></p>
-<p>为了减少语义差距，使用res-Path<br><img src="/2023/11/05/CNL-UNet/res-Path.jpg"></p>
-<p>译码模块由三个译码模块组成。在每个块之前都有一个上采样层。使用最近邻上采样。前两个区块由两个具有RELU激活的3×3卷积层组成。第三解码器块具有与第三编码器层相对应的具有REU激活的三个3×3卷积层。</p>
-<p>同样，编码块中的第一卷积层的特征映射通过RES路径与对应的解码器特征映射连接。最后，解码块1的最后一层产生预测的输出分段掩码，随后是1×1卷积和Sigmoid激活。Sigmoid激活函数用于二分类问题。它产生的输出范围从0到1。由于我们的任务是将输入图像的每个像素分为两类，因此我们使用该函数来生成输出分割掩码。</p>
-<p><img src="/2023/11/05/CNL-UNet/CNL.png"></p>
-<p>Jaccard index , 又称为Jaccard相似系数（Jaccard similarity coefficient）用于比较有限样本集之间的相似性与差异性。Jaccard系数值越大，样本相似度越高。</p>
-
+        
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
     </div>
