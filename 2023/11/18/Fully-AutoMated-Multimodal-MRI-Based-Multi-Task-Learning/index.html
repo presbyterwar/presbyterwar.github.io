@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Fully AutoMated Multimodal MRI-Based Multi-Task Learning | Hexo</title>
+  <title>A Fully AutoMated Multimodal MRI-Based Multi-Task Learning | Hexo</title>
   <meta name="keywords" content="">
-  <meta name="description" content="Fully AutoMated Multimodal MRI-Based Multi-Task Learning | Hexo">
+  <meta name="description" content="A Fully AutoMated Multimodal MRI-Based Multi-Task Learning | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
@@ -359,7 +359,7 @@
            href="/2023/11/18/Fully-AutoMated-Multimodal-MRI-Based-Multi-Task-Learning/"
            data-tag=""
            data-author="" >
-            <span class="post-title" title="Fully AutoMated Multimodal MRI-Based Multi-Task Learning">Fully AutoMated Multimodal MRI-Based Multi-Task Learning</span>
+            <span class="post-title" title="A Fully AutoMated Multimodal MRI-Based Multi-Task Learning">A Fully AutoMated Multimodal MRI-Based Multi-Task Learning</span>
             <span class="post-date" title="2023-11-18 16:45:53">2023/11/18</span>
         </a>
         
@@ -536,7 +536,7 @@
     <div class="pjax">
         <article id="post-Fully-AutoMated-Multimodal-MRI-Based-Multi-Task-Learning" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Fully AutoMated Multimodal MRI-Based Multi-Task Learning</h1>
+        <h1 class="article-title">A Fully AutoMated Multimodal MRI-Based Multi-Task Learning</h1>
     
     <div class="article-meta">
         
@@ -546,7 +546,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-11-18 22:11:17'>2023-11-18 16:45</time>
+            发布时间 : <time class="date" title='最后更新: 2023-11-22 21:09:01'>2023-11-18 16:45</time>
         
     </div>
     <div class="article-meta">
@@ -587,8 +587,11 @@
         <p>文章所提出的目标：<br>准确预测异柠檬酸脱氢酶(IDH)突变和胶质瘤分割是术前多模式磁共振成像(MRI)计算机辅助诊断的重要任务。</p>
 <p>由于肿瘤间和肿瘤内的显著异质性，这两项任务是持续不断的挑战。现有的解决这些问题的方法大多是基于单任务的方法，没有考虑两个任务之间的相关性。</p>
 <p>文章提出的方法：<br><strong>文章提出了一个全自动的基于多模式磁共振成像的多任务学习框架，用于同时进行胶质瘤分割和IDH基因分型。</strong></p>
-<p>具体地说，任务相关性和异构性通过由卷积神经网络和转换器组成的混合CNN-Transformer编码器来处理，该编码器从用于胶质瘤分割的解码器和用于IDH基因分型的多尺度分类器提取共享的空间和全局信息。然后，通过结合权重不确定的分割和分类损失函数，设计了一种多任务学习损失来平衡这两个任务。最后，为了提高IDH基因分型的准确性，提出了一种不确定性感知的伪标签选择方法，从较大的未标记数据中生成IDH伪标签。</p>
+<p>具体地说，任务相关性和异构性通过由卷积神经网络和转换器组成的混合CNN-Transformer编码器来处理，该编码器从用于胶质瘤分割的解码器和用于IDH基因分型的多尺度分类器提取共享的空间和全局信息。然后，通过结合权重不确定的分割和分类损失函数，设计了一种多任务学习损失来平衡这两个任务。最后，为了提高IDH基因分型的准确性，提出了一种不确定性感知的伪标签选择（UPS）的半监督多任务学习框架，从较大的未标记数据中生成IDH伪标签。</p>
 <p>传统的人工分割从医学图像中分割出的胶质瘤主观、耗时。因此，准确的IDH基因分型和精确的胶质瘤分割对指导治疗和评估预后具有重要意义。</p>
+<p><font color="#dd0000"> 在常规MRI图像中，不同的IDH基因型通常具有不同的形态特征。具体地说，IDH突变的胶质瘤表现为明显的无强化的肿瘤边缘和小的囊泡，而IDH野生型的胶质瘤表现为围绕中央坏死的双丘脑和边缘模糊的强化。</font> <br></p>
+<p>具体地说，任务相关性和异构性是通过混合CNN-Transformer编码器来处理的，该编码器由卷积神经网络和转换器组成，以提取从用于胶质瘤分割的解码器和用于IDH基因分型的多尺度分类器学习的共享的空间和全局信息。</p>
+<p>由于转换器受益于使用自我注意机制的全局表示建模，因此将其用于医学图像分割时很自然的。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
