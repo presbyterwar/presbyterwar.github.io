@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>多模态机器学习 | Hexo</title>
-  <meta name="keywords" content=" deep learning ">
-  <meta name="description" content="多模态机器学习 | Hexo">
+  <title>SegCoFusion | Hexo</title>
+  <meta name="keywords" content="">
+  <meta name="description" content="SegCoFusion | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
@@ -561,26 +561,19 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-多模态深度学习" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-SegCoFusion" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">多模态机器学习</h1>
+        <h1 class="article-title">SegCoFusion</h1>
     
     <div class="article-meta">
         
         
         
-        
-        <span class="tag">
-            <i class="iconfont icon-tag"></i>
-            
-            <a class="color4">deep learning</a>
-            
-        </span>
         
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-09-14 17:04:09'>2023-09-12 18:25</time>
+            发布时间 : <time class="date" title='最后更新: 2024-01-24 23:28:21'>2023-12-04 23:32</time>
         
     </div>
     <div class="article-meta">
@@ -618,20 +611,30 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>每一种信息的来源或者形式，都可以称为一种模态。例如，人有触觉，听觉，视觉，嗅觉；信息的媒介，有语音、视频、文字等；多种多样的传感器，如雷达、红外、加速度计等。以上的每一种都可以称为一种模态。</p>
-<p>同时，模态也可以有非常广泛的定义，比如我们可以把两种不同的语言当做是两种模态，甚至在两种不同情况下采集到的数据集，亦可认为是两种模态。</p>
-<p>多模态机器学习（MMML），旨在通过机器学习的方法实现处理和理解多源模态信息的能力。单模态的表示学习负责将信息表示为计算机可以处理的数值向量或者进一步抽象为更高层的特征向量，而多模态表示学习是指通过利用多模态之间的互补性，剔除模态间的冗余性，从而学习到更好的特征表示。主要包括两大研究方向：联合表示（Joint Representations）和协同表示（Coordinated Representations）。</p>
-<p>联合表示将多个模态的信息一起映射到一个统一的多模态向量空间；<br>协同表示负责将多模态中的每个模态分别映射到各自的表示空间，但映射后的向量之间满足一定的相关性约束（例如线性相关）<br><img src="/2023/09/12/%E5%A4%9A%E6%A8%A1%E6%80%81%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E5%A4%9A%E6%A8%A1%E6%80%81%E7%A0%94%E7%A9%B6%E6%96%B9%E5%90%91.png"></p>
-<p>协同学习到的特征向量之间满足加减算树运算这一特性，例如：<br>狗的图片特征向量 - 狗的文本特征向量 + 猫的文本特征向量 &#x3D; 猫的图片特征向量 -&gt; 在特征向量空间，根据最近邻距离，检索得到猫的图片</p>
-<p><img src="/2023/09/12/%E5%A4%9A%E6%A8%A1%E6%80%81%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E5%8D%8F%E5%90%8C%E5%AD%A6%E4%B9%A0.jpg"></p>
-<p>转化Translation、映射Mapping<br>转化也称为映射，负责将一个模态的信息转换为另一个模态的信息。<br>常见的应用包括：<br>机器翻译：将输入的语言A（即时）翻译为另一种语言B。类似的还有唇读和语音翻译，分别将唇部视觉和语音信息转换为文本信息。<br>图片描述或者视频描述：对给定的图片&#x2F;视频形成一段文字描述，以表达图片&#x2F;视频的内容。</p>
-<p>语音合成：根据输入的文本信息，自动合成一段语音信号。</p>
-<p>模态间的转换主要有两个难点，一个是open-ended，即未知结束位，例如实时翻译中，在还未得到句尾的情况下，必须实时的对句子进行翻译；另一个是subjective，即主观评判性，是指很多模态转换问题的效果没有一个比较客观的评判标准，也就是说目标函数的确定是非常主观的。例如，在图片描述中，形成怎样的一段话才算是对图片好的诠释？</p>
-<p>多模态的对齐负责对来自同一个实例的不同模态信息的子分支&#x2F;元素寻找对应关系。这个对应关系可以是时间维度的，比如下图所示的Temporal sequence alignment，将一组动作对应的视频流同骨骼图片对齐。类似的还有电影画面-语音-字幕的自动对齐。<br><img src="/2023/09/12/%E5%A4%9A%E6%A8%A1%E6%80%81%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E5%AF%B9%E9%BD%90.jpg"></p>
-<p>对齐可以是空间维度的，比如图片语义分割：尝试将图片的每个像素对听到某一种类型标签，实现视觉-词汇对齐。<img src="/2023/09/12/%E5%A4%9A%E6%A8%A1%E6%80%81%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E6%A0%87%E7%AD%BE%E5%AF%B9%E9%BD%90.jpg"></p>
-<p>多模态融合（Multimodal Fusion ）负责联合多个模态的信息，进行目标预测（分类或者回归），属于 MMML 最早的研究方向之一，也是目前应用最广的方向，它还存在其他常见的别名，例如多源信息融合（Multi-source Information Fusion）、多传感器融合（Multi-sensor Fusion）。</p>
-<p>按照融合的层次，可以将多模态融合分为 pixel level，feature level 和 decision level 三类，分别对应对原始数据进行融合、对抽象的特征进行融合和对决策结果进行融合。而 feature level 又可以分为 early 和 late 两个大类，代表了融合发生在特征抽取的早期和晚期。当然还有将多种融合层次混合的 hybrid 方法。<br><a href="./%E5%A4%9A%E6%A8%A1%E6%80%81%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/%E5%A4%9A%E6%A8%A1%E6%80%81%E8%9E%8D%E5%90%88.jpg"></a></p>
-<p>常见的机器学习方法都可以应用于多模态融合如：<br>视觉-音频识别：综合源自同一个实例的视频信息和音频信息，进行识别工作。</p>
+        <p><strong>研究目标：</strong><br>各种研究的目的是利用多种模式所包含的丰富信息，并融合它们之间的互补特征，以提高临床任务的性能</p>
+<p><strong>研究问题：</strong><br><font color="#FF0000">一方面，最近的分割研究，特别是U-Net风格的序列，已经达到了分割任务的性能上限。另一方面，由于不同成像模式的物理原理不同，在多模式成像中几乎不可能捕捉到融合的地面真相。</font> <br></p>
+<p><strong>提出方法：</strong></p>
+<table><br><td bgcolor="00dd00">提出了一种多模式分割与融合想结合的方法——SegCoFusion，它由一种新颖的特征分频网络FDNet和一个分割部分组成，该分割部分使用双单路径特征补充策略来优化分割输入和与融合部分的缝合。</td></table>
+
+<p>研究价值来源：现实中，由于每种成像模式的独特属性，单一类型传感器或单一成像模式设置所获取的信息不能全面描述病变场景，而医生在做出临床决策时经常需要同时查看来来自多个模式的切片。</p>
+<p>基于深度学习的MMIF方法在特征表征、结构保持和对比度增强方面表现出了更好的性能。这些方法大致可分为以下三类：基于卷积神经网络(CNN)的方法、基于变压器的方法和混合方法。一方面，基于CNN的方法通常通过空域卷积来实现互补的特征处理。</p>
+<p>根据网络结构，基于CNN的方法可以进一步细化为单路径端到端CNN、多路径端到端CNN和生成式对抗网络(GAN)。单路径端到端CNN框架通常将输入通道串联为单个输入序列，并且具有轻量级的网络参数。多路径端到端CNN框架通常为每个通道分配一个独立的卷积分支，提高了特征提取能力和处理能力。与端到端框架不同，在GaN中使用一个生成器和多个鉴别器来生成特定于任务的融合结果，这在一定程度上可以增强对比度。</p>
+<p>另一方面，基于Transformer的方法充分挖掘和整合了通道内和跨通道的全球背景。然而，尽管上述框架取得了相当大的融合性能，但它们与临床应用脱节。由于物理成像原理的限制，在单个传感器上同时捕获全面的信息几乎是不可能的。这导致在MMIF中缺乏融合结果评估的金标准，几乎所有的研究都停留在主观处理上，例如手工制作的损失函数比例设计。</p>
+<p><font color="#DC143C">然而，在许多情况下，这种融合比例是非线性的，或者很难预测。提出了一种分割引导的融合方法，以鼓励融合结果更多地聚焦于感兴趣的区域，为病变区域提供细粒度的融合结果。</font> <br></p>
+<p>利用融合网络所关注的多通道特征，将其作为融合先验来提高分割网络的性能。</p>
+<p>FDNet,这是一个多尺度分频融合网络，具有用于提及融合的细粒度融合能力。</p>
+<p>文章设计了一种数字信号处理器的分割策略。利用融合部分的优势，设计的策略使分段网络具有打破自身瓶颈的能力。此外，文章还通过使用不同的融合和分割网络来演示管道的普适性。</p>
+<p><img src="/2023/12/04/SegCoFusion/SegCoFusion%E6%A1%86%E6%9E%B6%E6%A6%82%E8%BF%B0.png"></p>
+<p><strong>如图所示，SegCoFusion首先通过融合部分获得融合结果，然后使用DsSP策略对融合数据和输入的多模数据进行处理（如下图所示）</strong></p>
+<p><img src="/2023/12/04/SegCoFusion/DsSP.png"></p>
+<p>输入的模态和融合结果首先经过卷积层，分别提取初始特征。然后，使用另一个卷积层对这些初始特征进行融合，以用于分割网络。</p>
+<p><strong>然后，将处理后的特征拼接为分割输入，得到分割结果。最后，利用融合损失和分割损失同时更新融合网络和分割网络。实现映射的现有优化模型(I1，I2，…)F可表示为(2)。我们将所提出的SegCoFusion表示为一个双层优化模型，如(3)所述。</strong></p>
+<p><img src="/2023/12/04/SegCoFusion/%E4%BC%98%E5%8C%96%E6%A8%A1%E5%9E%8B.png"></p>
+<p>文章认为映射{I1，I2，…}——&gt;Iw可以有效地减轻分辨率和细节损失。通过这种方式，我们提出了一种融合网络，分频网络（FDNet）。<br>几乎所有现有的融合架构都使用依赖于空间域特征卷积的多模态特征融合。小波域变换在多尺度图像处理中引起了广泛的关注，其固有特性：良好的空频局部化有助于保持多尺度信息。因此，文章将小波变换扩展到特征空间，以实现更细粒度的特征处理。</p>
+<p><img src="/2023/12/04/SegCoFusion/FDNet.png"><br>FDNet的详细说明如图所示，使用初始化块（详见图3（a））<br><img src="/2023/12/04/SegCoFusion/3a.png"><br>从每个输入模态中提取特征。然后，采用三维离散小波变换（DWT-3D）将特征变换到具有8组子带特征{HxHyHz，HxHyLz，HxLyHz，HxLyLz，LxHyHz，LxHyLz，LxLyHz，LxLyLz}的小波域。<br><img src="/2023/12/04/SegCoFusion/DWT-3D.png"></p>
+<p>该过程在图中描述。三个1-D滤波器fx、fy和fz形成可分离的DWT-3D滤波器。在一维小波变换中，函数f（t）分析如下：</p>
+<p><img src="/2023/12/04/SegCoFusion/%E5%B0%8F%E6%B3%A2%E5%8F%98%E6%8D%A2%E8%BF%87%E7%A8%8B.png"></p>
+<p>其中，Wt（τ，s）是由（8）估计的小波系数;每个小波系数Wt（τ，s）表示函数f（t）在特定平移τ和尺度s处与小波基Wt（τ，s）的相似性。使用Haar小波基在这项工作中。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
