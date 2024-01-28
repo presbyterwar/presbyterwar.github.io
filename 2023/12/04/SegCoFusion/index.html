@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://example.com/tags/index.html">
+<meta property="og:title" content="categories">
+<meta property="og:url" content="http://example.com/categories/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
+<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -573,7 +573,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2024-01-26 00:50:20'>2023-12-04 23:32</time>
+            发布时间 : <time class="date" title='最后更新: 2024-01-28 17:38:18'>2023-12-04 23:32</time>
         
     </div>
     <div class="article-meta">
@@ -642,6 +642,10 @@
 <p>其利用上述低通特性对小波域中的重组特征进行去噪并有效地提取特征。为了避免高频细节的丢失，在高频组中使用零MSPC，在次高组中使用一个MSPC，在次低组中使用两个MSPC，在低组中使用三个MSPC。此外，采用局部剩余连接（见图FDNet），以提高性能。在特征处理之后，集成块（参见图3（c））<br><img src="/2023/12/04/SegCoFusion/3c.png"><br>用于格式化特征通道。接着，这些重组的功能被重新划分为八个子带，并通过逆DTW-3D变换到空间域。最后，输出块（参见图3（d））<br><img src="/2023/12/04/SegCoFusion/3d.png"><br>用于缩小信道，并且softmax层用于预测融合权重概率。</p>
 <p>采用了几种最先进的分割网络。详细地，所有卷积层被设置为具有3×3×3核大小，原始路径处的输入和输出通道大小为4和16，补充路径处的输入和输出通道大小为4和16，并且第三卷积处的输入和输出通道大小为32和32。</p>
 <p>SF反映了图像灰度的变化率。较高的空间频率意味着较好的清晰度图像。MI测量两个图像之间的相似度，即，融合图像从源图像获取了多少信息。MI越大，融合图像的质量越好，因为它保留了源图像的更多信息。</p>
+<p>与基于级联多模态数据的策略相比，使用仅基于融合数据的输入策略会导致显著的性能降低，而文章提出的DsPS策略可以有效地解决这个问题，并打破传统分割的性能瓶颈。</p>
+<p><strong>提出的SegCoFusion将融合部分和分割部分结合起来进行协同学习，融合部分由分割部分自适应地引导，融合后的数据对分割输入特征进行补充。这两个部分相互补充，从而得到目标感知的融合结果，达到更好的分割效果。融合后的MR图像具有更丰富的肿瘤信息，并且在不同子区域边界的异质性方面表现良好。</strong></p>
+<p><strong>此外，在多模态分割任务的领域，流行的分割方法已经接近其固有的局限性，通过更大和更复杂的网络设计来提高性能的潜力越来越受到限制。因此，在这项研究中，我们采用了一种新的观点，利用融合网络集中的独特功能，并将它们作为融合先验来增强分割网络的性能。</strong></p>
+<p>#总结<br>文章提出了一种新的综合多模式体积分割与融合管（SegCoFusion）合作，同时提高分割和融合性能，通过共同学习。在分割部分的指导下，SegCoFusion实现了自适应的病灶感知增强融合。同时，融合后的结果可以为分割补充输入特征，进一步提高分割性能。与传统的分割和融合方法相比，该框架的性能得到了显著提高。SegCoFusion在体积融合中可以近似提高1.13%，0.65%，6.08%，5.11%和15.54%的定量指标。同时，它比三种先进的分割方法的平均Dice分数分别提高了2.07%，0.21%和2.07%。此外，FDNet也被提出来进一步提高融合性能，它使用小波域变换将特征分成不同的频率进行细粒度处理。与现有的SOTA MMIF方法相比，所提出的FDNet也具有竞争力的定性和定量结果。最后，证明了SegCoFusion的通用性，并探讨了多模态输入和分割之间的关系。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
