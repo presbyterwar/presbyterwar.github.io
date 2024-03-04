@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://example.com/tags/index.html">
+<meta property="og:title" content="categories">
+<meta property="og:url" content="http://example.com/categories/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
+<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -582,7 +582,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2024-03-04 17:19:23'>2024-03-04 17:19</time>
+            发布时间 : <time class="date" title='最后更新: 2024-03-04 20:46:27'>2024-03-04 17:19</time>
         
     </div>
     <div class="article-meta">
@@ -620,7 +620,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p>卷积神经网络(CNN)擅长捕获局部图像特征，而视觉变换器(ViT)则通过多头自注意力机制熟练地对远程依赖关系进行建模。</p>
+<p><strong>现存在的问题：</strong>CNN和ViT都面临着有效处理医学图像中的远程依赖性的挑战，通常需要大量的计算资源。</p>
+<p><strong>提出的方法</strong>本文介绍了Semi-Mamba-UNet，它将基于视觉曼巴的UNet架构与传统的UNet集成到半监督学习(SSL)架构中。这种创新的SSL方法利用双网络共同生成伪标签并相互交叉监督。文章引入了一种自监督像素级对比学习策略，采用投影仪对进一步增强特征学习能力。</p>
+<p>编码器压缩输入特征图以提取抽象特征，然后解码器使用抽象特征来重建图像，从而提高分割精度。跳跃连接旨在复制和粘贴特征，从而保留关键的空间信息，进一步提高网络的效率。</p>
+<p>基于ViT的网络的功效虽然有希望，但取决于大量标记数据集的可用性，而获取这些数据集具有挑战性。</p>
+<p><strong>文章的贡献：</strong><br>1.将基于Mamba的分割网络与SSL集成以进行医学图像分割。<br>2.引入了一种新颖的像素级对比学习策略，结合投影仪对，利用提供的标记和未标记数据最大限度地提高特征学习能力。<br>3.像素级交叉监督学习由两个独立的基于Mamba的UNet组成。该网络通过伪标记在另一个网络的帮助下进行训练，从而扩展了未标记数据在模型训练中的效用。</p>
+<p><img src="/2024/03/04/Mamba-Unet/Semi-Mamba-Unet.png"></p>
+
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
     </div>
