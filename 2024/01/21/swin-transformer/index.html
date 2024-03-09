@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://example.com/categories/index.html">
+<meta property="og:title" content="tags">
+<meta property="og:url" content="http://example.com/tags/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
+<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -582,7 +582,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2024-01-21 11:23:21'>2024-01-21 10:27</time>
+            发布时间 : <time class="date" title='最后更新: 2024-03-09 21:39:22'>2024-01-21 10:27</time>
         
     </div>
     <div class="article-meta">
@@ -620,7 +620,24 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p><strong>本文提出的技术：</strong><br>本文提出了一种新的视觉Transformer，称为Swin Transformer，它能够作为计算机视觉的通用骨干。</p>
+<p><strong>技术挑战：</strong>将Transformer从语言适应到视觉的挑战来自于两个领域之间的差异，例如视觉实体的规模变化很大，图像中的像素与文本中的单词相比分辨率很高。</p>
+<p><strong>技术关键：</strong>移位加窗方案通过将自注意力计算限制在非重叠的局部窗口同时还允许跨窗口连接来带来更高的效率。</p>
+<p><img src="/2024/01/21/swin-transformer/%E6%96%B9%E6%B3%95%E6%80%9D%E8%B7%AF%E5%AF%B9%E6%AF%94.png"><br>图1（a）</p>
+<p>(a)所提出的Swin Transformer通过在更深层中合并图像块（以灰色示出）来构建分层特征映射，并且由于仅在每个局部窗口（以红色示出）内计算自我注意，因此具有与输入图像大小线性的计算复杂度。因此，它可以作为图像分类和密集识别任务的通用骨干。(b)相比之下，以前的视觉变换器产生单个低分辨率的特征图，并且由于全局自注意力的计算而具有输入图像大小的二次计算复杂度。</p>
+<p>Transformer专为序列建模和转换任务而设计，它以关注数据中的长距离依赖性建模而闻名。</p>
+<p><strong>文章目标：</strong>寻求扩展Transformer的适用性，以便它可以作为计算机视觉的通用骨干，就像它在NLP和CNN在视觉中所做的那样。</p>
+<p>Transformer在将其在语言领域的高性能转移到视觉领域方面的重大挑战可以通过两种模式之间的差异来解释。这些差异之一涉及规模。与作为语言变形金刚中处理的基本元素的单词标记不同，视觉元素在尺度上可以有很大的变化，这是一个在诸如对象检测之类的任务中受到关注的问题.</p>
+<p>如图1（a）所示，Swin Transformer从小尺寸的补丁（以灰色轮廓显示）开始，逐渐合并更深Transformer层中的相邻补丁，从而构建了一个分层表示。通过这些分层特征图，Swin Transformer模型可以方便地利用高级技术进行密集预测，例如特征金字塔网络（FPN）或U-Net 。</p>
+<p>线性计算复杂度是通过在划分图像的非重叠窗口（红色轮廓）内局部计算自注意力来实现的。每个窗口中的补丁的数量是固定的，因此复杂度与图像大小成线性关系。</p>
+<p>swin-Tansformer的一个关键设计元素是它在连续的自我关注层之间的窗口分区的移动。<br><img src="/2024/01/21/swin-transformer/%E7%AA%97%E5%8F%A3%E5%88%86%E5%8C%BA%E7%A7%BB%E5%8A%A8.png"><br>窗口内的所有查询补丁共享相同的密钥集1，这便于硬件中的存储器访问。</p>
+<p>自注意力框架：<br>自注意力在每个像素的局部窗口内计算以加速优化，并且它们实现了比对应的ResNet架构稍好的精度&#x2F;FLOPs权衡。然而，它们昂贵的内存访问导致它们的实际延迟明显大于卷积网络。</p>
+<p><img src="/2024/01/21/swin-transformer/swin-Transformer.png"><br>Swin Transformer体系结构的概述如图所示，其中说明了微型版本（SwinT）。它首先将输入的RGB图像分割成不重叠的补丁由补丁分裂模块，如ViT。每个补丁都被视为一个“令牌”，其特征被设置为原始像素RGB值的串联。<br>在这些补丁令牌上应用具有修改的自注意力计算的几个Transformer块（Swin Transformer块）。Transformer块保持令牌的数量（H&#x2F;4 × W&#x2F;4），并与线性嵌入一起被称为“阶段1”。<br>为了产生分层表示，随着网络的深入，通过补丁合并层来减少令牌的数量。第一个面片合并层连接每组2 × 2相邻面片的特征，并在4C维连接特征上应用线性层。这将令牌的数量减少了2×2 &#x3D; 4的倍数（分辨率的2倍下采样），并且输出维度设置为2C。之后应用Swin Transformer块进行特征转换，分辨率保持在H 8 × W 8。将片合并和特征变换的该第一块表示为“阶段2”。</p>
+<p>Swin Transformer是通过将Transformer块中的标准多头自注意（MSA）模块替换为基于移位窗口的模块来构建的，其他层保持不变。如图3（b）所示，Swin Transformer模块由基于移动窗口的MSA模块组成，随后是两层MLP，其间具有GELU非线性。在每个MSA模块和每个MLP之前应用LayerNorm（LN）层，并且在每个模块之后应用剩余连接。</p>
+<p>基于移动窗口的自注意力：<br>标准Transformer架构及其对图像分类的适应都进行全局自注意，其中计算令牌和所有其他令牌之间的关系。全局计算导致二次复杂度相对于令牌的数量，使其不适合许多视觉问题，需要一个巨大的令牌集的密集预测或代表一个高分辨率的图像。</p>
+<p>移位窗口分割的一个问题是，它将导致更多的窗口，从移位配置中的[h&#x2F;M] * [w&#x2F;M]到（[h&#x2F;M] + 1 ）×（ [w&#x2F;M] × [w&#x2F;M] + 1），并且一些窗口将小于M × M 4。一个简单的解决方案是将较小的窗口填充到M × M的大小，并在计算注意力时屏蔽填充值。</p>
+<p><img src="/2024/01/21/swin-transformer/%E6%89%B9%E5%A4%84%E7%90%86%E8%AE%A1%E7%AE%97.png"><br>如图所示，提出了一种更有效的批处理计算方法，即向左上方循环移位。在该移位之后，批处理窗口可以由在特征图中不相邻的若干子窗口组成，因此采用掩蔽机制来将自注意力计算限制在每个子窗口内。</p>
+
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
     </div>
