@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>GMISeg-Note | Hexo</title>
+  <title>RMT | Hexo</title>
   <meta name="keywords" content="">
-  <meta name="description" content="GMISeg-Note | Hexo">
+  <meta name="description" content="RMT | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
@@ -597,9 +597,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-GMISeg-Note" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-RMT" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">GMISeg-Note</h1>
+        <h1 class="article-title">RMT</h1>
     
     <div class="article-meta">
         
@@ -609,7 +609,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2023-12-04 00:01:13'>2023-11-27 17:25</time>
+            发布时间 : <time class="date" title='最后更新: 2024-03-22 22:31:03'>2024-03-22 22:31</time>
         
     </div>
     <div class="article-meta">
@@ -647,23 +647,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><font color="#FF0000">文章目标：</font> <br><br>主要研究集中在被给予新的分割任务时不进行任何训练。</p>
-<p><strong>研究问题：</strong><br>医学图像分割往往不能扩展到涉及新的解刨结构、图像形状或标签的未知分割任务。对于新的分割任务，研究人员经常不得不重新训练或微调模型，这是耗时的，并对临床研究人员构成重大障碍。</p>
-<p><strong>解决方法：</strong></p>
-<table><br><td bgcolor="00dd00">因此，文章提出了一种通用的方法，可以解决未知的医学图像分割任务，而不需要额外的训练。
-
-<p>在给定用于定义新分割任务的图像和提示的示例集合的情况下，GMISig基于所提出的方法将一种新的低阶微调策略应用于SAM(Segment Anything Model)图像编码器，并与提示编码器和掩码解码器合作来微调已标记的数据集，而不需要额外的训练。为了实现对新任务的泛化，文章使用了不同部位具有不同成像模式的医学图像数据集。</p></td></table><p></p>
-<p>在自然图像领域训练的微调模型在医学领域可能没有帮助，这可能时由于不同领域之间的数据大小、特征和任务规格的差异，重要的是，仍然需要大量的再训练。</p>
-<p>图像分割中的一个关键问题是区域偏移，当给出分布以外的例子时，该模型的性能往往很差。</p>
-<p>主要贡献：<br>（1）文章提出的GMISeg采用了一种新的低阶微调策略。提高了模型的抗遗忘能力，再定制过程中只增加和更新了少量的参数。<br>（2）训练过程中任务的多样性和推理过程中图像容量的大小与算法的繁华能力有关。</p>
-<p>迁移学习策略包括微调预先训练的模型，通常来自不同的领域。</p>
-<p>FS（少镜头）方法通常通过微调预先训练的网络来适应来自几个训练样本的新任务。</p>
-<p><strong>GMISeg与其他方法的区别：</strong><br>在自然图像和医学图像的FS分割方法中，一种流行的策略是使用大的预训练模型来从查询和支持图像中提取深层特征。这些方法通常涉及学习每个标签的有意义的原型表示。<br>另一种医学FS分割策略使用自监督学习来弥补训练数据和任务的缺点。</p>
-<p>与GMISig相反，这些方法侧重于有限的数据策略，处理涉及在特定子域中概括到新类别的特定任务，例如腹部CT或MRI扫描，并且仅适用于低维表数据。</p>
-<p><img src="/2023/11/27/GMISeg-Note/GMISeg.png"><br>GMISeg的整体架构继承自SAM</p>
-<p>这些旁路首先将变换的特征压缩到低层空间，然后重新投影压缩的特征以与冻结的变压器块中的输出特征的通道对齐。</p>
-<p>GMISig的图像编码器主要由基于VIT(Vision Transformer)的模块组成，</p>
-
+        
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
     </div>
