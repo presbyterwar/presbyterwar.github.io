@@ -627,7 +627,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2024-05-07 21:29:07'>2024-05-07 21:29</time>
+            发布时间 : <time class="date" title='最后更新: 2024-05-08 22:08:06'>2024-05-07 21:29</time>
         
     </div>
     <div class="article-meta">
@@ -665,7 +665,19 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p><strong>面临问题</strong><br>最近的基于变换的方法在3D人体姿态估计中表现出优异的性能。然而，它们具有整体视图，并且通过编码所有关节之间的全局关系，它们不能精确地捕获局部依赖性。</p>
+<p><strong>提出的解决方法</strong><br>在本文中，文章提出了一种新的注意力GCNFormer（AGFormer）块，划分的通道数量，通过使用两个并行的Transformer和GCNFormer流。文章提出的GCNFormer模块利用相邻关节之间的局部关系，输出一个新的表示，是互补的Transformer输出。通过以自适应的方式融合这两种表示，AGFormer具有更好地学习底层3D结构的能力。</p>
+<p><strong>实验结果</strong><br>Human3.6M和MPI-INF-3DHP。MotionAGFormer-B实现了最先进的结果，P1误差分别为38.4 mm和16.2 mm。</p>
+<p>该领域的关键挑战之一是有效地将这些2D序列提升到3D空间中。最初为NLP任务设计的Transformer架构已适用于各种计算机视觉问题，包括姿态估计。它捕获远程依赖关系的能力及其固有的自我注意力机制使其成为该领域的一个有前途的候选者。<strong>人体运动具有内在的局部空间和时间依赖性。</strong></p>
+<p>在文中，MotionAGFormer利用变压器的力量来捕获全局信息，同时采用图形卷积网络（GCN）来集成本地空间和时间关系。文章使用自适应融合来聚合来自Transformer和图形流的特征。通过这样做，确保了人体运动的平衡和全面的表示，从而提高了3D姿态估计的准确性。</p>
+<p><img src="/2024/05/07/motionAGFormer/%E5%85%AC%E5%BC%8F1.png"><br>其中，Norm（·）表示一种规范化方法，例如批处理或层规范化，TokenMixer（·）表示一个模块，用于组合令牌之间的信息。我们的方法使用两个并行的令牌混合器：多头自注意（MHSA）和图卷积网络（GCN），每个都对信息转换过程做出独特的贡献。</p>
+<p>文章提出了MotionAGFormer架构，它使用注意力（Transformer）和图形卷积（GC NFormer）来提升运动序列。<br><img src="/2024/05/07/motionAGFormer/MotionAGFormer.png"><br><strong>图2</strong></p>
+<p>该模型采用置信度为X ∈ RT×J×3的二维输入序列，其中T和J分别表示帧数和关节数。然后，它继续使用线性投影层将每个时间帧中的每个关节映射到d维特征F（0）∈ RT×J×d。然后将空间位置嵌入Ps pos ∈ R1×J×d添加到令牌。这里需要强调的是，我们的模型并没有忽略时间标记顺序，因为该信息保留在GCNFormer流中。<br>在位置嵌入之后，我们使用AGFormer的N个块（第3.3节）来计算F（i）∈ RT × J × d（i &#x3D; 1，…，N）以有效地捕获骨架序列的底层3D结构。最后，我们通过应用线性层和tanh激活来计算运动语义M ∈ RT × J × d ′，并使用回归头来估计3D姿态P ∈ RT × J × 3，从而将F（N）映射到更高的维度。升力损失包含位置（L3D）和速度（L P）项，定义为：<br><img src="/2024/05/07/motionAGFormer/%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.png"></p>
+<p>式中，Pt &#x3D; Pt − Pt − 1，Pt &#x3D; Pt − Pt − 1。总升力损失定义为：<br><img src="/2024/05/07/motionAGFormer/%E6%80%BB%E6%8D%9F%E5%A4%B1.png"></p>
+<p><strong>AGFormer Block</strong><br>AGFormer块使用双流架构。每个流由两个组件组成：空间MetaFormer（图2b）和时间MetaFormer（图2c）。Spatial MetaFormer将各个身体关节处理为不同的标记，有效地捕获单个帧内的帧内关系。另一方面，Temporal MetaFormer将每个帧视为单个令牌，从而捕获随时间推移的帧间关系。这两个流之间的关键区别在于它们的令牌混合器类型。当一个流使用Transformer时，另一个流使用GCNFormers。</p>
+<p>Transformer流。该流采用空间多头自注意（S-MHSA）来捕获空间关系，随后采用时间多头自注意（T-MHSA）来捕获时间关系。S-MHSA定义为：<br><img src="/2024/05/07/motionAGFormer/S-MHSA.png"></p>
+<p>其中Ws（0）是投影参数矩阵，h是并行注意头部的数量，dk是Ks的特征维度。为了计算查询矩阵Qs、键矩阵Ks和值矩阵Vs，我们有：<br><img src="/2024/05/07/motionAGFormer/%E5%A4%9A%E6%9C%89%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E5%8F%82%E6%95%B0.png"></p>
+
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
     </div>
