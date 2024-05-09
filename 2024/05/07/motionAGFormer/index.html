@@ -627,7 +627,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2024-05-08 22:08:06'>2024-05-07 21:29</time>
+            发布时间 : <time class="date" title='最后更新: 2024-05-09 21:45:59'>2024-05-07 21:29</time>
         
     </div>
     <div class="article-meta">
@@ -676,7 +676,17 @@
 <p>式中，Pt &#x3D; Pt − Pt − 1，Pt &#x3D; Pt − Pt − 1。总升力损失定义为：<br><img src="/2024/05/07/motionAGFormer/%E6%80%BB%E6%8D%9F%E5%A4%B1.png"></p>
 <p><strong>AGFormer Block</strong><br>AGFormer块使用双流架构。每个流由两个组件组成：空间MetaFormer（图2b）和时间MetaFormer（图2c）。Spatial MetaFormer将各个身体关节处理为不同的标记，有效地捕获单个帧内的帧内关系。另一方面，Temporal MetaFormer将每个帧视为单个令牌，从而捕获随时间推移的帧间关系。这两个流之间的关键区别在于它们的令牌混合器类型。当一个流使用Transformer时，另一个流使用GCNFormers。</p>
 <p>Transformer流。该流采用空间多头自注意（S-MHSA）来捕获空间关系，随后采用时间多头自注意（T-MHSA）来捕获时间关系。S-MHSA定义为：<br><img src="/2024/05/07/motionAGFormer/S-MHSA.png"></p>
-<p>其中Ws（0）是投影参数矩阵，h是并行注意头部的数量，dk是Ks的特征维度。为了计算查询矩阵Qs、键矩阵Ks和值矩阵Vs，我们有：<br><img src="/2024/05/07/motionAGFormer/%E5%A4%9A%E6%9C%89%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E5%8F%82%E6%95%B0.png"></p>
+<p>其中Ws（0）是投影参数矩阵，h是并行注意头部的数量，dk是Ks的特征维度。为了计算查询矩阵Qs、键矩阵Ks和值矩阵Vs，有：<br><img src="/2024/05/07/motionAGFormer/%E5%A4%9A%E6%9C%89%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E5%8F%82%E6%95%B0.png"></p>
+<p>其中Fs ∈ RBT × J × d是空间特征，Ws（Q，i），Ws（K，i），Ws（V，i）是投影矩阵，B是批量大小。S—MHSA结果随后被馈送到多层感知器（MLP）中，然后是残差连接和LayerNorm。这完成了第一个MetaFormer，即空间Transformer。然后，将Fs重新整形为FT ∈ RBJ × T × d，以准备每个联合的时间特征作为T—MHSA的输入。这里有：</p>
+<p><img src="/2024/05/07/motionAGFormer/T-MHSA.png"></p>
+<p><strong>GCNFormer流</strong>与聚合全局信息的Transformer流不同，GCNFormer流关注骨架序列中存在的局部空间和时间关系。虽然局部信息也可用于变压器，但包含这种并行流允许模型更有效地平衡局部和全局信息的整合。在文中的GCNFormer中使用的定制GCN模块定义为：</p>
+<p><img src="/2024/05/07/motionAGFormer/GCNFormer.png"></p>
+<p>其中，A &#x3D; A + IN表示添加了自连接的邻接矩阵，IN表示单位矩阵，D ii &#x3D; j Ajj定义为沿A的对角线沿着的元素之和，W1、W2表示特定于每层的可训练权重矩阵。激活函数σ（·），如ReLU，与批次归一化一起应用。然后，GCN的输出通过MLP，然后是剩余连接和LayerNorm。</p>
+<p>空间GCNFormer和时间GCNFormer之间的区别在于它们的邻接矩阵和输入特征。输入要素类似于Transformer流的要素。在Spatial GCNFormer中，邻接矩阵表示人体拓扑（图3a）。另一方面，对于时间GCNFormer，我们使用Sim（FT ti，FT tj）&#x3D;（FT ti）TFT tj计算不同时间帧处单个关节之间的相似性，并选择K个最近邻居作为图中的连接节点（图3b）。因此，Temporal GCNFormer中的图形拓扑由学习的节点特征确定。<br><img src="/2024/05/07/motionAGFormer/GCNFormer%20module.png"><br><strong>图3</strong></p>
+<p>GCNFormer模块拓扑。(a)空间GCNFormer采用人体骨架作为其底层拓扑结构。(b)时间GCNFormer通过考虑每个关节的最高相似性（例如，图中的左手腕和右脚踝）。在K—NN之后，每行连接到K列。</p>
+<p><strong>自适应融合</strong>与MotionBERT类似，文章使用自适应融合来聚合Transformer和GCNFormer流的提取特征。其定义为：<br><img src="/2024/05/07/motionAGFormer/%E8%87%AA%E9%80%82%E5%BA%94%E8%9E%8D%E5%90%88.png"></p>
+<p>其中，F（i）表示在深度i处提取的特征嵌入，按元素乘法由表示，并且FTF（i-1）、FGF（i-1）分别指在深度i-1处提取的Transformer流和GCNFormer流特征。自适应融合权值αTF和αGF分别定义为：<br><img src="/2024/05/07/motionAGFormer/%E8%87%AA%E9%80%82%E5%BA%94%E8%9E%8D%E5%90%88%E6%9D%83%E5%80%BC.png"><br>其中W是可学习的线性变换。</p>
+<p><strong>评估标准</strong><br>Human3.6M<br>使用两个协议进行评估。第一个协议（称为P1）在对齐根关节（骶骨）后，在估计姿势和实际姿势之间使用以毫米为单位的平均每关节位置误差（MPJPE）。第二协议（称为P2）测量Procrustes-MPJPE，其中实际姿态和估计姿态通过刚性变换对准。<br>MPI-INF-3DHP<br>MPJPE，150 mm范围内正确关键点（PC）的百分比和曲线下面积（AUC）被报告为评估指标。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
