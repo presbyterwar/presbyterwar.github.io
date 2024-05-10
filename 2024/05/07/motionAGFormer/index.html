@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://example.com/categories/index.html">
+<meta property="og:title" content="tags">
+<meta property="og:url" content="http://example.com/tags/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
+<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -627,7 +627,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2024-05-09 21:45:59'>2024-05-07 21:29</time>
+            发布时间 : <time class="date" title='最后更新: 2024-05-10 17:09:42'>2024-05-07 21:29</time>
         
     </div>
     <div class="article-meta">
@@ -675,7 +675,7 @@
 <p>该模型采用置信度为X ∈ RT×J×3的二维输入序列，其中T和J分别表示帧数和关节数。然后，它继续使用线性投影层将每个时间帧中的每个关节映射到d维特征F（0）∈ RT×J×d。然后将空间位置嵌入Ps pos ∈ R1×J×d添加到令牌。这里需要强调的是，我们的模型并没有忽略时间标记顺序，因为该信息保留在GCNFormer流中。<br>在位置嵌入之后，我们使用AGFormer的N个块（第3.3节）来计算F（i）∈ RT × J × d（i &#x3D; 1，…，N）以有效地捕获骨架序列的底层3D结构。最后，我们通过应用线性层和tanh激活来计算运动语义M ∈ RT × J × d ′，并使用回归头来估计3D姿态P ∈ RT × J × 3，从而将F（N）映射到更高的维度。升力损失包含位置（L3D）和速度（L P）项，定义为：<br><img src="/2024/05/07/motionAGFormer/%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.png"></p>
 <p>式中，Pt &#x3D; Pt − Pt − 1，Pt &#x3D; Pt − Pt − 1。总升力损失定义为：<br><img src="/2024/05/07/motionAGFormer/%E6%80%BB%E6%8D%9F%E5%A4%B1.png"></p>
 <p><strong>AGFormer Block</strong><br>AGFormer块使用双流架构。每个流由两个组件组成：空间MetaFormer（图2b）和时间MetaFormer（图2c）。Spatial MetaFormer将各个身体关节处理为不同的标记，有效地捕获单个帧内的帧内关系。另一方面，Temporal MetaFormer将每个帧视为单个令牌，从而捕获随时间推移的帧间关系。这两个流之间的关键区别在于它们的令牌混合器类型。当一个流使用Transformer时，另一个流使用GCNFormers。</p>
-<p>Transformer流。该流采用空间多头自注意（S-MHSA）来捕获空间关系，随后采用时间多头自注意（T-MHSA）来捕获时间关系。S-MHSA定义为：<br><img src="/2024/05/07/motionAGFormer/S-MHSA.png"></p>
+<p><strong>Transformer流</strong>该流采用空间多头自注意（S-MHSA）来捕获空间关系，随后采用时间多头自注意（T-MHSA）来捕获时间关系。S-MHSA定义为：<br><img src="/2024/05/07/motionAGFormer/S-MHSA.png"></p>
 <p>其中Ws（0）是投影参数矩阵，h是并行注意头部的数量，dk是Ks的特征维度。为了计算查询矩阵Qs、键矩阵Ks和值矩阵Vs，有：<br><img src="/2024/05/07/motionAGFormer/%E5%A4%9A%E6%9C%89%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6%E5%8F%82%E6%95%B0.png"></p>
 <p>其中Fs ∈ RBT × J × d是空间特征，Ws（Q，i），Ws（K，i），Ws（V，i）是投影矩阵，B是批量大小。S—MHSA结果随后被馈送到多层感知器（MLP）中，然后是残差连接和LayerNorm。这完成了第一个MetaFormer，即空间Transformer。然后，将Fs重新整形为FT ∈ RBJ × T × d，以准备每个联合的时间特征作为T—MHSA的输入。这里有：</p>
 <p><img src="/2024/05/07/motionAGFormer/T-MHSA.png"></p>
@@ -686,7 +686,8 @@
 <p>GCNFormer模块拓扑。(a)空间GCNFormer采用人体骨架作为其底层拓扑结构。(b)时间GCNFormer通过考虑每个关节的最高相似性（例如，图中的左手腕和右脚踝）。在K—NN之后，每行连接到K列。</p>
 <p><strong>自适应融合</strong>与MotionBERT类似，文章使用自适应融合来聚合Transformer和GCNFormer流的提取特征。其定义为：<br><img src="/2024/05/07/motionAGFormer/%E8%87%AA%E9%80%82%E5%BA%94%E8%9E%8D%E5%90%88.png"></p>
 <p>其中，F（i）表示在深度i处提取的特征嵌入，按元素乘法由表示，并且FTF（i-1）、FGF（i-1）分别指在深度i-1处提取的Transformer流和GCNFormer流特征。自适应融合权值αTF和αGF分别定义为：<br><img src="/2024/05/07/motionAGFormer/%E8%87%AA%E9%80%82%E5%BA%94%E8%9E%8D%E5%90%88%E6%9D%83%E5%80%BC.png"><br>其中W是可学习的线性变换。</p>
-<p><strong>评估标准</strong><br>Human3.6M<br>使用两个协议进行评估。第一个协议（称为P1）在对齐根关节（骶骨）后，在估计姿势和实际姿势之间使用以毫米为单位的平均每关节位置误差（MPJPE）。第二协议（称为P2）测量Procrustes-MPJPE，其中实际姿态和估计姿态通过刚性变换对准。<br>MPI-INF-3DHP<br>MPJPE，150 mm范围内正确关键点（PC）的百分比和曲线下面积（AUC）被报告为评估指标。</p>
+<p><strong>评估标准</strong><br>Human3.6M<br>使用两个协议进行评估。第一个协议（称为P1）在对齐根关节（骶骨）后，在估计姿势和实际姿势之间使用以毫米为单位的平均每关节位置误差（MPJPE）。第二协议（称为P2）测量Procrustes-MPJPE，其中实际姿态和估计姿态通过刚性变换对准。</p>
+<p>MPI-INF-3DHP<br>MPJPE，150 mm范围内正确关键点（PC）的百分比和曲线下面积（AUC）被报告为评估指标。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
