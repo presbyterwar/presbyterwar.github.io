@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://example.com/tags/index.html">
+<meta property="og:title" content="categories">
+<meta property="og:url" content="http://example.com/categories/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
+<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -636,7 +636,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2024-05-11 16:02:43'>2024-05-11 16:02</time>
+            发布时间 : <time class="date" title='最后更新: 2024-05-12 00:28:44'>2024-05-11 16:02</time>
         
     </div>
     <div class="article-meta">
@@ -674,7 +674,31 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p><strong>提出问题</strong><br>基于学习的方法在3D人体姿态估计（HPE）任务中占主导地位，在大多数基准测试中的性能明显优于传统的基于优化的方法。尽管如此，3D HPE仍然是基于学习的模型面临的最大挑战，基于学习的3D HPE方法在跨域或野外场景中会出现性能下降。无论是2D-3D提升，图像到3D还是基于扩散的方法，因为经过训练的网络隐式地学习相机内部参数和基于域的3D人体姿势分布，并通过统计平均值估计姿势。虽然基于学习的方法在3D HPE任务中取得了显著的成功，但它们受到训练数据集的高度限制。换句话说，当在其他数据集上测试时，由于域间隙，它们的性能会突然下降。</p>
+<p><strong>提出方法</strong><br>基于优化的方法逐个案例地估计结果，这可以预测野外更多样化和复杂的人类姿势。结合基于优化和基于学习的方法的优点，提出了基于零次扩散的3D HPE优化流水线（Zero-shot Diffusion-based Optimization，ZeDO），以解决跨域和野外的3D HPE问题。</p>
+<p><strong>实验性能</strong><br>最小MPJPE为51.4mm，无需使用任何2D-3D或图像-3D对进行训练。<br>此外，单假设ZeDO在跨数据集评估中使用PA-MPJPE 40.3mm在3DPW数据集上实现了SOTA性能，甚至优于在3DPW上训练的基于学习的方法。</p>
+<p>与传统的基于优化的方法不同，传统的基于优化的方法包括各种运动学约束，扩散模型迭代地对优化管道的输出进行降噪，以确保优化的姿势符合人体约束。同时，通过使用简单而有效的优化流水线最小化2D关键点重投影误差来优化姿态。因此，ZeDO能够估计3D人体姿势，而无需对任何2D—3D或图像—3D对进行训练。<br><strong>文章贡献</strong><br>**.**所提出的ZeDO流水线是Zero-Shot 3D人体姿势估计流水线，其利用预先训练的基于扩散的3D人体姿势生成模型来在推理时间期间优化循环中的目标3D姿势。</p>
+<p>**.**与其他生成和去噪任务相比，文章将扩散模型作为优化工具，将简单的3D HPE优化管道与预先训练的基于扩散的3D人体姿势生成模型相结合。</p>
+<p>**.**ZeDO在Human3.6M、3DHP和3DPW数据集上实现了最先进的零拍摄3D HPE性能，甚至在交叉数据集评估上也是如此。</p>
+<p><strong>文章要点</strong><br>基于优化的方法，估计3D姿态逐帧和逐例，不受域间隙或变化的相机内部参数的限制。<br>2D-3D提升网络采用单个帧或归一化2D关键点序列作为输入，以生成相应的3D关键点。<br>端到端3D HPE方法直接将图像数据转换为3D姿态表示</p>
+<p><img src="/2024/05/11/Back-to-Optimization/ZeDO%E7%AE%A1%E9%81%93.png"><br><strong>图1</strong><br>如图1所示，ZeDO包括用于旋转初始姿态的初始姿态优化器和用于迭代优化3D姿态的循环中的优化器。</p>
+<p>首先，随机选择的初始3D姿态（假设）Pinit ∈ RJ×3通过利用检测到的或真实的2D关键点p2d ∈ RJ×2最小化重新投影误差而被旋转到最佳姿态P0。这里，<strong>J代表关键点的数量</strong>。<br>然后，在第i个优化步骤中，Pi由优化器在循环中优化，并且使用预训练的扩散模型将其降噪到Pi+1作为下一次迭代的输入。在n次迭代之后，Pn将是估计的3D人体姿势。与其他基于扩散的姿势估计方法不同，我们的扩散模型θg是一个<strong>姿势生成模型</strong>，它只使用3D人体姿势进行训练，并且在推理过程中，我们的扩散模型只将优化的姿势ePi和时间戳t（i）作为输入，而没有任何额外的姿势条件信息，包括2D姿势。</p>
+<p>基于噪声条件得分网络（NCSN）的学习策略，通过选择λ（t）&#x3D; σ（t）2来表示我们的损失函数如下：<br><img src="/2024/05/11/Back-to-Optimization/%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0.png"></p>
+<p>其中z代表随机噪声向量z &lt;$N（0，1），sθ是预训练的分数匹配网络。σ表示等式中提到的方差。作为[1-e-Rt 0 β（s）ds]，并且时间戳或去噪时间变量t从（0，1）均匀采样1000次。3D姿态生成模型从不使用任何2D-3D或图像-3D对进行训练。我们报告了基于分数匹配的模型的结果，类似于GFPose。</p>
+<p><strong>初始姿势优化器</strong><br>文章的优化管道从初始姿势Pinit开始。如图2所示，如果初始姿态的取向显著不同于目标姿态的取向或者甚至垂直于目标姿态的取向，则优化姿态可能是不够的。因此，初始姿态优化器被设计为通过最小化2D关键点p2d的重新投影误差来找到Pinit的最佳旋转矩阵R0 ∈ SO（3）和平移T0。<br><img src="/2024/05/11/Back-to-Optimization/%E5%88%9D%E8%AF%95%E5%A7%BF%E6%80%81%E4%BC%98%E5%8C%96%E8%BF%87%E7%A8%8B.png"><br><strong>图2</strong></p>
+<p><img src="/2024/05/11/Back-to-Optimization/%E5%A7%BF%E6%80%81%E6%97%8B%E8%BD%AC%E7%AD%89%E5%BC%8F.png"></p>
+<p>在旋转之后，P0 &#x3D; RoPinit是发送到迭代优化流水线的最佳姿态。如图2所示，旋转优化将初始姿态与目标2D和3D姿态对准。（将旋转轴限制在z轴上）</p>
+<p><strong>迭代优化器</strong><br>文章的迭代优化器利用姿态生成扩散模型的去噪能力和学习的人体姿态先验，以简单而有效的优化管道来估计准确的3D人体姿态，而无需任何显式运动学约束。利用摄像机固有矩阵K，可以基于透视投影将2D关键点p2d转换为3D射线r ∈ Rx3，<br><img src="/2024/05/11/Back-to-Optimization/%E4%BC%98%E5%8C%96%E7%AE%A1%E9%81%93%E4%BC%B0%E8%AE%A1%E5%A7%BF%E6%80%81%E7%AD%89%E5%BC%8F.png"><br><img src="/2024/05/11/Back-to-Optimization/%E6%8A%95%E5%BD%B1%E7%AD%89%E5%BC%8F.png"></p>
+<p>直观地，如图3所示，将3D关键点从Po投影到r将使2D重新投影误差最小化并提供估计的3D人类姿势。</p>
+<p><img src="/2024/05/11/Back-to-Optimization/%E4%BC%B0%E8%AE%A1%E4%BA%BA%E4%BD%933D%E5%A7%BF%E6%80%81.png"><br><strong>图3</strong></p>
+<p>然而，存在两个问题：<br>1）简单地将3D关键点从P0投影到r生成有噪声的3D人体姿势，其可能不满足人体的运动学约束。</p>
+<p>2)P0和摄像机之间的平移不同，投影结果也不同。为了解决这两个问题，我们需要确保估计的3D姿态Pi是有效的姿态，并且内在地遵循运动学约束以找到最佳平移Ti。这就要求我们使用pose prior。</p>
+<p>虽然优化的姿态不存在重新投影误差，但是优化的姿态可能不满足运动学约束。我们利用预先训练的基于扩散的姿势生成模型来“降噪”我们的优化姿势。如DDPM ，DDIM 和Score Matching network 中所述，通过最大化似然来训练扩散模型，其目的是基于输入噪声姿态找到最可能的有效姿态。因此，我们使用基于扩散的姿势生成模型来基于优化的姿势Pi找到最佳Pi+1。</p>
+<p>采用截断扩散模型推理，其时间戳在推理过程中从训练时间戳中截断。在我们的例子中，时间戳t被截断为t ∈（0，0.1），而不是（0，1）。</p>
+<p>最佳平移是通过最小化Pi的2D重新投影误差从To导出的，这取决于当前迭代次数，因为优化的姿态Pi在早期迭代中不够可靠。在某些迭代之后，从以下公式推导出最佳翻译：</p>
+<p><img src="/2024/05/11/Back-to-Optimization/%E6%9C%80%E4%BD%B3%E7%BF%BB%E8%AF%91%E7%AD%89%E5%BC%8F.png"></p>
+<p>其中，C2d ∈ RJ是2D关键点的置信度得分，p2d和K是相机固有矩阵。C2d有助于指导翻译优化。通过结合最佳平移和运动学约束，可以通过迭代地将Pi投影到r并在扩散模型的帮助下对投影的Pi+1进行去噪来优化3D人体姿势。</p>
+
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
     </div>
