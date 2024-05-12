@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://example.com/categories/index.html">
+<meta property="og:title" content="tags">
+<meta property="og:url" content="http://example.com/tags/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
+<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -636,7 +636,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2024-05-12 00:28:44'>2024-05-11 16:02</time>
+            发布时间 : <time class="date" title='最后更新: 2024-05-12 23:22:24'>2024-05-11 16:02</time>
         
     </div>
     <div class="article-meta">
@@ -691,6 +691,12 @@
 <p><strong>迭代优化器</strong><br>文章的迭代优化器利用姿态生成扩散模型的去噪能力和学习的人体姿态先验，以简单而有效的优化管道来估计准确的3D人体姿态，而无需任何显式运动学约束。利用摄像机固有矩阵K，可以基于透视投影将2D关键点p2d转换为3D射线r ∈ Rx3，<br><img src="/2024/05/11/Back-to-Optimization/%E4%BC%98%E5%8C%96%E7%AE%A1%E9%81%93%E4%BC%B0%E8%AE%A1%E5%A7%BF%E6%80%81%E7%AD%89%E5%BC%8F.png"><br><img src="/2024/05/11/Back-to-Optimization/%E6%8A%95%E5%BD%B1%E7%AD%89%E5%BC%8F.png"></p>
 <p>直观地，如图3所示，将3D关键点从Po投影到r将使2D重新投影误差最小化并提供估计的3D人类姿势。</p>
 <p><img src="/2024/05/11/Back-to-Optimization/%E4%BC%B0%E8%AE%A1%E4%BA%BA%E4%BD%933D%E5%A7%BF%E6%80%81.png"><br><strong>图3</strong></p>
+<p><img src="/2024/05/11/Back-to-Optimization/%E8%BF%AD%E4%BB%A3%E7%AE%97%E6%B3%95.png"></p>
+<p>从你给出的要求和伪代码片段中，可以推断出一个基于扩散模型的迭代优化方法来估计3D人体姿态的过程。这里的关键是结合了初始的3D姿态估计、2D姿态检测、2D姿态的置信度、相机内参以及一个预训练的扩散模型来迭代地优化和去噪3D姿态。</p>
+<p>以下是基于你提供的伪代码的一个更详细的解释和扩展：</p>
+<p>初始化：<br>给定初始的3D姿态 Pinit、目标2D姿态 p2d、2D姿态的置信度 C2d、相机内参 K 和一个扩散时间戳 t。<br>使用最小二乘法（或其他优化方法）找到最优的旋转矩阵 R0 和平移向量 T0，使得经过 R0 和 T0 变换后的 Pinit 在相机坐标系下的投影最接近 p2d。<br>使用找到的 R0 和 T0 对 Pinit 进行变换，得到初始的3D姿态估计 P0。</p>
+<p>迭代优化和去噪：<br>定义一个单位射线向量 ˆr，它是通过将目标2D姿态 p2d 通过相机内参 K 的逆矩阵 K−1 变换到相机坐标系下并归一化得到的。<br>迭代地执行以下步骤 n 次（其中 n 是预设的迭代次数）：<br>如果当前迭代次数 i 小于一个“预热”迭代次数 warmup（用于确保在扩散过程的早期阶段稳定性），则使用初始的平移向量 T0。<br>否则，通过优化找到平移向量 Ti，以最小化2D姿态的置信度加权投影误差。这考虑了不同2D关键点可能具有不同的置信度。<br>将当前的3D姿态 Pi 和平移向量 Ti 投影到射线 ˆr 上，得到一个沿射线的3D点 Pei。这可以看作是沿着从相机中心出发并指向目标2D姿态的射线的3D姿态的一个估计。<br>（伪代码中缺失了 Pi+1 的具体计算步骤，但通常这里会使用预训练的扩散模型 θg(P, t) 和当前的迭代次数或时间戳 t 来生成或去噪一个新的3D姿态 Pi+1。这个步骤可能还涉及将 Pei 作为条件或约束来使用。）</p>
+<p>输出：<br>经过 n 次迭代后，输出最终的3D姿态估计 Pn。</p>
 <p>然而，存在两个问题：<br>1）简单地将3D关键点从P0投影到r生成有噪声的3D人体姿势，其可能不满足人体的运动学约束。</p>
 <p>2)P0和摄像机之间的平移不同，投影结果也不同。为了解决这两个问题，我们需要确保估计的3D姿态Pi是有效的姿态，并且内在地遵循运动学约束以找到最佳平移Ti。这就要求我们使用pose prior。</p>
 <p>虽然优化的姿态不存在重新投影误差，但是优化的姿态可能不满足运动学约束。我们利用预先训练的基于扩散的姿势生成模型来“降噪”我们的优化姿势。如DDPM ，DDIM 和Score Matching network 中所述，通过最大化似然来训练扩散模型，其目的是基于输入噪声姿态找到最可能的有效姿态。因此，我们使用基于扩散的姿势生成模型来基于优化的姿势Pi找到最佳Pi+1。</p>
