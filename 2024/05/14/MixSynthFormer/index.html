@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>idea | Hexo</title>
+  <title>MixSynthFormer | Hexo</title>
   <meta name="keywords" content="">
-  <meta name="description" content="idea | Hexo">
+  <meta name="description" content="MixSynthFormer | Hexo">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
@@ -633,9 +633,9 @@
 </aside>
 <div id="post">
     <div class="pjax">
-        <article id="post-idea" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-MixSynthFormer" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">idea</h1>
+        <h1 class="article-title">MixSynthFormer</h1>
     
     <div class="article-meta">
         
@@ -645,7 +645,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2024-04-13 20:22:51'>2024-04-13 20:18</time>
+            发布时间 : <time class="date" title='最后更新: 2024-05-14 22:16:48'>2024-05-14 22:00</time>
         
     </div>
     <div class="article-meta">
@@ -683,11 +683,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>创新点参考：</strong><br>1.通过设计残差连接和密集连接的原则，在特征细化和聚合过程充分利用和融合了不同层级之间的特征信息，构建了一个深度而高效的网络结构。</p>
-<p>2.提出的结合变换器和卷积技术的图像分割方法通过引入比例变换器和精炼模块，能够在不同尺度上细化特征并加强特征信息的利用，并融合局部与全局信息，有效减缓下采样过程中细节信息丢失的问题。</p>
-<p>3.提出了一种创新的轻量化卷积模块，通过设计了一个多路径结构，引入全局注意力通道机制，有效降低了模型的计算复杂性和参数量，同时保证了竞争性的分割效果。</p>
-<p>4.细粒度分割：探索使用边缘检测和细节增强模块，以进一步改善模型对复杂肿瘤结构的分割性能。</p>
-<p>5.泛化能力：探索迁移学习和领域适应技术，使模型能够更好地适应新的医学图像数据集。</p>
+        <p><strong>提出问题：</strong><br>以前的工作已经证明了利用运动连续性进行姿态估计使用稀疏采样帧与transformerbased模型的可行性。然而，这些方法只考虑了时间关系，而忽略了空间注意力，和点积自注意力计算的变压器的复杂性是二次成正比的嵌入大小。</p>
+<p><strong>提出方法：</strong><br>为了解决这些限制，文章提出了MixSynthFormer，一个类似于Transformer的编码器模型，具有基于MLP的混合合成注意力。通过混合合成的空间和时间的注意力，模型结合了关节间和帧间的重要性，可以准确地估计在整个视频序列中的人体姿势从稀疏采样帧。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
