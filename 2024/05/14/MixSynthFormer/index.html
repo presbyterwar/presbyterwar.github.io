@@ -645,7 +645,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2024-05-18 22:07:22'>2024-05-14 22:00</time>
+            发布时间 : <time class="date" title='最后更新: 2024-05-19 00:25:05'>2024-05-14 22:00</time>
         
     </div>
     <div class="article-meta">
@@ -729,7 +729,9 @@
 <p><img src="/2024/05/14/MixSynthFormer/%E6%9D%83%E9%87%8D%E8%BE%93%E5%87%BA.png"></p>
 <p>MixSynth Attention块的输出通过用权重Wo ∈ RC×C线性变换Yout来获得：</p>
 <p><img src="/2024/05/14/MixSynthFormer/MixSynth%E6%B3%A8%E6%84%8F%E5%8A%9B%E8%BE%93%E5%87%BA.png"></p>
-<p><strong>SynthAttention</strong><br>transformers中的自注意模块利用成对点积计算注意权重。查询密钥矩阵乘法的计算随着嵌入大小的增加而二次扩展。为了减轻嵌入大小对计算成本的影响，文章提出了合成注意力操作（SynthAttenOp），其计算量随着嵌入大小的增加而线性增长，作为标准注意力的替代品。SynthAttenOP使用线性层生成注意力矩阵。</p>
+<p><strong>SynthAttention</strong></p>
+<p><img src="/2024/05/14/MixSynthFormer/SynthAttenOp.png"><br><strong>图3</strong></p>
+<p>transformers中的自注意模块利用成对点积计算注意权重。查询密钥矩阵乘法的计算随着嵌入大小的增加而二次扩展。为了减轻嵌入大小对计算成本的影响，文章提出了合成注意力操作（SynthAttenOp），其计算量随着嵌入大小的增加而线性增长，作为标准注意力的替代品。SynthAttenOP使用线性层生成注意力矩阵。</p>
 <p>SynthAttenOp在空间上和时间上运行。在空间注意合成中，输入和输出是互换的。这里我们用Z ∈ RN×D来说明一般情况，其中N和D可以用C或T代替。粗合成注意力矩阵As ∈ RN×N由具有权重Wz ∈ RD×N的线性层生成：</p>
 <p><img src="/2024/05/14/MixSynthFormer/%E5%90%88%E6%88%90%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9F%A9%E9%98%B5.png"></p>
 <p>由于不同的框架或关节有不同的贡献，我们应用挤压和激发层（SELayer）来调节影响。它可以放大关键通道，同时减轻不太重要的影响。细粒度的注意力矩阵Asynth ∈ RN×N由以下公式获得：</p>
@@ -737,6 +739,9 @@
 <p>其中GAP表示全局平均池化，GAP（A）∈ RN，δ和σ是Sigmoid激活和ReLU函数。减少比（rse）是一个经验发现的超参数，限制了模型的复杂性。Ws ∈ RN rse ×N是降维的，We ∈ RN× N rse是扩展到原始维数的.SELayer的输出是在与计算的权重逐通道相乘之后的重新缩放的输入。Softmax继承自标准的Transformer，它对注意力权重进行了归一化。与标准的Transformer编码器一致，输出是注意力矩阵和值的乘积：</p>
 <p><img src="/2024/05/14/MixSynthFormer/%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9F%A9%E9%98%B5%E5%92%8C%E5%80%BC%E7%9A%84%E4%B9%98%E7%A7%AF.png"></p>
 <p>其中V &#x3D; Z ∈ RN × D且Y ∈ RN × D。上述方法适用于N相对较小的情况。当N较大时，由于等式n中的矩阵乘法，计算成本呈二次方增长。文章将缩减因子r应用于最后一个维度D，从而节省了等式中的计算。将降维表示为d &#x3D; N&#x2F;r。图3显示了简化注意力矩阵生成和特征融合的过程。通过下式获得约简的粗注意矩阵Ar s ∈ RN × d和约简值Vr ∈ Rd × D：</p>
+<p><img src="/2024/05/14/MixSynthFormer/%E7%B2%97%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9F%A9%E9%98%B5.png"></p>
+<p>其中，用于减少注意力矩阵生成的权重和用于减少值的权重分别为Wrz ∈ RD×d和Wv ∈ Rd×N。</p>
+<p><strong>评估指标</strong><br>对于2D姿态估计，使用正确关键点百分比（PCK），并设置三个阈值（像素级下的边界框大小的20%、10%和5%）。对于3D任务，平均每关节位置误差（MPJPE）用于报告距离误差，平均加速度误差（Accel）用于反映估计的位姿序列的平滑性。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
