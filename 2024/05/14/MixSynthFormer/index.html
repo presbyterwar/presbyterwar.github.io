@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://example.com/tags/index.html">
+<meta property="og:title" content="categories">
+<meta property="og:url" content="http://example.com/categories/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
+<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -645,7 +645,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2024-05-17 23:51:26'>2024-05-14 22:00</time>
+            发布时间 : <time class="date" title='最后更新: 2024-05-18 22:07:22'>2024-05-14 22:00</time>
         
     </div>
     <div class="article-meta">
@@ -703,12 +703,40 @@
 <p>基于采样的方法使用统一、随机或自定义的采样策略选择关键帧。由于所选择的帧可能不是“好的”，这些框架添加了细化模块来清除噪声姿态。</p>
 <p><img src="/2024/05/14/MixSynthFormer/MixSynthFormer.png"><br><strong>图2</strong></p>
 <p>MixSynthFormer从稀疏采样的关键帧中恢复和优化姿势。它由L个MixSynthEncoder块和两个线性投影层组成。MixSynthEncoder遵循标准的Transformer编码器结构，但用MixSynth Attention取代了多头自关注。MixSynth Attention通过SynthAttention操作合成空间和时间注意力（如图3所示）。两个分支的输出被合并并转发到线性层进行特征融合。（关键帧中检测到的姿势是彩色的，插值器恢复的姿势是灰色的。）</p>
+<p>人体姿态估计本质上是一个关键点检测的项目，其目标是对身体的关键点进行检测。在这个过程中，可能会遇到关键点在连续帧之间的位置不连续或存在误差的情况。此时，插值技术可以被用来平滑这些关键点的位置，或者预测缺失的关键点位置。</p>
+<p>具体来说，插值器可以根据已知的关键点位置，通过某种插值算法（如线性插值、多项式插值、样条插值等）来估计出未知或缺失的关键点位置。这可以帮助提高人体姿态估计的准确性和连续性。</p>
 <p><strong>问题定义</strong>给定T帧的输入视频，采样器从每K帧（T是K的倍数）中采样一帧。采样帧被视为关键帧，其中将通过姿态估计来估计姿态。由于复杂的姿态或遮挡，从采样帧检测到的姿态可能是不可靠的。我们将从采样帧中检测到的姿态表示为Xsampled noisy ∈ R T K×P，它作为框架的输入。P是姿势参数的数量，其可以表示关节位置（2D&#x2F;3D）或旋转（6D），并且可以根据数据集和身体表示而变化。基于采样的位姿估计的目标是从采样帧中的检测位姿中恢复原始序列中的所有位姿态X ∈ RT × P（称为采样检测位姿）。</p>
 <p><strong>模型概述</strong><br>MixSynthFormer的目标是恢复和优化姿态，以有效地获得准确的估计。最初，通过线性插值或线性层从采样的检测姿态恢复整个姿态序列。使用线性投影将这些恢复的姿势转换为姿势嵌入，并将其馈送到MixSynthEncoder的L个块中。每个MixSynthEncoder包括一个注意块和一个带有残差连接的前馈网络，后面是一个层归一化层。注意力块MixSynth Attention同时合成空间和时间注意力矩阵。通过整合空间和时间信息，我们的模型可以同时细化整个姿势序列。最后，通过另一个线性层输出恢复的姿态。</p>
 <p><strong>MixSynthFormer结构设计</strong><br>文章采用了一个恢复细化管道。基于关键帧中检测到的姿态X，通过传统的或学习的姿态估计器沿时间维度沿着初步恢复整个姿态序列，记为x&#96;∈R T*P</p>
 <p>从稀疏和有噪声的输入中恢复姿势会导致不准确的估计，这需要额外的处理来获得干净的输出。此外，传统的插值方法往往会产生过于平滑的运动序列，缺乏细节。</p>
-<p>因此，细化步骤是必要的，以生成更精确的姿势序列，这可以被公式化为序列到序列的问题。Transformers在解决这些问题方面取得了显着的成功，因为它们能够捕捉令牌之间的全局相关性。除了用MixSynth Attention替换自注意模块之外，文章按照标准Transformer编码器的工作流程设计MixSynthFormer。以下是MixSynthFormer的高级操作。</p>
-<p>ˆX中的所有姿势都通过权重为W0∈Rp×C的线性层变换到姿势嵌入Z0∈RT×C，其中C是嵌入空间的维度。转换器中的关注层需要位置嵌入来指定输入标记的位置，而我们基于MLP的MixSynth注意在时间注意合成中对标记的顺序敏感，并且不需要额外的位置嵌入。</p>
+<p>因此，细化步骤是必要的，以生成更精确的姿势序列，这可以被公式化为序列到序列的问题。Transformers在解决这些问题方面取得了显着的成功，因为它们能够捕捉令牌之间的全局相关性。除了用MixSynth Attention替换自注意模块之外，文章按照标准Transformer编码器的工作流程设计MixSynthFormer。</p>
+<p>以下是MixSynthFormer的操作：</p>
+<p>ˆX中的所有姿势都通过权重为W0∈Rp×C的线性层变换到姿势嵌入Z0∈RT×C，其中C是嵌入空间的维度。MixSynthEncoder的注意力层需要位置嵌入来指定输入标记的位置，而基于<strong>MLP</strong>的MixSynth注意在时间注意合成中对标记的顺序敏感，并且不需要额外的位置嵌入。</p>
+<p><img src="/2024/05/14/MixSynthFormer/%E5%A7%BF%E6%80%81%E5%B5%8C%E5%85%A5.png"></p>
+<p>{MLP指的是多层感知器（Multilayer Perceptron），它是一种人工神经网络（Artificial Neural Network, ANN）的类型。MLP是一种前向反馈神经网络，由多个神经元层组成，每个层与下一层全连接。</p>
+<p>MLP至少包含三层：输入层、隐藏层（可以有多个）以及输出层。输入层负责接收原始数据，隐藏层负责对数据进行中间特征的提取，输出层负责输出最终的预测结果。在MLP中，每个神经元都与前一层的所有神经元相连，并具有权重和偏差。信息在网络中前向传播，通过乘以权重并加上偏差，然后通过激活函数进行非线性转换，从而在隐藏层和输出层之间传递。这种非线性转换使得MLP能够学习和表示复杂的非线性函数。}</p>
+<p>姿势嵌入然后被传递到MixSynthEncode的L块中。由堆叠的MixSynth注意模块和前馈网络(FFN)组成，FFN是一个具有Gelu激活的两层逐点全连接层。在每个块之后依次应用剩余连接和层归一化(LN)。</p>
+<p><img src="/2024/05/14/MixSynthFormer/MixSynthBlock.png"></p>
+<p>这里，L∈[1，L]是指L的第一块。Zl−1是前一个编码块的输出，ˆZl是中间表示，Zl是当前编码块的输出。Zl和ˆZl在Rt×C中具有相同的维度。</p>
+<p>在L个操作块之后，嵌入空间ZL中的特征通过另一个具有权重Wp ∈ RC × P的线性层被变换回姿势维度。残差连接的使用可以加快模型的收敛，并产生更稳定的结果。因此，最终恢复的姿态序列是来自MixSynthEncoder块的输出和初步恢复的噪声姿态的总和：</p>
+<p><img src="/2024/05/14/MixSynthFormer/%E6%9C%80%E7%BB%88%E5%A7%BF%E6%80%81%E5%BA%8F%E5%88%97.png"></p>
+<p><strong>MixSynth 注意力层</strong><br>为了学习全局和局部特征，它混合了空间和时间的合成注意力矩阵。这些矩阵中的权重反映了相对的关节间和帧间重要性。空间矩阵揭示了关节之间的相关性。当执行某些运动模式时，一起移动的关节高度相关。它有助于从相关关节中定位错误检测的关节，并进行准确检测。时间矩阵确定帧相对于序列中其他帧的影响，表示帧影响其余帧的程度。</p>
+<p>合成注意力操作（SynthAttenOP）对Z ∈ RT×C进行操作，并输出特征Yi ∈ RT×C，其可以是空间的或时间的，分别表示为Ys和Yt。</p>
+<p><img src="/2024/05/14/MixSynthFormer/%E5%90%88%E6%88%90%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%93%8D%E4%BD%9C.png"></p>
+<p>同时生成空间和时间关注的特征。应用分裂注意力来重新平衡两个分支的贡献。不同的议案可以有不同的重点。关节间关系对于某些运动更重要，而其他运动可能更多地受到帧间关系的影响。Ys和Yt的权重Ay ∈ R2×C计算为：</p>
+<p><img src="/2024/05/14/MixSynthFormer/%E6%9D%83%E9%87%8D%E8%AE%A1%E7%AE%97.png"></p>
+<p>其中GAP表示全局平均池化函数，FFN包含两个具有ReLU激活的全连接层，Softmax用于归一化。加权和Yout ∈ RT×C是来自两个分支的级联表示与重新平衡权重Ay的逐元素乘积的总和：</p>
+<p><img src="/2024/05/14/MixSynthFormer/%E6%9D%83%E9%87%8D%E8%BE%93%E5%87%BA.png"></p>
+<p>MixSynth Attention块的输出通过用权重Wo ∈ RC×C线性变换Yout来获得：</p>
+<p><img src="/2024/05/14/MixSynthFormer/MixSynth%E6%B3%A8%E6%84%8F%E5%8A%9B%E8%BE%93%E5%87%BA.png"></p>
+<p><strong>SynthAttention</strong><br>transformers中的自注意模块利用成对点积计算注意权重。查询密钥矩阵乘法的计算随着嵌入大小的增加而二次扩展。为了减轻嵌入大小对计算成本的影响，文章提出了合成注意力操作（SynthAttenOp），其计算量随着嵌入大小的增加而线性增长，作为标准注意力的替代品。SynthAttenOP使用线性层生成注意力矩阵。</p>
+<p>SynthAttenOp在空间上和时间上运行。在空间注意合成中，输入和输出是互换的。这里我们用Z ∈ RN×D来说明一般情况，其中N和D可以用C或T代替。粗合成注意力矩阵As ∈ RN×N由具有权重Wz ∈ RD×N的线性层生成：</p>
+<p><img src="/2024/05/14/MixSynthFormer/%E5%90%88%E6%88%90%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9F%A9%E9%98%B5.png"></p>
+<p>由于不同的框架或关节有不同的贡献，我们应用挤压和激发层（SELayer）来调节影响。它可以放大关键通道，同时减轻不太重要的影响。细粒度的注意力矩阵Asynth ∈ RN×N由以下公式获得：</p>
+<p><img src="/2024/05/14/MixSynthFormer/%E7%BB%86%E7%B2%92%E5%BA%A6%E7%9F%A9%E9%98%B5.png"></p>
+<p>其中GAP表示全局平均池化，GAP（A）∈ RN，δ和σ是Sigmoid激活和ReLU函数。减少比（rse）是一个经验发现的超参数，限制了模型的复杂性。Ws ∈ RN rse ×N是降维的，We ∈ RN× N rse是扩展到原始维数的.SELayer的输出是在与计算的权重逐通道相乘之后的重新缩放的输入。Softmax继承自标准的Transformer，它对注意力权重进行了归一化。与标准的Transformer编码器一致，输出是注意力矩阵和值的乘积：</p>
+<p><img src="/2024/05/14/MixSynthFormer/%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9F%A9%E9%98%B5%E5%92%8C%E5%80%BC%E7%9A%84%E4%B9%98%E7%A7%AF.png"></p>
+<p>其中V &#x3D; Z ∈ RN × D且Y ∈ RN × D。上述方法适用于N相对较小的情况。当N较大时，由于等式n中的矩阵乘法，计算成本呈二次方增长。文章将缩减因子r应用于最后一个维度D，从而节省了等式中的计算。将降维表示为d &#x3D; N&#x2F;r。图3显示了简化注意力矩阵生成和特征融合的过程。通过下式获得约简的粗注意矩阵Ar s ∈ RN × d和约简值Vr ∈ Rd × D：</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
