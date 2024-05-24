@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://example.com/categories/index.html">
+<meta property="og:title" content="tags">
+<meta property="og:url" content="http://example.com/tags/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
+<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -654,7 +654,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2024-05-24 00:20:19'>2024-05-23 20:20</time>
+            发布时间 : <time class="date" title='最后更新: 2024-05-24 22:07:44'>2024-05-23 20:20</time>
         
     </div>
     <div class="article-meta">
@@ -692,9 +692,18 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>提出问题</strong><br>PoseFormer通过级联transformer层捕捉每个视频帧中人体关节的空间关系和帧之间的人体动力学。然而在实际场景中，PoseFormer及其后续的性能受到两个因素的限制：(A)输入联合序列的长度；(B)2D联合检测的质量。现有的方法通常对输入序列的所有帧都应用自关注，当增加帧数目以获得更高的估计精度时，会造成巨大的计算负担，并且它们对由于2D联合检测器能力有限而带来的自然噪声不具有鲁棒性。</p>
-<p><strong>提出方法</strong><br>文章提出了PoseFormerV,它利用了长骨架序列在频域的紧凑表示，有效地扩大了接受场，并提高了对噪声2D联合检测的鲁棒性。</p>
-<p>一方面，低频分量足以表示整个视觉标识（例如，图像压缩中的2D图像和这种情况下的关节轨迹），从而消除了对昂贵的全帧自关注的需要;另一方面，骨架序列本身的低频表示滤除了检测到的关节轨迹中包含的高频噪声（抖动和离群值）</p>
+        <p><strong>提出问题</strong><br>PoseFormer通过级联transformer层捕捉每个视频帧中人体关节的空间关系和帧之间的人体动力学。然而在实际场景中，PoseFormer及其后续的性能受到两个因素的限制：(A)输入联合序列的长度；(B)2D联合检测的质量。现有的方法通常对输入序列的所有帧都应用自关注，当增加帧数目以获得更高的估计精度时，会造成巨大的计算负担，并且它们对由于2D联合检测器能力有限而带来的自然噪声不具有鲁棒性。（简言之：处理长序列的效率和对不可靠联合检测的鲁棒性）</p>
+<p><strong>提出方法</strong><br>文章提出了PoseFormerV,它利用了长骨架序列在频域的紧凑表示，有效地扩大了接受场，并提高了对噪声2D联合检测的鲁棒性。（设计了一个有效的时频特征融合模块来缩小时域和频域之间的差距）。</p>
+<p>一方面，低频分量足以表示整个视觉标识（例如，图像压缩中的2D图像和这种情况下的关节轨迹），从而消除了对昂贵的全帧自关注的需要;另一方面，骨架序列本身的低频表示滤除了检测到的关节轨迹中包含的高频噪声（抖动和离群值）。</p>
+<p><strong>文章目标：</strong>我们的目标是从频域的角度提高其操作长序列的效率和对噪声联合检测的鲁棒性。</p>
+<p><strong>文章要点</strong><br>利用输入联合序列的频域表示进行2D到3D提升HPE。</p>
+<p>由于人类视觉系统对图像的低频分量更敏感。<br><strong>图像的低频分量指图像中灰度值变化缓慢的区域，即图像中较为平滑的部分，低频分量通常代表图像的总体形状和大致的灰度分布。高频分量则代表图像中的细节、边缘和快速变化的灰度级，如噪声和纹理。</strong></p>
+<p><img src="/2024/05/23/PoseFormerV2/PoseFormerV1.png"></p>
+<p>PoseFormerV1的概述。PoseFormerV1主要包括两个模块：空间Transformer编码器和时间Transformer编码器。PoseFormerV1的时间编码器将自注意力应用于给定2D关节序列的所有帧，用于人体运动建模。</p>
+<p>PoseFormerV1由两个主要模块组成，空间编码器用于单帧联合相关建模，时间编码器用于跨帧人体运动建模。给定输入的二维骨架序列x ∈ RF×J×2，其中F表示序列长度，J表示人体表示的关节数。首先，将每个帧中的人的所有关节的坐标线性投影到c维向量（即，联合嵌入）表示为z0 ∈ RF×J×c。将可学习的空间位置嵌入ESPos ∈ R1×J×c 添加到z0以编码联合相关信息。</p>
+<p><strong>空间Transformer编码器</strong><br>利用自注意机制，建立每个帧zi 0 ∈ R1×J×c的联合嵌入空间依赖关系。在该阶段中，馈送到每个Transformer块中的令牌的数量是J。第i帧的L层的空间Transformer编码器的输出由zi L ∈ R1×J×c表示。然后，每帧表示被平坦化并级联为输入Z0 ∈ RF×（J·c）到时间Transformer编码器中。</p>
+<p><strong>时间Transformer编码器</strong><br>类似地，输入Z0与可学习的时间位置嵌入ETPos ∈ RF ×（J·c）相加，以对每个帧的索引相关信息进行编码。具有M个Transformer层的时间编码器密集地对整个序列中的帧到帧的依赖性进行建模，并且其输出由ZM ∈ RF ×（J·c）表示。在此阶段，每个Transformer层的令牌号为F，即输入序列长度。</p>
+<p><strong>回归head</strong><br>为了依次估计中心帧的3D姿态，使用简单的1D卷积来收集时间信息，并且线性投影输出最终姿态表示y ∈ R1×（J·3）。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
