@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://example.com/tags/index.html">
+<meta property="og:title" content="categories">
+<meta property="og:url" content="http://example.com/categories/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
+<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -243,7 +243,7 @@
     <li>
         <div class="all active" data-rel="全部文章">全部文章
             
-                <small>(31)</small>
+                <small>(32)</small>
             
         </div>
     </li>
@@ -268,7 +268,7 @@
         
     </div>
 </div>
-<input type="hidden" id="yelog_site_posts_number" value="31">
+<input type="hidden" id="yelog_site_posts_number" value="32">
 
 <div style="display: none">
     <span id="busuanzi_value_site_uv"></span>
@@ -344,6 +344,15 @@
 
     
     <nav id="title-list-nav">
+        
+        
+        <a  class="全部文章 "
+           href="/2024/05/29/GLA-GCN/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="GLA_GCN">GLA_GCN</span>
+            <span class="post-date" title="2024-05-29 21:38:11">2024/05/29</span>
+        </a>
         
         
         <a  class="全部文章 "
@@ -654,7 +663,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2024-05-27 00:11:02'>2024-05-23 20:20</time>
+            发布时间 : <time class="date" title='最后更新: 2024-05-29 21:38:50'>2024-05-23 20:20</time>
         
     </div>
     <div class="article-meta">
@@ -693,7 +702,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p><strong>提出问题</strong><br>PoseFormer通过级联transformer层捕捉每个视频帧中人体关节的空间关系和帧之间的人体动力学。然而在实际场景中，PoseFormer及其后续的性能受到两个因素的限制：(A)输入联合序列的长度；(B)2D联合检测的质量。现有的方法通常对输入序列的所有帧都应用自关注，当增加帧数目以获得更高的估计精度时，会造成巨大的计算负担，并且它们对由于2D联合检测器能力有限而带来的自然噪声不具有鲁棒性。（简言之：处理长序列的效率和对不可靠联合检测的鲁棒性）</p>
-<p><strong>提出方法</strong><br>文章提出了PoseFormerV,它利用了长骨架序列在频域的紧凑表示，有效地扩大了接受场，并提高了对噪声2D联合检测的鲁棒性。（设计了一个有效的时频特征融合模块来缩小时域和频域之间的差距）。</p>
+<p><strong>提出方法</strong><br>提出了PoseFormerV2，它利用频域中长骨架序列的紧凑表示来有效地放大感受野，并提高对噪声2D联合检测的鲁棒性。提出的方法有效地融合了时域和频域的特征。</p>
 <p>一方面，低频分量足以表示整个视觉标识（例如，图像压缩中的2D图像和这种情况下的关节轨迹），从而消除了对昂贵的全帧自关注的需要;另一方面，骨架序列本身的低频表示滤除了检测到的关节轨迹中包含的高频噪声（抖动和离群值）。</p>
 <p><strong>文章目标：</strong>我们的目标是从频域的角度提高其操作长序列的效率和对噪声联合检测的鲁棒性。</p>
 <p><strong>文章要点</strong><br>利用输入联合序列的频域表示进行2D到3D提升HPE。</p>
