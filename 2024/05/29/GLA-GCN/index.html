@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://example.com/categories/index.html">
+<meta property="og:title" content="tags">
+<meta property="og:url" content="http://example.com/tags/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
+<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -663,7 +663,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2024-05-29 22:42:52'>2024-05-29 21:38</time>
+            发布时间 : <time class="date" title='最后更新: 2024-06-02 00:30:15'>2024-05-29 21:38</time>
         
     </div>
     <div class="article-meta">
@@ -706,6 +706,22 @@
 <p><strong>提出方法：</strong>本文提出了一种简单而有效的全局-局部自适应图卷积网络（GLA-GCN）模型。文章的GLA-GCN通过图表示和回溯局部关节特征对时空结构进行全局建模，用于通过单独连接的层进行3D人体姿态估计。</p>
 <p>不同姿态关节的估计依赖于同一个全连通层，缺乏考虑不同姿态关节的独立性。另一方面，基于GCN的模型可以在卷积传播期间显式地保留2D和3D人体姿势的结构。然而，GCN的这一优势仍未得到充分探索。现有的基于GCN的方法还利用全连接层来估计不同的3D姿态关节，其不考虑GCN表示的结构特征。</p>
 <p><strong>文章要点：</strong><br><strong>GLA-GCN包含两个模块：全局表示和局部3D姿态估计</strong><br>在全局表示中，文章使用自适应的图卷积网络（GCN）来根据对应的2D序列重建中间3D人体姿态序列的全局表示。对于局部3D姿态关节点的估计，文章通过步长设计将经过重建的3D姿态序列优化后的全局表示进行时间上的缩减。接着，文章提出了一个独立的连接层，用于从缩减后的全局表示中局部估计3D人体姿态关节点。</p>
+<p><img src="/2024/05/29/GLA-GCN/GLA-GCN%E6%A1%86%E6%9E%B6.png"><br><strong>图1</strong><br>GLA-GCN架构。AGCN（Cin，Cout，S）表示具有输入通道、输出通道和步幅长度的特定值的AGCN块。F（C′，T′，N′）表示特征图的大小。单个连接层显示了使用单独的1D CNN层的四个姿势联合示例的预测过程。</p>
+<p><strong>自适应图卷积网络</strong>AGCN块基于GCN，具有自适应设计，提高了典型ST-GCN块的灵活性。<br>    为了实现基本ST-GCN块，首先定义相邻集合Bi以指示用于特定姿态联合的空间图形卷积滤波器B1，i。具体来说，对于顶点节点的图卷积滤波器，我们应用三个距离邻居子集：顶点本身，向心子集和离心子集。向心和离心子集的定义基于姿势帧的重心（即，所有姿势关节的平均坐标）。</p>
+<p>向心和离心子集分别表示离重心的平均距离更近和更远的节点。经验上，与2D卷积类似，将内核大小K设置为3，这将导致Bi中的3个子集。为了实现子集，映射ht，i → {0，.K − 1}用于用数字标签索引每个子集，其中向心和离心子集分别标记为1和2。具有到重心的平均距离的子集索引为0。</p>
+<p><img src="/2024/05/29/GLA-GCN/%E5%9B%BE%E5%8D%B7%E7%A7%AF%E8%BF%90%E7%AE%97.png"></p>
+<p>Vt,j → R2是得到关节节点Vt,j的属性特征的映射，Zt,j是等于子集的基数的归一化项。对于姿态帧，采样策略（例如，向心和离心子集）可以通过N×N邻接矩阵来实现。</p>
+<p><img src="/2024/05/29/GLA-GCN/%E5%9B%BE%E5%8D%B7%E7%A7%AF%E5%8F%98%E6%8D%A2.png"></p>
+<p>Ck执行与Bk类似的功能，其通过由嵌入函数计算的两个特征图的点积来实现（即，θ和θ）来计算姿势关节之间的相似性。Ck的计算可以表示为：</p>
+<p><img src="/2024/05/29/GLA-GCN/Ck%E8%A1%A8%E7%A4%BA.png"></p>
+<p>其中W θ和W ∅是两个嵌入函数的可学习参数，初始化为0.0。然后，AGCN块用1 × Γ经典2D卷积层（Γ是我们设置为9的时间内核大小）和定义的自适应图卷积fout（fout）来实现，这两个层后面都是批归一化层和ReLU层，以及它们之间的dropout层。同时，将剩余连接添加到AGCN块。</p>
+<p><strong>重建3D姿态序列</strong><br>使用引入的AGCN块来提取全局图表示中的时空结构信息，通过从相应的2D序列估计3D姿态序列来监督该信息。</p>
+<p>每个AGCN块具有三个关键参数：输入通道的数量Cin、输出通道的数量Cout和时间卷积的步幅S，而其他参数保持一致（例如，时间卷积核大小是3）。给定输入Cin-dim姿态表示F（Cin，Tin，N），AGCN块经由对姿态结构序列的卷积来导出输出Cout-dim姿态F（Cout，Tout，N），其中Tout取决于Nin和S。为了重建3D姿态序列，我们首先使用AGCN（2，96，1）将2D姿态序列F（2，T，N）转换为96 D姿态表示F（96，T，N）。根据相关工作的设置，将Human3.6M数据集的T设置为243，N设置为17。也就是说，输入的2D姿态序列F（2，243，17）被转换成96 D姿态序列F（96，243，17）。然后，堆叠AGCN（96，96，1）的迭代层，以构建96维姿态序列的深时空结构表示。最后一个AGCN块的输出被馈送到AGCN（96，3，1）中，以基于96 D联合表示来估计3D姿态序列并导出F（3，243，17）。然后，我们让pt，i ∈ R3是在时间t的第i个关节的3D位置，并且最小化所估计的3D姿态序列与地面实况3D姿态序列之间的差：</p>
+<p><img src="/2024/05/29/GLA-GCN/%E6%9C%80%E5%B0%8F%E5%8C%96%E4%BC%B0%E8%AE%A1%E7%9A%84%E5%A7%BF%E6%80%81%E5%BA%8F%E5%88%97%E4%B8%8E%E5%AE%9E%E5%86%B5%E7%9A%84%E5%B7%AE.png"></p>
+<p><strong>跨越式学习框架</strong><br>使用跨步卷积来减少长时间序列并在时间t附近聚合时间信息以进行姿态估计。图1中的灰色模块（跨越式学习）说明了跨越式AGCN模块的设计。每个跨AGCN模块有两个连续的AGCN块，它们被剩余连接包围。在每个跨步AGCN模块的第二个AGCN块处执行跨步卷积，以逐渐缩小时间维度上的特征大小。</p>
+<p>第一跨步AGCN模块的输入是3D姿态序列重建中的中间输出，即，提取的F（96，243，17）。在通过第一个跨步AGAN模块传播之后，96D姿态序列将收缩为F（96，81，17）。然后，重复执行子序列AGCN层，直到特征尺寸缩小到96 × 1 × 17。以这种方式，姿态序列中的时间邻居的模式将被聚合用于后续的局部3D姿态联合估计，以估计中心时间步的3D姿态。</p>
+<p><strong>局部3D姿态联合估计</strong><br>基于上述跨越的AGCN模块，表示为F（96，243，17）的输入2D姿态序列可以被变换为特征图F（96，1，17）。下一步是基于特征图估计关节节点的3D位置。</p>
+<p><strong>单独连接层</strong></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
