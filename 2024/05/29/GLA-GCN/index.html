@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://example.com/tags/index.html">
+<meta property="og:title" content="categories">
+<meta property="og:url" content="http://example.com/categories/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
+<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -663,7 +663,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2024-06-02 00:30:15'>2024-05-29 21:38</time>
+            发布时间 : <time class="date" title='最后更新: 2024-06-03 00:21:52'>2024-05-29 21:38</time>
         
     </div>
     <div class="article-meta">
@@ -721,7 +721,18 @@
 <p><strong>跨越式学习框架</strong><br>使用跨步卷积来减少长时间序列并在时间t附近聚合时间信息以进行姿态估计。图1中的灰色模块（跨越式学习）说明了跨越式AGCN模块的设计。每个跨AGCN模块有两个连续的AGCN块，它们被剩余连接包围。在每个跨步AGCN模块的第二个AGCN块处执行跨步卷积，以逐渐缩小时间维度上的特征大小。</p>
 <p>第一跨步AGCN模块的输入是3D姿态序列重建中的中间输出，即，提取的F（96，243，17）。在通过第一个跨步AGAN模块传播之后，96D姿态序列将收缩为F（96，81，17）。然后，重复执行子序列AGCN层，直到特征尺寸缩小到96 × 1 × 17。以这种方式，姿态序列中的时间邻居的模式将被聚合用于后续的局部3D姿态联合估计，以估计中心时间步的3D姿态。</p>
 <p><strong>局部3D姿态联合估计</strong><br>基于上述跨越的AGCN模块，表示为F（96，243，17）的输入2D姿态序列可以被变换为特征图F（96，1，17）。下一步是基于特征图估计关节节点的3D位置。</p>
-<p><strong>单独连接层</strong></p>
+<p><strong>单独连接层</strong><br>现有的基于TCN和GCN的方法通常会将导出的特征图平坦化，并使用由所有关节节点组成的全局骨架表示来估计每个关节，忽略关节与特征图中相应向量之间的匹配信息。至关重要的是要在相应的关节节点的空间信息范围内推断其3D位置。本文首先提出了一个单独的连接层来估计每个关节的3D位置基于相应的关节节点特征F（96，1，1），而不是所有关节节点F（96，1，17）的池表示。在数学上，单个连接层可以表示为：</p>
+<p><img src="/2024/05/29/GLA-GCN/%E9%9D%9E%E5%85%B1%E4%BA%AB%E5%8D%95%E4%B8%AA%E8%BF%9E%E6%8E%A5%E5%B1%82.png"></p>
+<p>由于权重Wi和偏置bi在关节之间不共享，我们将上述单独连接层命名为非共享单独连接层。最重要的是，文章发现以非共享方式单独连接的层可能会忽略2D到3D姿势提升中关节之间的共享规则，导致过拟合关节特定分布。因此，进一步设计了共享的单独连接层：</p>
+<p><img src="/2024/05/29/GLA-GCN/%E5%85%B1%E4%BA%AB%E8%BF%9E%E6%8E%A5%E5%B1%82.png"></p>
+<p>共享个体连通层的权参数表示为Ws和Ws ∈ R96×3，其偏置参数表示为bs和bs ∈ R1×3.然后，每个关节的3D姿态估计可以被公式化为来自共享和非共享的单独连接层的估计结果的加权平均：</p>
+<p><img src="/2024/05/29/GLA-GCN/%E5%85%B1%E4%BA%AB%E4%B8%8E%E9%9D%9E%E5%85%B1%E4%BA%AB%E4%BC%B0%E8%AE%A1%E7%BB%93%E6%9E%9C%E5%8A%A0%E6%9D%83%E5%B9%B3%E5%9D%87.png"></p>
+<p>这里，λ是对共享的个体连接层和非共享的个体连接层进行加权的参数。当λ为0.0时，模型仅使用共享的单个连接层进行估计，当λ为1.0时，模型仅使用非共享的单个连接层进行预测。特别是，为了方便起见，本文中通过1D CNN层实现了连接层。最后，希望通过Llocal最小化估计的联合姿态&lt;$pi和地面真实联合姿态pi之间的差异：</p>
+<p><img src="/2024/05/29/GLA-GCN/%E6%9C%80%E5%B0%8F%E4%BC%B0%E8%AE%A1%E8%81%94%E5%90%88%E5%A7%BF%E6%80%81%E4%B8%8E%E7%9C%9F%E5%AE%9E%E5%A7%BF%E6%80%81%E5%B7%AE.png"></p>
+<p>在训练过程中，分两个阶段优化Lglobal和Llocal。在第一阶段，最小化Lglobal + Llocal，使用全局监督信号引导来优化模型。在第二阶段，最小化Llocal以提高3D姿态估计性能。</p>
+<p><strong>数据集</strong><br>我们的实验基于三个公共数据集：Human3.6M ，HumanEva-I 和MPI-INF-3DHP 。对于Human3.6M，受试者S1、S5、S6、S7和S8的数据用于训练，而S9和S11的数据用于测试，这与现有工作的训练和验证设置一致。在HumanEva-I方面，受试者S1、S2和S3的动作“行走”和“慢跑”数据用于训练和测试。对于MPIINF-3DHP，遵循最新技术水平的实验设置进行公平比较。</p>
+<p><strong>评估标准</strong><br>平均每关节位置误差（MPJPE）和姿势对齐MPJPE（P-MPJPE）分别被称为方案#1和方案#2，用于两个数据集。MPJPE的计算基于与根关节对准的预测的3D姿态关节之间的平均欧几里得距离（即，骨盆）和地面实况3D姿态关节通过运动捕捉收集，与MPJPE相比，P-MPJPE也基于平均欧几里得距离，但具有额外的刚性比对后处理步骤（例如，缩放、旋转和平移）到预测的3D姿态。P-MPJPE导致与地面真实值的差异较小，并且遵循。</p>
+<p>遵循中使用的Human3.6M 和HumanEva-I 的2D姿态检测，分别由CPN 和MRCNN 检测。CPN的2D姿态检测具有17个关节，而MRCNN的2D姿态检测具有15个关节。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
