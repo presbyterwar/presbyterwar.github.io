@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="presbyter的博客">
 <meta property="og:type" content="website">
-<meta property="og:title" content="tags">
-<meta property="og:url" content="http://example.com/tags/index.html">
+<meta property="og:title" content="categories">
+<meta property="og:url" content="http://example.com/categories/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="presbyter的博客">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:41:58.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:41:58.446Z">
+<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
+<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary">
 
@@ -690,7 +690,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2024-09-02 11:31:15'>2024-09-02 11:31</time>
+            发布时间 : <time class="date" title='最后更新: 2024-09-02 15:59:01'>2024-09-02 11:31</time>
         
     </div>
     <div class="article-meta">
@@ -728,7 +728,12 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <p><strong>提出问题：</strong><br>在仅给定部分观察的情况下，生成器需要推断未观察到的身体部分以生成目标姿态和视角的图像。此外，不同姿态和视角下的图像在外观上可能差异很大，要求生成器能够捕捉图像分布中的大量变化。</p>
+<p><strong>提出方法：</strong><br>论文提出了一种新的生成对抗网络（GAN），通过渐进姿态注意力迁移（Progressive Pose Attention Transfer, PAT）框架来实现姿态迁移。该方法的核心在于通过一系列姿态注意力迁移块（Pose-Attentional Transfer Blocks, PATBs）逐步更新图像和姿态的表示，从而实现姿态的渐进迁移。</p>
+<p>具体来说，PATBs包括图像路径和姿态路径两条路径，它们通过注意力机制相互作用，逐步更新图像和姿态的代码。每个PATB通过注意力掩码指导图像代码中哪些区域需要被保留或抑制，从而实现姿态的局部迁移。通过这种方式，每个PATB只需在姿态流形上进行局部迁移，避免了全局流形复杂结构带来的挑战。</p>
+<p><strong>文章要点</strong><br><img src="/2024/09/02/PATNet/%E5%A7%BF%E6%80%81%E8%BF%81%E7%A7%BB%E7%BD%91%E7%BB%9C%E7%BB%93%E6%9E%84.pngpng"><br><strong>图1</strong></p>
+<p>3.1 生成器<br>生成器的输入包括条件图像Pc、条件姿态Sc和目标姿态St。生成器的目标是将条件图像Pc的姿态从Sc迁移到St，生成逼真的目标姿态图像Pg。<br>•    编码器：条件图像和姿态通过各自的编码器进行下采样，编码成初始的图像代码FP0和姿态代码FS0。<br>•    姿态注意力迁移网络（PATN）：PATN由多个PATBs级联而成，逐步更新图像代码和姿态代码。每个PATB通过注意力掩码和残差连接更新图像代码，并通过与更新后的图像代码的拼接来更新姿态代码。<br>•    解码器：最终生成的图像代码FPT通过解码器生成目标姿态图像Pg。<br>3.2 判别器<br>设计了两个判别器，即外观判别器DA和形状判别器DS，分别评估生成图像与条件图像在外观上的相似性和与目标姿态的对齐程度。两个判别器的输出相乘得到最终的判别分数。</p>
+
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
     </div>
