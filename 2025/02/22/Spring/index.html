@@ -553,7 +553,7 @@
     </div>
     <div class="article-meta">
         
-            发布时间 : <time class="date" title='最后更新: 2025-02-22 16:42:18'>2025-02-22 16:42</time>
+            发布时间 : <time class="date" title='最后更新: 2025-02-22 21:53:56'>2025-02-22 16:42</time>
         
     </div>
     <div class="article-meta">
@@ -575,7 +575,7 @@
     
     <div class="toc-ref">
     
-        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring"><span class="toc-text">Spring</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-1"><span class="toc-text">Spring</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#bean%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-text">bean线程安全问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOP"><span class="toc-text">AOP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E5%A4%B1%E6%95%88"><span class="toc-text">事务失效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring%E7%9A%84%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8"><span class="toc-text">Spring的循环引用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-MVC"><span class="toc-text">Spring MVC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Springboot"><span class="toc-text">Springboot</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86"><span class="toc-text">自动配置原理</span></a></li></ol></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -591,7 +591,65 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h1><p><img src="/2025/02/22/Spring/Spring%E9%87%8D%E7%82%B9.png" title="Spring重点"></p>
+<h2 id="Spring-1"><a href="#Spring-1" class="headerlink" title="Spring"></a>Spring</h2><h3 id="bean线程安全问题"><a href="#bean线程安全问题" class="headerlink" title="bean线程安全问题"></a>bean线程安全问题</h3><p>bean不是线程安全的<br><br>Spring框架中有一个@Scope注解，默认的值就是singleton，单例的。<br><br>因为一般在spring的bean中的都是无状态的对象，没有线程安全问题，如果在bean中定义了可修改的成员变量，是要考虑线程安全问题的，可以使用多例或者加锁来解决。</p>
+<h3 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h3><p>AOP称为面向切面编程，用于将那些与业务无关，但却对多个对象产生影响的公共行为和逻辑，抽取并封装为一个可重用的模块，这个模块被命名为“切面”(Aspect)，减少系统中的重复代码，降低了模块间的耦合度，同时提高了系统的可维护性。</p>
+<p>常见的AOP使用场景：</p>
+<p>1、记录操作日志<br><br>2、缓存处理<br><br>3、Spring中内置的事务处理</p>
+<p><img src="/2025/02/22/Spring/%E8%AE%B0%E5%BD%95%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97.png" title="记录操作日志"></p>
+<p><img src="/2025/02/22/Spring/%E8%AE%B0%E5%BD%95%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E6%80%9D%E8%B7%AF.png" title="记录操作日志思路"></p>
+<p>Spring支持编程式事务管理和声明式事务管理两种方式。<br><br>1、编程式事务控制：需使用TransactionTemplate来进行实现，对业务代码有侵入性，项目中很少使用<br><br>2、声明式事务管理：声明式事务管理建立在AOP之上的。其本质是通过AOP功能，对方法前后进行拦截，将事务处理的功能编织到拦截的方法中，也就是在目标方法开始之前加入一个事务，在执行完目标方法之后根据执行情况提交或回滚事务。</p>
+<hr>
+
+<h3 id="事务失效"><a href="#事务失效" class="headerlink" title="事务失效"></a>事务失效</h3><p>情况一：异常捕获处理</p>
+<p><img src="/2025/02/22/Spring/%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E5%A4%84%E7%90%86.png" title="异常捕获处理"></p>
+<p><strong>原因</strong>：事务通知只有捉到了目标抛出的异常，才能进行后续的回滚处理，如果目标自己处理掉异常，事务通知无法知悉。<br></p>
+<p><strong>解决</strong>：在catch块添加throw new RuntimeException(e)抛出</p>
+<hr>
+情况二：抛出检查异常
+
+<p><img src="/2025/02/22/Spring/%E6%8A%9B%E5%87%BA%E6%A3%80%E6%9F%A5%E5%BC%82%E5%B8%B8.png" title="抛出检查异常"></p>
+<p><strong>原因</strong>：Spring默认只会回滚非检查异常</p>
+<p><strong>解决</strong>：配置rollbackFor属性  @Transaction(rollbackFor&#x3D;Exception.class)</p>
+<hr>
+
+<p>情况三：非public方法导致的事务失效</p>
+<p><img src="/2025/02/22/Spring/%E9%9D%9Epublic%E6%96%B9%E6%B3%95%E5%AF%BC%E8%87%B4%E7%9A%84%E5%A4%B1%E6%95%88.png" title="非public方法导致的失效"></p>
+<p><strong>原因</strong>：Spring为方法创建代理、添加事务通知、前提条件都是该方法是public的<br></p>
+<p><strong>解决</strong>：改为public方法</p>
+<hr>
+### bean的生命周期
+
+<p><font color="#F00">BeanDefinition</font><br><br>Spring容器在进行实例化时，会将xml配置的<bean>的信息封装成一个BeanDefinition对象，Spring根据BeanDefinition来创建Bean对象，里面有很多的属性用来描述Bean。</bean></p>
+<p><img src="/2025/02/22/Spring/BeanDefinition.png" title="创建Bean"></p>
+<p><font color="#F00">Bean的生命周期</font><br><img src="/2025/02/22/Spring/bean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.png" title="Bean的生命周期"></p>
+<p>1、通过BeanDefinition获取bean的定义信息<br><br>2、调用构造函数实例化bean<br>3、bean的依赖注入<br>4、处理Aware接口(BeanNameAware、BeanFactoryAware、ApplicationContextAware)<br>5、Bean的后置处理器BeanPostProcessor-前置<br>6、初始化方法(InitializingBean、init-method)<br>7、Bean的后置处理器BeanPostProcessor-后置<br>8、销毁bean</p>
+<hr>
+
+<h3 id="Spring的循环引用"><a href="#Spring的循环引用" class="headerlink" title="Spring的循环引用"></a>Spring的循环引用</h3><p><strong>循环依赖</strong>：循环依赖其实就是循环引用，也就是两个或两个以上的bean互相持有对方，最终形成闭环。比如A依赖于B，B依赖于A。<br><br>循环依赖在Spring中是允许存在，Spring框架依据三级缓存已经解决了大部分的循环依赖<br></p>
+<p><img src="/2025/02/22/Spring/Spring%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8.png" title="Spring循环引用"></p>
+<p><img src="/2025/02/22/Spring/Spring%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96.png" title="Spring循环依赖"></p>
+<p><font color="#F00">三级缓存解决循环依赖</font><br><br>Spring解决循环依赖是通过三级缓存，对应的三级缓存如下所示：<br></p>
+<p><img src="/2025/02/22/Spring/%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98.png" title="三级缓存"></p>
+<p>单独的一级缓存不能解决循环依赖问题</p>
+<p><img src="/2025/02/22/Spring/%E4%B8%80%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98.png" title="一二级缓存"></p>
+<p>如果是代理对象，一二级缓存就不能解决循环依赖问题</p>
+<p><img src="/2025/02/22/Spring/%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96.png" title="三级缓存解决循环依赖"></p>
+<p>构造方法出现了循环依赖</p>
+<p><img src="/2025/02/22/Spring/%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E5%87%BA%E7%8E%B0%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96.png" title="构造方法出现循环依赖"></p>
+<p><img src="/2025/02/22/Spring/%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95.png" title="构造方法循环依赖解决方法"></p>
+<h2 id="Spring-MVC"><a href="#Spring-MVC" class="headerlink" title="Spring MVC"></a>Spring MVC</h2><p>Springmvc的执行流程是这个框架最核心的内容<br><br>1、视图阶段(老旧JSP等)<br><br>2、前后端分离阶段(接口开发，异步)<br></p>
+<p><font color="#F00">视图阶段(JSP)</font></p>
+<p><img src="/2025/02/22/Spring/JSP.png" title="JSP"></p>
+<p><img src="/2025/02/22/Spring/JSP%E7%AE%80%E5%8C%96.png" title="JSP简化"></p>
+<p>SpringMVC的执行流程<br></p>
+<p>视图版本JSP执行流程</p>
+<p><img src="/2025/02/22/Spring/%E8%A7%86%E5%9B%BE%E7%89%88%E6%9C%ACJSP%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.png" title="视图版本执行流程"></p>
+<p>前后端开发，接口开发</p>
+<p><img src="/2025/02/22/Spring/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91.png" title="接口开发执行流程"></p>
+<h2 id="Springboot"><a href="#Springboot" class="headerlink" title="Springboot"></a>Springboot</h2><h3 id="自动配置原理"><a href="#自动配置原理" class="headerlink" title="自动配置原理"></a>自动配置原理</h3><p><img src="/2025/02/22/Spring/%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86.png" title="自动配置原理"></p>
+<p><img src="/2025/02/22/Spring/Spingboot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86.png" title="Springboot自动配置原理"></p>
+
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
     </div>
