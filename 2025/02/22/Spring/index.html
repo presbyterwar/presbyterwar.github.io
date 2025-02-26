@@ -1,777 +1,726 @@
+
+
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
 <head>
-  <meta charset="utf-8">
-  <title>Spring | Hexo</title>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="presbyter">
   <meta name="keywords" content="">
-  <meta name="description" content="Spring | Hexo">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="presbyter的博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://example.com/categories/index.html">
+  
+    <meta name="description" content="Spring Springbean线程安全问题bean不是线程安全的Spring框架中有一个@Scope注解，默认的值就是singleton，单例的。因为一般在spring的bean中的都是无状态的对象，没有线程安全问题，如果在bean中定义了可修改的成员变量，是要考虑线程安全问题的，可以使用多例或者加锁来解决。 AOPAOP称为面向切面编程，用于将那些与业务无关，但却对多个对象产生影响的公共行为">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring">
+<meta property="og:url" content="http://example.com/2025/02/22/Spring/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="presbyter的博客">
+<meta property="og:description" content="Spring Springbean线程安全问题bean不是线程安全的Spring框架中有一个@Scope注解，默认的值就是singleton，单例的。因为一般在spring的bean中的都是无状态的对象，没有线程安全问题，如果在bean中定义了可修改的成员变量，是要考虑线程安全问题的，可以使用多例或者加锁来解决。 AOPAOP称为面向切面编程，用于将那些与业务无关，但却对多个对象产生影响的公共行为">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/Spring%E9%87%8D%E7%82%B9.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E8%AE%B0%E5%BD%95%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E8%AE%B0%E5%BD%95%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E6%80%9D%E8%B7%AF.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E5%A4%84%E7%90%86.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E6%8A%9B%E5%87%BA%E6%A3%80%E6%9F%A5%E5%BC%82%E5%B8%B8.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E9%9D%9Epublic%E6%96%B9%E6%B3%95%E5%AF%BC%E8%87%B4%E7%9A%84%E5%A4%B1%E6%95%88.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/BeanDefinition.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/bean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/Spring%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/Spring%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E4%B8%80%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E5%87%BA%E7%8E%B0%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/JSP.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/JSP%E7%AE%80%E5%8C%96.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E8%A7%86%E5%9B%BE%E7%89%88%E6%9C%ACJSP%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/Spingboot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/Spring%E5%B8%B8%E8%A7%81%E6%B3%A8%E8%A7%A3.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/SpringMVC%E5%B8%B8%E8%A7%81%E6%B3%A8%E8%A7%A3.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/Springboot%E5%B8%B8%E8%A7%81%E6%B3%A8%E8%A7%A3.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/Mybatis%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E7%94%A8%E6%88%B7%E8%AE%A2%E5%8D%95.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E5%BB%B6%E8%BF%9F%E5%8A%A0%E8%BD%BD%E7%9A%84%E5%8E%9F%E7%90%86.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/Mybatis%E4%B8%80%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9.png">
+<meta property="og:image" content="http://example.com/2025/02/22/Spring/%E4%B8%80%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98%E6%80%BB%E7%BB%93.png">
+<meta property="article:published_time" content="2025-02-22T08:42:18.000Z">
+<meta property="article:modified_time" content="2025-02-23T07:40:20.123Z">
 <meta property="article:author" content="presbyter">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2025/02/22/Spring/Spring%E9%87%8D%E7%82%B9.png">
+  
+  
+  
+  <title>Spring - Hexo</title>
 
-
-<link rel="icon" href="/img/avatar.jpg">
-
-<link href="/css/style.css?v=1.1.0" rel="stylesheet">
-
-<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
-
-<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
-
-<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-<script src="/js/titleTip.js?v=1.1.0" ></script>
-
-<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
-<script>
-    hljs.initHighlightingOnLoad();
-</script>
-
-<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
 
-<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-<script src="/js/iconfont.js?v=1.1.0" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
 
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
 <meta name="generator" content="Hexo 5.4.1"></head>
-<div style="display: none">
-  <input class="theme_disqus_on" value="false">
-  <input class="theme_preload_comment" value="">
-  <input class="theme_blog_path" value="">
-  <input id="theme_shortcut" value="true" />
-  <input id="theme_highlight_on" value="true" />
-  <input id="theme_code_copy" value="true" />
-</div>
-
 
 
 <body>
-<aside class="nav">
-    <div class="nav-left">
-        <a href="/"
-   class="avatar_target">
-    <img class="avatar"
-         src="/img/avatar.jpg"/>
-</a>
-<div class="author">
-    <span>presbyter</span>
-</div>
+  
 
-<div class="icon">
+  <header>
     
-        
-            <a title="rss"
-               href="/atom.xml"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-rss"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="github"
-               href="https://github.com/yelog"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-github"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="facebook"
-               href="https://www.facebook.com/faker.tops"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-facebook"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-    
-        
-    
-        
-            <a title="instagram"
-               href="https://www.facebook.com/faker.tops"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-instagram"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="reddit"
-               href="https://www.reddit.com/user/yelog/"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-reddit"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="weibo"
-               href="http://weibo.com/u/2307534817"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-weibo"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="jianshu"
-               href="https://www.jianshu.com/u/ff56736de7cf"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-jianshu"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="zhihu"
-               href="https://www.zhihu.com/people/jaytp/activities"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-zhihu"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-    
-        
-            <a title="oschina"
-               href="https://my.oschina.net/yelog"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-oschina"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-    
-        
-            <a title="email"
-               href="mailto:jaytp@qq.com"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-email"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="qq"
-               href="http://wpa.qq.com/msgrd?v=3&uin=872336115&site=qq&menu=yes"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-qq"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="kugou"
-               href="https://www.kugou.com/"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-kugou"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="neteasemusic"
-               href="https://music.163.com/#/user/home?id=88151013"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-neteasemusic"></use>
-                    </svg>
-                
-            </a>
-        
-    
-</div>
 
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
 
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
 
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
 
+  
 
-<ul>
-    <li>
-        <div class="all active" data-rel="全部文章">全部文章
-            
-                <small>(13)</small>
-            
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Spring"></span>
+          
         </div>
-    </li>
+
+        
+          
+  <div class="mt-3">
     
-</ul>
-<div class="left-bottom">
-    <div class="menus">
-        
-            
-            
-            
-    </div>
-    <div>
-        
-            <a class="about  hasFriend  site_url"
-               
-               href="/about">关于</a>
-        
-        <a style="width: 50%"
-                
-                                           class="friends">友链</a>
-        
-    </div>
-</div>
-<input type="hidden" id="yelog_site_posts_number" value="13">
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-22 16:42" pubdate>
+          2025年2月22日 下午
+        </time>
+      </span>
+    
+  </div>
 
-<div style="display: none">
-    <span id="busuanzi_value_site_uv"></span>
-    <span id="busuanzi_value_site_pv"></span>
-</div>
-
-    </div>
-    <div class="nav-right">
-        <div class="friends-area">
-    <div class="friends-title">
-        友情链接
-        <i class="iconfont icon-left"></i>
-    </div>
-    <div class="friends-content">
-        <ul>
-            
-            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
-            
-        </ul>
-    </div>
-</div>
-        <div class="title-list">
-    <div class="right-top">
-        <div id="default-panel">
-            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
-            <div class="right-title">全部文章</div>
-            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
-        </div>
-        <div id="search-panel">
-            <i class="iconfont icon-left" data-title="返回"></i>
-            <input id="local-search-input" autocomplete="off"/>
-            <label class="border-line" for="input"></label>
-            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
-            <i class="iconfont icon-tag" data-title="标签"></i>
-        </div>
-        <div id="outline-panel" style="display: none">
-            <div class="right-title">大纲</div>
-            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
-        </div>
-    </div>
-
-    <div class="tags-list">
-    <input id="tag-search" />
-    <div class="tag-wrapper">
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
         
-    </div>
-
-</div>
+          1.4k 字
+        
+      </span>
+    
 
     
-    <nav id="title-list-nav">
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
         
         
-        <a  class="全部文章 "
-           href="/2025/02/23/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="微服务">微服务</span>
-            <span class="post-date" title="2025-02-23 15:50:41">2025/02/23</span>
-        </a>
         
+          12 分钟
         
-        <a  class="全部文章 "
-           href="/2025/02/22/Spring/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="Spring">Spring</span>
-            <span class="post-date" title="2025-02-22 16:42:18">2025/02/22</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2025/02/07/redis/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="redis">redis</span>
-            <span class="post-date" title="2025-02-07 11:58:02">2025/02/07</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2024/10/21/Dual-task-pose-transfer/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="Dual-task pose transfer">Dual-task pose transfer</span>
-            <span class="post-date" title="2024-10-21 10:38:08">2024/10/21</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2024/06/13/KTPFormer/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="KTPFormer">KTPFormer</span>
-            <span class="post-date" title="2024-06-13 21:49:59">2024/06/13</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2024/05/29/GLA-GCN/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="GLA_GCN">GLA_GCN</span>
-            <span class="post-date" title="2024-05-29 21:38:11">2024/05/29</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2024/05/23/PoseFormerV2/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="PoseFormerV2">PoseFormerV2</span>
-            <span class="post-date" title="2024-05-23 20:20:16">2024/05/23</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2024/05/14/MixSynthFormer/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="MixSynthFormer">MixSynthFormer</span>
-            <span class="post-date" title="2024-05-14 22:00:39">2024/05/14</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2024/05/11/Back-to-Optimization/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="Back to Optimization">Back to Optimization</span>
-            <span class="post-date" title="2024-05-11 16:02:43">2024/05/11</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2024/05/07/motionAGFormer/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="motionAGFormer">motionAGFormer</span>
-            <span class="post-date" title="2024-05-07 21:29:07">2024/05/07</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2022/03/31/sqi/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="sqi">sqi</span>
-            <span class="post-date" title="2022-03-31 19:15:02">2022/03/31</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2022/03/25/sqli/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="sqli">sqli</span>
-            <span class="post-date" title="2022-03-25 22:33:12">2022/03/25</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2022/03/17/mysql-note/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="mysqlnote">mysqlnote</span>
-            <span class="post-date" title="2022-03-17 23:31:16">2022/03/17</span>
-        </a>
-        
-        <div id="no-item-tips">
+      </span>
+    
 
-        </div>
-    </nav>
-    <div id="outline-list">
-    </div>
-</div>
+    
+    
+  </div>
 
-    </div>
-    <div class="hide-list">
-        <div class="semicircle" data-title="切换全屏 快捷键 s">
-            <div class="brackets first"><</div>
-            <div class="brackets">&gt;</div>
-        </div>
-    </div>
-</aside>
-<div id="post">
-    <div class="pjax">
-        <article id="post-Spring" class="article article-type-post" itemscope itemprop="blogPost">
-    
-        <h1 class="article-title">Spring</h1>
-    
-    <div class="article-meta">
+
         
-        
-        
-        
-    </div>
-    <div class="article-meta">
-        
-            发布时间 : <time class="date" title='最后更新: 2025-02-23 15:40:20'>2025-02-22 16:42</time>
-        
-    </div>
-    <div class="article-meta">
-        
-        
-        <span id="busuanzi_container_page_pv">
-            阅读 :<span id="busuanzi_value_page_pv">
-                <span class="count-comment">
-                    <span class="spinner">
-                      <div class="cube1"></div>
-                      <div class="cube2"></div>
-                    </span>
-                </span>
-            </span>
-        </span>
-        
-        
-    </div>
-    
-    <div class="toc-ref">
-    
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring"><span class="toc-text">Spring</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-1"><span class="toc-text">Spring</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#bean%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-text">bean线程安全问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOP"><span class="toc-text">AOP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E5%A4%B1%E6%95%88"><span class="toc-text">事务失效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring%E7%9A%84%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8"><span class="toc-text">Spring的循环引用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-MVC"><span class="toc-text">Spring MVC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Springboot"><span class="toc-text">Springboot</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86"><span class="toc-text">自动配置原理</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Mybatis"><span class="toc-text">Mybatis</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Mybatis%E5%BB%B6%E8%BF%9F%E5%8A%A0%E8%BD%BD"><span class="toc-text">Mybatis延迟加载</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Mybatis%E4%B8%80%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98"><span class="toc-text">Mybatis一二级缓存</span></a></li></ol></li></ol>
-    
-<style>
-    .left-col .switch-btn,
-    .left-col .switch-area {
-        display: none;
-    }
-    .toc-level-3 i,
-    .toc-level-3 ol {
-        display: none !important;
-    }
-</style>
-</div>
-    
-    <div class="article-entry" itemprop="articleBody">
+      </div>
+
       
-        <h1 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h1><p><img src="/2025/02/22/Spring/Spring%E9%87%8D%E7%82%B9.png" title="Spring重点"></p>
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Spring</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h1><p><img src="/2025/02/22/Spring/Spring%E9%87%8D%E7%82%B9.png" srcset="/img/loading.gif" lazyload title="Spring重点"></p>
 <h2 id="Spring-1"><a href="#Spring-1" class="headerlink" title="Spring"></a>Spring</h2><h3 id="bean线程安全问题"><a href="#bean线程安全问题" class="headerlink" title="bean线程安全问题"></a>bean线程安全问题</h3><p>bean不是线程安全的<br><br>Spring框架中有一个@Scope注解，默认的值就是singleton，单例的。<br><br>因为一般在spring的bean中的都是无状态的对象，没有线程安全问题，如果在bean中定义了可修改的成员变量，是要考虑线程安全问题的，可以使用多例或者加锁来解决。</p>
 <h3 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h3><p>AOP称为面向切面编程，用于将那些与业务无关，但却对多个对象产生影响的公共行为和逻辑，抽取并封装为一个可重用的模块，这个模块被命名为“切面”(Aspect)，减少系统中的重复代码，降低了模块间的耦合度，同时提高了系统的可维护性。</p>
 <p>常见的AOP使用场景：</p>
 <p>1、记录操作日志<br><br>2、缓存处理<br><br>3、Spring中内置的事务处理</p>
-<p><img src="/2025/02/22/Spring/%E8%AE%B0%E5%BD%95%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97.png" title="记录操作日志"></p>
-<p><img src="/2025/02/22/Spring/%E8%AE%B0%E5%BD%95%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E6%80%9D%E8%B7%AF.png" title="记录操作日志思路"></p>
+<p><img src="/2025/02/22/Spring/%E8%AE%B0%E5%BD%95%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97.png" srcset="/img/loading.gif" lazyload title="记录操作日志"></p>
+<p><img src="/2025/02/22/Spring/%E8%AE%B0%E5%BD%95%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97%E6%80%9D%E8%B7%AF.png" srcset="/img/loading.gif" lazyload title="记录操作日志思路"></p>
 <p>Spring支持编程式事务管理和声明式事务管理两种方式。<br><br>1、编程式事务控制：需使用TransactionTemplate来进行实现，对业务代码有侵入性，项目中很少使用<br><br>2、声明式事务管理：声明式事务管理建立在AOP之上的。其本质是通过AOP功能，对方法前后进行拦截，将事务处理的功能编织到拦截的方法中，也就是在目标方法开始之前加入一个事务，在执行完目标方法之后根据执行情况提交或回滚事务。</p>
 <hr>
 
 <h3 id="事务失效"><a href="#事务失效" class="headerlink" title="事务失效"></a>事务失效</h3><p>情况一：异常捕获处理</p>
-<p><img src="/2025/02/22/Spring/%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E5%A4%84%E7%90%86.png" title="异常捕获处理"></p>
+<p><img src="/2025/02/22/Spring/%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7%E5%A4%84%E7%90%86.png" srcset="/img/loading.gif" lazyload title="异常捕获处理"></p>
 <p><strong>原因</strong>：事务通知只有捉到了目标抛出的异常，才能进行后续的回滚处理，如果目标自己处理掉异常，事务通知无法知悉。<br></p>
 <p><strong>解决</strong>：在catch块添加throw new RuntimeException(e)抛出</p>
 <hr>
 情况二：抛出检查异常
 
-<p><img src="/2025/02/22/Spring/%E6%8A%9B%E5%87%BA%E6%A3%80%E6%9F%A5%E5%BC%82%E5%B8%B8.png" title="抛出检查异常"></p>
+<p><img src="/2025/02/22/Spring/%E6%8A%9B%E5%87%BA%E6%A3%80%E6%9F%A5%E5%BC%82%E5%B8%B8.png" srcset="/img/loading.gif" lazyload title="抛出检查异常"></p>
 <p><strong>原因</strong>：Spring默认只会回滚非检查异常</p>
 <p><strong>解决</strong>：配置rollbackFor属性  @Transaction(rollbackFor&#x3D;Exception.class)</p>
 <hr>
 
 <p>情况三：非public方法导致的事务失效</p>
-<p><img src="/2025/02/22/Spring/%E9%9D%9Epublic%E6%96%B9%E6%B3%95%E5%AF%BC%E8%87%B4%E7%9A%84%E5%A4%B1%E6%95%88.png" title="非public方法导致的失效"></p>
+<p><img src="/2025/02/22/Spring/%E9%9D%9Epublic%E6%96%B9%E6%B3%95%E5%AF%BC%E8%87%B4%E7%9A%84%E5%A4%B1%E6%95%88.png" srcset="/img/loading.gif" lazyload title="非public方法导致的失效"></p>
 <p><strong>原因</strong>：Spring为方法创建代理、添加事务通知、前提条件都是该方法是public的<br></p>
 <p><strong>解决</strong>：改为public方法</p>
 <hr>
 ### bean的生命周期
 
 <p><font color="#F00">BeanDefinition</font><br><br>Spring容器在进行实例化时，会将xml配置的<bean>的信息封装成一个BeanDefinition对象，Spring根据BeanDefinition来创建Bean对象，里面有很多的属性用来描述Bean。</bean></p>
-<p><img src="/2025/02/22/Spring/BeanDefinition.png" title="创建Bean"></p>
-<p><font color="#F00">Bean的生命周期</font><br><img src="/2025/02/22/Spring/bean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.png" title="Bean的生命周期"></p>
+<p><img src="/2025/02/22/Spring/BeanDefinition.png" srcset="/img/loading.gif" lazyload title="创建Bean"></p>
+<p><font color="#F00">Bean的生命周期</font><br><img src="/2025/02/22/Spring/bean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.png" srcset="/img/loading.gif" lazyload title="Bean的生命周期"></p>
 <p>1、通过BeanDefinition获取bean的定义信息<br><br>2、调用构造函数实例化bean<br>3、bean的依赖注入<br>4、处理Aware接口(BeanNameAware、BeanFactoryAware、ApplicationContextAware)<br>5、Bean的后置处理器BeanPostProcessor-前置<br>6、初始化方法(InitializingBean、init-method)<br>7、Bean的后置处理器BeanPostProcessor-后置<br>8、销毁bean</p>
 <hr>
 
 <h3 id="Spring的循环引用"><a href="#Spring的循环引用" class="headerlink" title="Spring的循环引用"></a>Spring的循环引用</h3><p><strong>循环依赖</strong>：循环依赖其实就是循环引用，也就是两个或两个以上的bean互相持有对方，最终形成闭环。比如A依赖于B，B依赖于A。<br><br>循环依赖在Spring中是允许存在，Spring框架依据三级缓存已经解决了大部分的循环依赖<br></p>
-<p><img src="/2025/02/22/Spring/Spring%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8.png" title="Spring循环引用"></p>
-<p><img src="/2025/02/22/Spring/Spring%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96.png" title="Spring循环依赖"></p>
+<p><img src="/2025/02/22/Spring/Spring%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8.png" srcset="/img/loading.gif" lazyload title="Spring循环引用"></p>
+<p><img src="/2025/02/22/Spring/Spring%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96.png" srcset="/img/loading.gif" lazyload title="Spring循环依赖"></p>
 <p><font color="#F00">三级缓存解决循环依赖</font><br><br>Spring解决循环依赖是通过三级缓存，对应的三级缓存如下所示：<br></p>
-<p><img src="/2025/02/22/Spring/%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98.png" title="三级缓存"></p>
+<p><img src="/2025/02/22/Spring/%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98.png" srcset="/img/loading.gif" lazyload title="三级缓存"></p>
 <p>单独的一级缓存不能解决循环依赖问题</p>
-<p><img src="/2025/02/22/Spring/%E4%B8%80%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98.png" title="一二级缓存"></p>
+<p><img src="/2025/02/22/Spring/%E4%B8%80%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98.png" srcset="/img/loading.gif" lazyload title="一二级缓存"></p>
 <p>如果是代理对象，一二级缓存就不能解决循环依赖问题</p>
-<p><img src="/2025/02/22/Spring/%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96.png" title="三级缓存解决循环依赖"></p>
+<p><img src="/2025/02/22/Spring/%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98%E8%A7%A3%E5%86%B3%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96.png" srcset="/img/loading.gif" lazyload title="三级缓存解决循环依赖"></p>
 <p>构造方法出现了循环依赖</p>
-<p><img src="/2025/02/22/Spring/%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E5%87%BA%E7%8E%B0%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96.png" title="构造方法出现循环依赖"></p>
-<p><img src="/2025/02/22/Spring/%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95.png" title="构造方法循环依赖解决方法"></p>
+<p><img src="/2025/02/22/Spring/%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E5%87%BA%E7%8E%B0%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96.png" srcset="/img/loading.gif" lazyload title="构造方法出现循环依赖"></p>
+<p><img src="/2025/02/22/Spring/%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E5%BE%AA%E7%8E%AF%E4%BE%9D%E8%B5%96%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95.png" srcset="/img/loading.gif" lazyload title="构造方法循环依赖解决方法"></p>
 <h2 id="Spring-MVC"><a href="#Spring-MVC" class="headerlink" title="Spring MVC"></a>Spring MVC</h2><p>Springmvc的执行流程是这个框架最核心的内容<br><br>1、视图阶段(老旧JSP等)<br><br>2、前后端分离阶段(接口开发，异步)<br></p>
 <p><font color="#F00">视图阶段(JSP)</font></p>
-<p><img src="/2025/02/22/Spring/JSP.png" title="JSP"></p>
-<p><img src="/2025/02/22/Spring/JSP%E7%AE%80%E5%8C%96.png" title="JSP简化"></p>
+<p><img src="/2025/02/22/Spring/JSP.png" srcset="/img/loading.gif" lazyload title="JSP"></p>
+<p><img src="/2025/02/22/Spring/JSP%E7%AE%80%E5%8C%96.png" srcset="/img/loading.gif" lazyload title="JSP简化"></p>
 <p>SpringMVC的执行流程<br></p>
 <p>视图版本JSP执行流程</p>
-<p><img src="/2025/02/22/Spring/%E8%A7%86%E5%9B%BE%E7%89%88%E6%9C%ACJSP%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.png" title="视图版本执行流程"></p>
+<p><img src="/2025/02/22/Spring/%E8%A7%86%E5%9B%BE%E7%89%88%E6%9C%ACJSP%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.png" srcset="/img/loading.gif" lazyload title="视图版本执行流程"></p>
 <p>前后端开发，接口开发</p>
-<p><img src="/2025/02/22/Spring/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91.png" title="接口开发执行流程"></p>
-<h2 id="Springboot"><a href="#Springboot" class="headerlink" title="Springboot"></a>Springboot</h2><h3 id="自动配置原理"><a href="#自动配置原理" class="headerlink" title="自动配置原理"></a>自动配置原理</h3><p><img src="/2025/02/22/Spring/%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86.png" title="自动配置原理"></p>
-<p><img src="/2025/02/22/Spring/Spingboot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86.png" title="Springboot自动配置原理"></p>
+<p><img src="/2025/02/22/Spring/%E6%8E%A5%E5%8F%A3%E5%BC%80%E5%8F%91.png" srcset="/img/loading.gif" lazyload title="接口开发执行流程"></p>
+<h2 id="Springboot"><a href="#Springboot" class="headerlink" title="Springboot"></a>Springboot</h2><h3 id="自动配置原理"><a href="#自动配置原理" class="headerlink" title="自动配置原理"></a>自动配置原理</h3><p><img src="/2025/02/22/Spring/%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86.png" srcset="/img/loading.gif" lazyload title="自动配置原理"></p>
+<p><img src="/2025/02/22/Spring/Spingboot%E8%87%AA%E5%8A%A8%E9%85%8D%E7%BD%AE%E5%8E%9F%E7%90%86.png" srcset="/img/loading.gif" lazyload title="Springboot自动配置原理"></p>
 <hr>
 
-<p><img src="/2025/02/22/Spring/Spring%E5%B8%B8%E8%A7%81%E6%B3%A8%E8%A7%A3.png" title="Spring常见注解"></p>
-<p><img src="/2025/02/22/Spring/SpringMVC%E5%B8%B8%E8%A7%81%E6%B3%A8%E8%A7%A3.png" title="SpringMVC常见注解"></p>
-<p><img src="/2025/02/22/Spring/Springboot%E5%B8%B8%E8%A7%81%E6%B3%A8%E8%A7%A3.png" title="Springboot常见注解"></p>
-<h1 id="Mybatis"><a href="#Mybatis" class="headerlink" title="Mybatis"></a>Mybatis</h1><p><img src="/2025/02/22/Spring/Mybatis%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.png" title="Mybatis执行流程"></p>
+<p><img src="/2025/02/22/Spring/Spring%E5%B8%B8%E8%A7%81%E6%B3%A8%E8%A7%A3.png" srcset="/img/loading.gif" lazyload title="Spring常见注解"></p>
+<p><img src="/2025/02/22/Spring/SpringMVC%E5%B8%B8%E8%A7%81%E6%B3%A8%E8%A7%A3.png" srcset="/img/loading.gif" lazyload title="SpringMVC常见注解"></p>
+<p><img src="/2025/02/22/Spring/Springboot%E5%B8%B8%E8%A7%81%E6%B3%A8%E8%A7%A3.png" srcset="/img/loading.gif" lazyload title="Springboot常见注解"></p>
+<h1 id="Mybatis"><a href="#Mybatis" class="headerlink" title="Mybatis"></a>Mybatis</h1><p><img src="/2025/02/22/Spring/Mybatis%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B.png" srcset="/img/loading.gif" lazyload title="Mybatis执行流程"></p>
 <p>1、读取Mybatis配置文件：mybatis-config.xml加载运行环境和映射文件<br>2、构造会话工厂SqlSessionFactory<br>3、会话工厂创建SqlSession对象(包含了执行SQL语句的所有方法)<br>4、操作数据库的接口，Executor执行器，同时负责查询缓存的维护<br>5、Executor接口的执行方法中有一个MappedStatement类型的参数，封装了映射信息<br>6、输入参数映射<br>7、输出结果映射</p>
-<h2 id="Mybatis延迟加载"><a href="#Mybatis延迟加载" class="headerlink" title="Mybatis延迟加载"></a>Mybatis延迟加载</h2><p><img src="/2025/02/22/Spring/%E7%94%A8%E6%88%B7%E8%AE%A2%E5%8D%95.png" title="用户订单"></p>
+<h2 id="Mybatis延迟加载"><a href="#Mybatis延迟加载" class="headerlink" title="Mybatis延迟加载"></a>Mybatis延迟加载</h2><p><img src="/2025/02/22/Spring/%E7%94%A8%E6%88%B7%E8%AE%A2%E5%8D%95.png" srcset="/img/loading.gif" lazyload title="用户订单"></p>
 <p>查询用户的时候，把用户所属的订单数据也查询出来，这个是立即加载<br><br>查询用户的时候，暂时不查询订单数据，当需要订单的时候，再查询订单，这个就是延迟加载</p>
-<p><img src="/2025/02/22/Spring/%E5%BB%B6%E8%BF%9F%E5%8A%A0%E8%BD%BD%E7%9A%84%E5%8E%9F%E7%90%86.png" title="延迟加载的原理"></p>
+<p><img src="/2025/02/22/Spring/%E5%BB%B6%E8%BF%9F%E5%8A%A0%E8%BD%BD%E7%9A%84%E5%8E%9F%E7%90%86.png" srcset="/img/loading.gif" lazyload title="延迟加载的原理"></p>
 <p>延迟加载的意思是：在需要用到数据时才进行加载，不需要用到数据时就不加载数据。<br><br>Mybatis支持一对一关联对象和一对多关联集合对象的延迟加载。<br><br>在Mybatis配置文件中，可以配置是否启用延迟加载lazyLoadingEnabled&#x3D;true|false，默认是关闭的</p>
 <p>延迟加载的底层原理：<br><br>1、使用<font color="#F00">CGLIB</font>创建目标对象的代理对象<br><br>2、当调用目标方法时，进入拦截器invoke方法，发现目标方法是null值，执行sql查询<br><br>3、获取数据以后，调用set方法设置属性值，再继续查询目标方法，就有值了<br></p>
-<h2 id="Mybatis一二级缓存"><a href="#Mybatis一二级缓存" class="headerlink" title="Mybatis一二级缓存"></a>Mybatis一二级缓存</h2><p><img src="/2025/02/22/Spring/Mybatis%E4%B8%80%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98.png" title="Mybatis一二级缓存"></p>
+<h2 id="Mybatis一二级缓存"><a href="#Mybatis一二级缓存" class="headerlink" title="Mybatis一二级缓存"></a>Mybatis一二级缓存</h2><p><img src="/2025/02/22/Spring/Mybatis%E4%B8%80%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98.png" srcset="/img/loading.gif" lazyload title="Mybatis一二级缓存"></p>
 <p><strong>一级缓存</strong>：基于PerpetualCache的HashMap本地缓存，其存储作用域为Session，当Session进行flush或close之后，该Session中的所有Cache就将清空，默认打开一级缓存。</p>
 <p><strong>二级缓存</strong>：二级缓存是基于namespace和mapper的作用域起作用的，不是依赖于SQL session，默认也是采用PerpetualCache，HashMap存储</p>
-<p><img src="/2025/02/22/Spring/%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9.png" title="Mybatis二级缓存注意事项"></p>
-<p><img src="/2025/02/22/Spring/%E4%B8%80%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98%E6%80%BB%E7%BB%93.png" title="Mybatis一二级缓存总结"></p>
+<p><img src="/2025/02/22/Spring/%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9.png" srcset="/img/loading.gif" lazyload title="Mybatis二级缓存注意事项"></p>
+<p><img src="/2025/02/22/Spring/%E4%B8%80%E4%BA%8C%E7%BA%A7%E7%BC%93%E5%AD%98%E6%80%BB%E7%BB%93.png" srcset="/img/loading.gif" lazyload title="Mybatis一二级缓存总结"></p>
 <p>Mybatis二级缓存什么时候会清理缓存中的数据？<br></p>
 <p>当某一个作用域(一级缓存Session&#x2F;二级缓存Namespaces)的进行了<font color="#F00">新增、修改、删除</font>操作后，默认该作用域下所有select中的缓存将被clear。</p>
 
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Spring</div>
+      <div>http://example.com/2025/02/22/Spring/</div>
+    </div>
+    <div class="license-meta">
       
-       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
-    </div>
-</article>
-
-
-<p>
-    <a  class="dashang" onclick="dashangToggle()">赏</a>
-</p>
-
-
-
-
-
-
-    
-
-
-
-
-    </div>
-    <div class="copyright">
-        <p class="footer-entry">
-    ©2016-2020 Yelog
-</p>
-<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
-
-    </div>
-    <div class="full-toc">
-        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
-<a class="" id="rocket" ></a>
-
-    </div>
-</div>
-
-<div class="hide_box" onclick="dashangToggle()"></div>
-<div class="shang_box">
-    <a class="shang_close"  onclick="dashangToggle()">×</a>
-    <div class="shang_tit">
-        <p>喜欢就点赞,疼爱就打赏</p>
-    </div>
-    <div class="shang_payimg">
-        <div class="pay_img">
-            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
-            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>presbyter</div>
         </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
     </div>
-    <div class="shang_payselect">
-        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/02/23/%E5%BE%AE%E6%9C%8D%E5%8A%A1/" title="微服务">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">微服务</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/07/redis/" title="redis">
+                        <span class="hidden-mobile">redis</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
     </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
 </div>
 
 
-</body>
-<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
 
-<script src="/js/script.js?v=1.1.0" ></script>
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
 <script>
-    var img_resize = 'default';
-    function initArticle() {
-        /*渲染对应的表格样式*/
-        
-            $("#post .pjax table").addClass("green_title");
-        
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
 
-        /*渲染打赏样式*/
-        
-        $("input[name=pay]").on("click", function () {
-            if($("input[name=pay]:checked").val()=="weixin"){
-                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
-            } else {
-                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
-            }
-        })
-        
-
-        /*高亮代码块行号*/
-        
-
-        /*访问数量*/
-        
-        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
-        
-
-        /*代码高亮，行号对齐*/
-        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
-
-        
-        
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
     }
 
-    /*打赏页面隐藏与展示*/
-    
-    function dashangToggle() {
-        $(".shang_box").fadeToggle();
-        $(".hide_box").fadeToggle();
-    }
-    
-
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
 </script>
 
-<!--加入行号的高亮代码块样式-->
 
-<!--自定义样式设置-->
-<style>
-    
-    
-    .nav {
-        width: 542px;
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
     }
-    .nav.fullscreen {
-        margin-left: -542px;
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
     }
-    .nav-left {
-        width: 120px;
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
     }
-    
-    
-    @media screen and (max-width: 1468px) {
-        .nav {
-            width: 492px;
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
         }
-        .nav.fullscreen {
-            margin-left: -492px;
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
         }
-        .nav-left {
-            width: 100px;
-        }
-    }
-    
-    
-    @media screen and (max-width: 1024px) {
-        .nav {
-            width: 492px;
-            margin-left: -492px
-        }
-        .nav.fullscreen {
-            margin-left: 0;
-        }
-    }
-    
-    @media screen and (max-width: 426px) {
-        .nav {
-            width: 100%;
-        }
-        .nav-left {
-            width: 100%;
-        }
-    }
-    
-    
-    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
-        color: #383636;
-    }
-    
-    
-    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
-        color: #5e5e5f;
-    }
-    
-    
-    .nav-right nav a.hover, #local-search-result a.hover{
-        background-color: #e2e0e0;
-    }
-    
-    
-
-    /*列表样式*/
-    
-
-    /* 背景图样式 */
-    
-    
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
 
 
-    /*引用块样式*/
-    
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
 
-    /*文章列表背景图*/
-    
 
-    
-</style>
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
 
 
 
 
 
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
 
 
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
 </html>

@@ -1,519 +1,303 @@
+
+
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
 <head>
-  <meta charset="utf-8">
-  <title>MixSynthFormer | Hexo</title>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="presbyter">
   <meta name="keywords" content="">
-  <meta name="description" content="MixSynthFormer | Hexo">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="presbyter的博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="categories">
-<meta property="og:url" content="http://example.com/categories/index.html">
+  
+    <meta name="description" content="Human3.6m关键点编号‘hip’,  # 0‘lhip’,  # 1‘lknee’,  # 2‘lankle’,  #‘rhip’,  # 4‘rknee’,  # 5‘rankle’,  # 6‘Spine (H36M)’,  # 7‘neck’,  # 8‘Head (H36M)’,  # 9‘headtop’,  # 10‘lshoulder’,  # 11‘lelbow’,  # 1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MixSynthFormer">
+<meta property="og:url" content="http://example.com/2024/05/14/MixSynthFormer/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="presbyter的博客">
+<meta property="og:description" content="Human3.6m关键点编号‘hip’,  # 0‘lhip’,  # 1‘lknee’,  # 2‘lankle’,  #‘rhip’,  # 4‘rknee’,  # 5‘rankle’,  # 6‘Spine (H36M)’,  # 7‘neck’,  # 8‘Head (H36M)’,  # 9‘headtop’,  # 10‘lshoulder’,  # 11‘lelbow’,  # 1">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-03-22T11:42:07.000Z">
-<meta property="article:modified_time" content="2022-03-22T11:42:07.809Z">
+<meta property="og:image" content="http://example.com/2024/05/14/MixSynthFormer/Pipelines.png">
+<meta property="og:image" content="http://example.com/2024/05/14/MixSynthFormer/MixSynthFormer.png">
+<meta property="og:image" content="http://example.com/2024/05/14/MixSynthFormer/%E5%A7%BF%E6%80%81%E5%B5%8C%E5%85%A5.png">
+<meta property="og:image" content="http://example.com/2024/05/14/MixSynthFormer/MixSynthBlock.png">
+<meta property="og:image" content="http://example.com/2024/05/14/MixSynthFormer/%E6%9C%80%E7%BB%88%E5%A7%BF%E6%80%81%E5%BA%8F%E5%88%97.png">
+<meta property="og:image" content="http://example.com/2024/05/14/MixSynthFormer/%E5%90%88%E6%88%90%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%93%8D%E4%BD%9C.png">
+<meta property="og:image" content="http://example.com/2024/05/14/MixSynthFormer/%E6%9D%83%E9%87%8D%E8%AE%A1%E7%AE%97.png">
+<meta property="og:image" content="http://example.com/2024/05/14/MixSynthFormer/%E6%9D%83%E9%87%8D%E8%BE%93%E5%87%BA.png">
+<meta property="og:image" content="http://example.com/2024/05/14/MixSynthFormer/MixSynth%E6%B3%A8%E6%84%8F%E5%8A%9B%E8%BE%93%E5%87%BA.png">
+<meta property="og:image" content="http://example.com/2024/05/14/MixSynthFormer/SynthAttenOp.png">
+<meta property="og:image" content="http://example.com/2024/05/14/MixSynthFormer/%E5%90%88%E6%88%90%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9F%A9%E9%98%B5.png">
+<meta property="og:image" content="http://example.com/2024/05/14/MixSynthFormer/%E7%BB%86%E7%B2%92%E5%BA%A6%E7%9F%A9%E9%98%B5.png">
+<meta property="og:image" content="http://example.com/2024/05/14/MixSynthFormer/%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9F%A9%E9%98%B5%E5%92%8C%E5%80%BC%E7%9A%84%E4%B9%98%E7%A7%AF.png">
+<meta property="og:image" content="http://example.com/2024/05/14/MixSynthFormer/%E7%B2%97%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9F%A9%E9%98%B5.png">
+<meta property="article:published_time" content="2024-05-14T14:00:39.000Z">
+<meta property="article:modified_time" content="2024-05-20T13:47:59.300Z">
 <meta property="article:author" content="presbyter">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2024/05/14/MixSynthFormer/Pipelines.png">
+  
+  
+  
+  <title>MixSynthFormer - Hexo</title>
 
-
-<link rel="icon" href="/img/avatar.jpg">
-
-<link href="/css/style.css?v=1.1.0" rel="stylesheet">
-
-<link href="/css/hl_theme/atom-light.css?v=1.1.0" rel="stylesheet">
-
-<link href="//cdn.jsdelivr.net/npm/animate.css@4.1.0/animate.min.css" rel="stylesheet">
-
-<script src="//cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
-<script src="/js/titleTip.js?v=1.1.0" ></script>
-
-<script src="//cdn.jsdelivr.net/npm/highlightjs@9.16.2/highlight.pack.min.js"></script>
-<script>
-    hljs.initHighlightingOnLoad();
-</script>
-
-<script src="//cdn.jsdelivr.net/npm/nprogress@0.2.0/nprogress.min.js"></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
 
-<script src="//cdn.jsdelivr.net/npm/jquery.cookie@1.4.1/jquery.cookie.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
 
-<script src="/js/iconfont.js?v=1.1.0" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
 
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
 <meta name="generator" content="Hexo 5.4.1"></head>
-<div style="display: none">
-  <input class="theme_disqus_on" value="false">
-  <input class="theme_preload_comment" value="">
-  <input class="theme_blog_path" value="">
-  <input id="theme_shortcut" value="true" />
-  <input id="theme_highlight_on" value="true" />
-  <input id="theme_code_copy" value="true" />
-</div>
-
 
 
 <body>
-<aside class="nav">
-    <div class="nav-left">
-        <a href="/"
-   class="avatar_target">
-    <img class="avatar"
-         src="/img/avatar.jpg"/>
-</a>
-<div class="author">
-    <span>presbyter</span>
-</div>
+  
 
-<div class="icon">
+  <header>
     
-        
-            <a title="rss"
-               href="/atom.xml"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-rss"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="github"
-               href="https://github.com/yelog"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-github"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="facebook"
-               href="https://www.facebook.com/faker.tops"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-facebook"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-    
-        
-    
-        
-            <a title="instagram"
-               href="https://www.facebook.com/faker.tops"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-instagram"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="reddit"
-               href="https://www.reddit.com/user/yelog/"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-reddit"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="weibo"
-               href="http://weibo.com/u/2307534817"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-weibo"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="jianshu"
-               href="https://www.jianshu.com/u/ff56736de7cf"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-jianshu"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="zhihu"
-               href="https://www.zhihu.com/people/jaytp/activities"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-zhihu"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-    
-        
-            <a title="oschina"
-               href="https://my.oschina.net/yelog"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-oschina"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-    
-        
-            <a title="email"
-               href="mailto:jaytp@qq.com"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-email"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="qq"
-               href="http://wpa.qq.com/msgrd?v=3&uin=872336115&site=qq&menu=yes"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-qq"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="kugou"
-               href="https://www.kugou.com/"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-kugou"></use>
-                    </svg>
-                
-            </a>
-        
-    
-        
-            <a title="neteasemusic"
-               href="https://music.163.com/#/user/home?id=88151013"
-               target="_blank">
-                
-                    <svg class="iconfont-svg" aria-hidden="true">
-                        <use xlink:href="#icon-neteasemusic"></use>
-                    </svg>
-                
-            </a>
-        
-    
-</div>
 
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
 
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
 
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
 
+  
 
-<ul>
-    <li>
-        <div class="all active" data-rel="全部文章">全部文章
-            
-                <small>(13)</small>
-            
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="MixSynthFormer"></span>
+          
         </div>
-    </li>
+
+        
+          
+  <div class="mt-3">
     
-</ul>
-<div class="left-bottom">
-    <div class="menus">
-        
-            
-            
-            
-    </div>
-    <div>
-        
-            <a class="about  hasFriend  site_url"
-               
-               href="/about">关于</a>
-        
-        <a style="width: 50%"
-                
-                                           class="friends">友链</a>
-        
-    </div>
-</div>
-<input type="hidden" id="yelog_site_posts_number" value="13">
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-05-14 22:00" pubdate>
+          2024年5月14日 晚上
+        </time>
+      </span>
+    
+  </div>
 
-<div style="display: none">
-    <span id="busuanzi_value_site_uv"></span>
-    <span id="busuanzi_value_site_pv"></span>
-</div>
-
-    </div>
-    <div class="nav-right">
-        <div class="friends-area">
-    <div class="friends-title">
-        友情链接
-        <i class="iconfont icon-left"></i>
-    </div>
-    <div class="friends-content">
-        <ul>
-            
-            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
-            
-        </ul>
-    </div>
-</div>
-        <div class="title-list">
-    <div class="right-top">
-        <div id="default-panel">
-            <i class="iconfont icon-search" data-title="搜索 快捷键 i"></i>
-            <div class="right-title">全部文章</div>
-            <i class="iconfont icon-file-tree" data-title="切换到大纲视图 快捷键 w"></i>
-        </div>
-        <div id="search-panel">
-            <i class="iconfont icon-left" data-title="返回"></i>
-            <input id="local-search-input" autocomplete="off"/>
-            <label class="border-line" for="input"></label>
-            <i class="iconfont icon-case-sensitive" data-title="大小写敏感"></i>
-            <i class="iconfont icon-tag" data-title="标签"></i>
-        </div>
-        <div id="outline-panel" style="display: none">
-            <div class="right-title">大纲</div>
-            <i class="iconfont icon-list" data-title="切换到文章列表"></i>
-        </div>
-    </div>
-
-    <div class="tags-list">
-    <input id="tag-search" />
-    <div class="tag-wrapper">
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
         
-    </div>
-
-</div>
+          4.1k 字
+        
+      </span>
+    
 
     
-    <nav id="title-list-nav">
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
         
         
-        <a  class="全部文章 "
-           href="/2025/02/23/%E5%BE%AE%E6%9C%8D%E5%8A%A1/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="微服务">微服务</span>
-            <span class="post-date" title="2025-02-23 15:50:41">2025/02/23</span>
-        </a>
         
+          35 分钟
         
-        <a  class="全部文章 "
-           href="/2025/02/22/Spring/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="Spring">Spring</span>
-            <span class="post-date" title="2025-02-22 16:42:18">2025/02/22</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2025/02/07/redis/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="redis">redis</span>
-            <span class="post-date" title="2025-02-07 11:58:02">2025/02/07</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2024/10/21/Dual-task-pose-transfer/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="Dual-task pose transfer">Dual-task pose transfer</span>
-            <span class="post-date" title="2024-10-21 10:38:08">2024/10/21</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2024/06/13/KTPFormer/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="KTPFormer">KTPFormer</span>
-            <span class="post-date" title="2024-06-13 21:49:59">2024/06/13</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2024/05/29/GLA-GCN/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="GLA_GCN">GLA_GCN</span>
-            <span class="post-date" title="2024-05-29 21:38:11">2024/05/29</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2024/05/23/PoseFormerV2/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="PoseFormerV2">PoseFormerV2</span>
-            <span class="post-date" title="2024-05-23 20:20:16">2024/05/23</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2024/05/14/MixSynthFormer/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="MixSynthFormer">MixSynthFormer</span>
-            <span class="post-date" title="2024-05-14 22:00:39">2024/05/14</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2024/05/11/Back-to-Optimization/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="Back to Optimization">Back to Optimization</span>
-            <span class="post-date" title="2024-05-11 16:02:43">2024/05/11</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2024/05/07/motionAGFormer/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="motionAGFormer">motionAGFormer</span>
-            <span class="post-date" title="2024-05-07 21:29:07">2024/05/07</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2022/03/31/sqi/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="sqi">sqi</span>
-            <span class="post-date" title="2022-03-31 19:15:02">2022/03/31</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2022/03/25/sqli/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="sqli">sqli</span>
-            <span class="post-date" title="2022-03-25 22:33:12">2022/03/25</span>
-        </a>
-        
-        
-        <a  class="全部文章 "
-           href="/2022/03/17/mysql-note/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="mysqlnote">mysqlnote</span>
-            <span class="post-date" title="2022-03-17 23:31:16">2022/03/17</span>
-        </a>
-        
-        <div id="no-item-tips">
+      </span>
+    
 
-        </div>
-    </nav>
-    <div id="outline-list">
-    </div>
-</div>
+    
+    
+  </div>
 
-    </div>
-    <div class="hide-list">
-        <div class="semicircle" data-title="切换全屏 快捷键 s">
-            <div class="brackets first"><</div>
-            <div class="brackets">&gt;</div>
-        </div>
-    </div>
-</aside>
-<div id="post">
-    <div class="pjax">
-        <article id="post-MixSynthFormer" class="article article-type-post" itemscope itemprop="blogPost">
-    
-        <h1 class="article-title">MixSynthFormer</h1>
-    
-    <div class="article-meta">
+
         
-        
-        
-        
-    </div>
-    <div class="article-meta">
-        
-            发布时间 : <time class="date" title='最后更新: 2024-05-20 21:47:59'>2024-05-14 22:00</time>
-        
-    </div>
-    <div class="article-meta">
-        
-        
-        <span id="busuanzi_container_page_pv">
-            阅读 :<span id="busuanzi_value_page_pv">
-                <span class="count-comment">
-                    <span class="spinner">
-                      <div class="cube1"></div>
-                      <div class="cube2"></div>
-                    </span>
-                </span>
-            </span>
-        </span>
-        
-        
-    </div>
-    
-    <div class="toc-ref">
-    
-        
-    
-<style>
-    .left-col .switch-btn,
-    .left-col .switch-area {
-        display: none;
-    }
-    .toc-level-3 i,
-    .toc-level-3 ol {
-        display: none !important;
-    }
-</style>
-</div>
-    
-    <div class="article-entry" itemprop="articleBody">
+      </div>
+
       
-        <p><strong>Human3.6m关键点编号</strong><br>‘hip’,  # 0<br>‘lhip’,  # 1<br>‘lknee’,  # 2<br>‘lankle’,  #<br>‘rhip’,  # 4<br>‘rknee’,  # 5<br>‘rankle’,  # 6<br>‘Spine (H36M)’,  # 7<br>‘neck’,  # 8<br>‘Head (H36M)’,  # 9<br>‘headtop’,  # 10<br>‘lshoulder’,  # 11<br>‘lelbow’,  # 12<br>‘lwrist’,  # 13<br>‘rshoulder’,  # 14<br>‘relbow’,  # 15<br>‘rwrist’,  # 16</p>
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">MixSynthFormer</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><strong>Human3.6m关键点编号</strong><br>‘hip’,  # 0<br>‘lhip’,  # 1<br>‘lknee’,  # 2<br>‘lankle’,  #<br>‘rhip’,  # 4<br>‘rknee’,  # 5<br>‘rankle’,  # 6<br>‘Spine (H36M)’,  # 7<br>‘neck’,  # 8<br>‘Head (H36M)’,  # 9<br>‘headtop’,  # 10<br>‘lshoulder’,  # 11<br>‘lelbow’,  # 12<br>‘lwrist’,  # 13<br>‘rshoulder’,  # 14<br>‘relbow’,  # 15<br>‘rwrist’,  # 16</p>
 <p><strong>提出问题：</strong><br>问题1：视频中的人体姿态估计在各个领域都有广泛的实际应用，其中许多需要在资源稀缺的设备上进行快速推理，因此需要开发高效和准确的算法。<br>问题2：<br>以前的工作已经证明了利用运动连续性进行姿态估计使用稀疏采样帧与transformerbased模型的可行性。然而，这些方法只考虑了时间关系，而忽略了空间注意力，和点积自注意力计算的变压器的复杂性是二次成正比的嵌入大小。</p>
 <p><strong>提出方法：</strong><br>为了解决这些限制，文章提出了MixSynthFormer，一个类似于Transformer的编码器模型，具有基于MLP的混合合成注意力。通过混合合成的空间和时间的注意力，模型结合了关节间和帧间的重要性，可以准确地估计在整个视频序列中的人体姿势从稀疏采样帧。</p>
 <p>类似于运动完成，剩余帧中的姿态可以从关键帧姿态重构，这可以显著降低资源密集型姿态估计器的成本。</p>
 <p>基于帧如何被馈送到模型中，姿势估计模型可以被分类为两种类型：逐帧估计器和基于关键帧的估计器。</p>
 <p>常见的姿态估计框架估计每帧中的姿态，并通过知识蒸馏或模型结构设计来优化效率。然而，由于逐帧估计，计算成本仍然很高。此外，这些方法是敏感的遮挡情况下，部分关节是不可见的相机视图中，由于复杂的姿势或与环境的相互作用，导致不连贯的姿态，无论纳入时间信息。</p>
 <p>相比之下，基于关键帧的姿态估计框架利用人体运动的连续性，可以产生更平滑的序列。只有关键帧用于重单帧估计，而其余帧中的姿势由轻量级模块恢复。</p>
-<p><strong>文章要点</strong><br><img src="/2024/05/14/MixSynthFormer/Pipelines.png"><br><strong>图1</strong></p>
+<p><strong>文章要点</strong><br><img src="/2024/05/14/MixSynthFormer/Pipelines.png" srcset="/img/loading.gif" lazyload><br><strong>图1</strong></p>
 <p>基于关键帧的姿态估计框架流水线。恢复过程类似于插值。<br>(a)是基于特征的管道，它根据输入特征选择30%到40%的帧并恢复整个序列。</p>
 <p>(b)是现有的基于采样的流水线，其使用采样器来选择帧并进行关键帧细化、全序列恢复和全序列细化。</p>
 <p>(c)是本文提出的简化的基于采样的流水线，不包括关键帧细化。</p>
@@ -524,7 +308,7 @@
 <p>文章设计了一个基于MLP的混合合成注意力矩阵生成模块MixSynth Attention，它从输入表示中生成空间和时间上的注意力矩阵。这种设计使得模型能够动态地融合通道和令牌特征，并有效地优化姿势。为了加快计算速度，我们在注意力矩阵生成中引入了一个缩减因子，这进一步节省了计算而不影响性能。</p>
 <p>根据关键帧的选择方式，基于关键帧的方法可以进一步分为两类：基于特征的和基于采样的。基于特征的方法选择依赖于中间特征表示的“好”关键帧，并在没有细化的情况下恢复整个序列。</p>
 <p>基于采样的方法使用统一、随机或自定义的采样策略选择关键帧。由于所选择的帧可能不是“好的”，这些框架添加了细化模块来清除噪声姿态。</p>
-<p><img src="/2024/05/14/MixSynthFormer/MixSynthFormer.png"><br><strong>图2</strong></p>
+<p><img src="/2024/05/14/MixSynthFormer/MixSynthFormer.png" srcset="/img/loading.gif" lazyload><br><strong>图2</strong></p>
 <p>MixSynthFormer从稀疏采样的关键帧中恢复和优化姿势。它由L个MixSynthEncoder块和两个线性投影层组成。MixSynthEncoder遵循标准的Transformer编码器结构，但用MixSynth Attention取代了多头自关注。MixSynth Attention通过SynthAttention操作合成空间和时间注意力（如图3所示）。两个分支的输出被合并并转发到线性层进行特征融合。（关键帧中检测到的姿势是彩色的，插值器恢复的姿势是灰色的。）</p>
 <p>人体姿态估计本质上是一个关键点检测的项目，其目标是对身体的关键点进行检测。在这个过程中，可能会遇到关键点在连续帧之间的位置不连续或存在误差的情况。此时，插值技术可以被用来平滑这些关键点的位置，或者预测缺失的关键点位置。</p>
 <p>具体来说，插值器可以根据已知的关键点位置，通过某种插值算法（如线性插值、多项式插值、样条插值等）来估计出未知或缺失的关键点位置。这可以帮助提高人体姿态估计的准确性和连续性。</p>
@@ -535,228 +319,377 @@
 <p>因此，细化步骤是必要的，以生成更精确的姿势序列，这可以被公式化为序列到序列的问题。Transformers在解决这些问题方面取得了显着的成功，因为它们能够捕捉令牌之间的全局相关性。除了用MixSynth Attention替换自注意模块之外，文章按照标准Transformer编码器的工作流程设计MixSynthFormer。</p>
 <p>以下是MixSynthFormer的操作：</p>
 <p>ˆX中的所有姿势都通过权重为W0∈Rp×C的线性层变换到姿势嵌入Z0∈RT×C，其中C是嵌入空间的维度。MixSynthEncoder的注意力层需要位置嵌入来指定输入标记的位置，而基于<strong>MLP</strong>的MixSynth注意在时间注意合成中对标记的顺序敏感，并且不需要额外的位置嵌入。</p>
-<p><img src="/2024/05/14/MixSynthFormer/%E5%A7%BF%E6%80%81%E5%B5%8C%E5%85%A5.png"></p>
+<p><img src="/2024/05/14/MixSynthFormer/%E5%A7%BF%E6%80%81%E5%B5%8C%E5%85%A5.png" srcset="/img/loading.gif" lazyload></p>
 <p>{MLP指的是多层感知器（Multilayer Perceptron），它是一种人工神经网络（Artificial Neural Network, ANN）的类型。MLP是一种前向反馈神经网络，由多个神经元层组成，每个层与下一层全连接。</p>
 <p>MLP至少包含三层：输入层、隐藏层（可以有多个）以及输出层。输入层负责接收原始数据，隐藏层负责对数据进行中间特征的提取，输出层负责输出最终的预测结果。在MLP中，每个神经元都与前一层的所有神经元相连，并具有权重和偏差。信息在网络中前向传播，通过乘以权重并加上偏差，然后通过激活函数进行非线性转换，从而在隐藏层和输出层之间传递。这种非线性转换使得MLP能够学习和表示复杂的非线性函数。}</p>
 <p>姿势嵌入然后被传递到MixSynthEncode的L块中。由堆叠的MixSynth注意模块和前馈网络(FFN)组成，FFN是一个具有Gelu激活的两层逐点全连接层。在每个块之后依次应用剩余连接和层归一化(LN)。</p>
-<p><img src="/2024/05/14/MixSynthFormer/MixSynthBlock.png"></p>
+<p><img src="/2024/05/14/MixSynthFormer/MixSynthBlock.png" srcset="/img/loading.gif" lazyload></p>
 <p>这里，L∈[1，L]是指L的第一块。Zl−1是前一个编码块的输出，ˆZl是中间表示，Zl是当前编码块的输出。Zl和ˆZl在Rt×C中具有相同的维度。</p>
 <p>在L个操作块之后，嵌入空间ZL中的特征通过另一个具有权重Wp ∈ RC × P的线性层被变换回姿势维度。残差连接的使用可以加快模型的收敛，并产生更稳定的结果。因此，最终恢复的姿态序列是来自MixSynthEncoder块的输出和初步恢复的噪声姿态的总和：</p>
-<p><img src="/2024/05/14/MixSynthFormer/%E6%9C%80%E7%BB%88%E5%A7%BF%E6%80%81%E5%BA%8F%E5%88%97.png"></p>
+<p><img src="/2024/05/14/MixSynthFormer/%E6%9C%80%E7%BB%88%E5%A7%BF%E6%80%81%E5%BA%8F%E5%88%97.png" srcset="/img/loading.gif" lazyload></p>
 <p><strong>MixSynth 注意力层</strong><br>为了学习全局和局部特征，它混合了空间和时间的合成注意力矩阵。这些矩阵中的权重反映了相对的关节间和帧间重要性。空间矩阵揭示了关节之间的相关性。当执行某些运动模式时，一起移动的关节高度相关。它有助于从相关关节中定位错误检测的关节，并进行准确检测。时间矩阵确定帧相对于序列中其他帧的影响，表示帧影响其余帧的程度。</p>
 <p>合成注意力操作（SynthAttenOP）对Z ∈ RT×C进行操作，并输出特征Yi ∈ RT×C，其可以是空间的或时间的，分别表示为Ys和Yt。</p>
-<p><img src="/2024/05/14/MixSynthFormer/%E5%90%88%E6%88%90%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%93%8D%E4%BD%9C.png"></p>
+<p><img src="/2024/05/14/MixSynthFormer/%E5%90%88%E6%88%90%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%93%8D%E4%BD%9C.png" srcset="/img/loading.gif" lazyload></p>
 <p>同时生成空间和时间关注的特征。应用分裂注意力来重新平衡两个分支的贡献。不同的议案可以有不同的重点。关节间关系对于某些运动更重要，而其他运动可能更多地受到帧间关系的影响。Ys和Yt的权重Ay ∈ R2×C计算为：</p>
-<p><img src="/2024/05/14/MixSynthFormer/%E6%9D%83%E9%87%8D%E8%AE%A1%E7%AE%97.png"></p>
+<p><img src="/2024/05/14/MixSynthFormer/%E6%9D%83%E9%87%8D%E8%AE%A1%E7%AE%97.png" srcset="/img/loading.gif" lazyload></p>
 <p>其中GAP表示全局平均池化函数，FFN包含两个具有ReLU激活的全连接层，Softmax用于归一化。加权和Yout ∈ RT×C是来自两个分支的级联表示与重新平衡权重Ay的逐元素乘积的总和：</p>
-<p><img src="/2024/05/14/MixSynthFormer/%E6%9D%83%E9%87%8D%E8%BE%93%E5%87%BA.png"></p>
+<p><img src="/2024/05/14/MixSynthFormer/%E6%9D%83%E9%87%8D%E8%BE%93%E5%87%BA.png" srcset="/img/loading.gif" lazyload></p>
 <p>MixSynth Attention块的输出通过用权重Wo ∈ RC×C线性变换Yout来获得：</p>
-<p><img src="/2024/05/14/MixSynthFormer/MixSynth%E6%B3%A8%E6%84%8F%E5%8A%9B%E8%BE%93%E5%87%BA.png"></p>
+<p><img src="/2024/05/14/MixSynthFormer/MixSynth%E6%B3%A8%E6%84%8F%E5%8A%9B%E8%BE%93%E5%87%BA.png" srcset="/img/loading.gif" lazyload></p>
 <p><strong>SynthAttention</strong></p>
-<p><img src="/2024/05/14/MixSynthFormer/SynthAttenOp.png"><br><strong>图3</strong></p>
+<p><img src="/2024/05/14/MixSynthFormer/SynthAttenOp.png" srcset="/img/loading.gif" lazyload><br><strong>图3</strong></p>
 <p>transformers中的自注意模块利用成对点积计算注意权重。查询密钥矩阵乘法的计算随着嵌入大小的增加而二次扩展。为了减轻嵌入大小对计算成本的影响，文章提出了合成注意力操作（SynthAttenOp），其计算量随着嵌入大小的增加而线性增长，作为标准注意力的替代品。SynthAttenOP使用线性层生成注意力矩阵。</p>
 <p>SynthAttenOp在空间上和时间上运行。在空间注意合成中，输入和输出是互换的。这里我们用Z ∈ RN×D来说明一般情况，其中N和D可以用C或T代替。粗合成注意力矩阵As ∈ RN×N由具有权重Wz ∈ RD×N的线性层生成：</p>
-<p><img src="/2024/05/14/MixSynthFormer/%E5%90%88%E6%88%90%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9F%A9%E9%98%B5.png"></p>
+<p><img src="/2024/05/14/MixSynthFormer/%E5%90%88%E6%88%90%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9F%A9%E9%98%B5.png" srcset="/img/loading.gif" lazyload></p>
 <p>由于不同的框架或关节有不同的贡献，我们应用挤压和激发层（SELayer）来调节影响。它可以放大关键通道，同时减轻不太重要的影响。细粒度的注意力矩阵Asynth ∈ RN×N由以下公式获得：</p>
-<p><img src="/2024/05/14/MixSynthFormer/%E7%BB%86%E7%B2%92%E5%BA%A6%E7%9F%A9%E9%98%B5.png"></p>
+<p><img src="/2024/05/14/MixSynthFormer/%E7%BB%86%E7%B2%92%E5%BA%A6%E7%9F%A9%E9%98%B5.png" srcset="/img/loading.gif" lazyload></p>
 <p>其中GAP表示全局平均池化，GAP（A）∈ RN，δ和σ是Sigmoid激活和ReLU函数。减少比（rse）是一个经验发现的超参数，限制了模型的复杂性。Ws ∈ RN rse ×N是降维的，We ∈ RN× N rse是扩展到原始维数的.SELayer的输出是在与计算的权重逐通道相乘之后的重新缩放的输入。Softmax继承自标准的Transformer，它对注意力权重进行了归一化。与标准的Transformer编码器一致，输出是注意力矩阵和值的乘积：</p>
-<p><img src="/2024/05/14/MixSynthFormer/%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9F%A9%E9%98%B5%E5%92%8C%E5%80%BC%E7%9A%84%E4%B9%98%E7%A7%AF.png"></p>
+<p><img src="/2024/05/14/MixSynthFormer/%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9F%A9%E9%98%B5%E5%92%8C%E5%80%BC%E7%9A%84%E4%B9%98%E7%A7%AF.png" srcset="/img/loading.gif" lazyload></p>
 <p>其中V &#x3D; Z ∈ RN × D且Y ∈ RN × D。上述方法适用于N相对较小的情况。当N较大时，由于等式n中的矩阵乘法，计算成本呈二次方增长。文章将缩减因子r应用于最后一个维度D，从而节省了等式中的计算。将降维表示为d &#x3D; N&#x2F;r。图3显示了简化注意力矩阵生成和特征融合的过程。通过下式获得约简的粗注意矩阵Ar s ∈ RN × d和约简值Vr ∈ Rd × D：</p>
-<p><img src="/2024/05/14/MixSynthFormer/%E7%B2%97%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9F%A9%E9%98%B5.png"></p>
+<p><img src="/2024/05/14/MixSynthFormer/%E7%B2%97%E6%B3%A8%E6%84%8F%E5%8A%9B%E7%9F%A9%E9%98%B5.png" srcset="/img/loading.gif" lazyload></p>
 <p>其中，用于减少注意力矩阵生成的权重和用于减少值的权重分别为Wrz ∈ RD×d和Wv ∈ Rd×N。</p>
 <p>SELayer，即Squeeze-and-Excitation（SE）模块，是深度学习中的一种注意力机制模块，最初是在2017年由Hu等人提出的SENet（Squeeze-and-Excitation Networks）中引入的。SE模块的主要目标是通过显式地建模卷积特征通道之间的相互依赖关系来提高模型的表示能力。</p>
 <p>SE模块主要由两部分组成：</p>
 <p>Squeeze操作：这部分通过对每个通道的全局空间特征进行压缩（如通过全局平均池化）来得到一个通道描述符，该描述符能够捕获全局上下文信息。<br>Excitation操作：这部分使用一个简单的门控机制（如一个全连接层或两个全连接层组成的瓶颈结构），基于Squeeze操作得到的通道描述符来生成每个通道的调制权重。这些权重随后被用于重新校准（或缩放）原始特征图。<br>通过SE模块，模型能够学习到哪些通道是重要的并应该被强调，哪些通道是不重要的并应该被抑制。这种机制有助于提高模型的性能，特别是在处理具有复杂空间依赖关系的任务时。</p>
 <p><strong>评估指标</strong><br>对于2D姿态估计，使用正确关键点百分比（PCK），并设置三个阈值（像素级下的边界框大小的20%、10%和5%）。对于3D任务，平均每关节位置误差（MPJPE）用于报告距离误差，平均加速度误差（Accel）用于反映估计的位姿序列的平滑性。</p>
 
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>MixSynthFormer</div>
+      <div>http://example.com/2024/05/14/MixSynthFormer/</div>
+    </div>
+    <div class="license-meta">
       
-       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 jaytp@qq.com </span>
-    </div>
-</article>
-
-
-<p>
-    <a  class="dashang" onclick="dashangToggle()">赏</a>
-</p>
-
-
-
-
-
-
-    
-
-
-
-
-    </div>
-    <div class="copyright">
-        <p class="footer-entry">
-    ©2016-2020 Yelog
-</p>
-<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
-
-    </div>
-    <div class="full-toc">
-        <button class="full" data-title="切换全屏 快捷键 s"><span class="min "></span></button>
-<a class="" id="rocket" ></a>
-
-    </div>
-</div>
-
-<div class="hide_box" onclick="dashangToggle()"></div>
-<div class="shang_box">
-    <a class="shang_close"  onclick="dashangToggle()">×</a>
-    <div class="shang_tit">
-        <p>喜欢就点赞,疼爱就打赏</p>
-    </div>
-    <div class="shang_payimg">
-        <div class="pay_img">
-            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
-            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>presbyter</div>
         </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年5月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
     </div>
-    <div class="shang_payselect">
-        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/05/23/PoseFormerV2/" title="PoseFormerV2">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">PoseFormerV2</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/05/11/Back-to-Optimization/" title="Back to Optimization">
+                        <span class="hidden-mobile">Back to Optimization</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
     </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
 </div>
 
 
-</body>
-<script src="/js/jquery.pjax.js?v=1.1.0" ></script>
 
-<script src="/js/script.js?v=1.1.0" ></script>
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
 <script>
-    var img_resize = 'default';
-    function initArticle() {
-        /*渲染对应的表格样式*/
-        
-            $("#post .pjax table").addClass("green_title");
-        
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
 
-        /*渲染打赏样式*/
-        
-        $("input[name=pay]").on("click", function () {
-            if($("input[name=pay]:checked").val()=="weixin"){
-                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
-            } else {
-                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
-            }
-        })
-        
-
-        /*高亮代码块行号*/
-        
-
-        /*访问数量*/
-        
-        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
-        
-
-        /*代码高亮，行号对齐*/
-        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
-
-        
-        
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
     }
 
-    /*打赏页面隐藏与展示*/
-    
-    function dashangToggle() {
-        $(".shang_box").fadeToggle();
-        $(".hide_box").fadeToggle();
-    }
-    
-
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
 </script>
 
-<!--加入行号的高亮代码块样式-->
 
-<!--自定义样式设置-->
-<style>
-    
-    
-    .nav {
-        width: 542px;
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
     }
-    .nav.fullscreen {
-        margin-left: -542px;
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
     }
-    .nav-left {
-        width: 120px;
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
     }
-    
-    
-    @media screen and (max-width: 1468px) {
-        .nav {
-            width: 492px;
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
         }
-        .nav.fullscreen {
-            margin-left: -492px;
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
         }
-        .nav-left {
-            width: 100px;
-        }
-    }
-    
-    
-    @media screen and (max-width: 1024px) {
-        .nav {
-            width: 492px;
-            margin-left: -492px
-        }
-        .nav.fullscreen {
-            margin-left: 0;
-        }
-    }
-    
-    @media screen and (max-width: 426px) {
-        .nav {
-            width: 100%;
-        }
-        .nav-left {
-            width: 100%;
-        }
-    }
-    
-    
-    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
-        color: #383636;
-    }
-    
-    
-    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
-        color: #5e5e5f;
-    }
-    
-    
-    .nav-right nav a.hover, #local-search-result a.hover{
-        background-color: #e2e0e0;
-    }
-    
-    
-
-    /*列表样式*/
-    
-
-    /* 背景图样式 */
-    
-    
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
 
 
-    /*引用块样式*/
-    
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
 
-    /*文章列表背景图*/
-    
 
-    
-</style>
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
 
 
 
 
 
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
 
 
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
 </html>
