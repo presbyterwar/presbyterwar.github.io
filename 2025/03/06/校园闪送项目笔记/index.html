@@ -27,7 +27,7 @@
 <meta property="og:description" content="项目：校园内送 1. Redis缓存高频数据与SpringCache优化 技术实现   场景：分类菜品信息频繁被查询，数据库压力大。   实现：   使用Redis的Hash结构缓存菜品分类数据，Key设计为category:menu:&amp;#123;分类ID&amp;#125;，Value存储菜品列表JSON。   通过@Cacheable和@CacheEvict注解实现SpringCache的缓存读写，结">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-06T13:26:17.000Z">
-<meta property="article:modified_time" content="2025-03-06T13:30:31.255Z">
+<meta property="article:modified_time" content="2025-03-06T13:32:36.649Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.3k 字
+          2.2k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          20 分钟
+          19 分钟
         
       </span>
     
@@ -479,11 +479,6 @@
 </li>
 </ul>
 <hr>
-<h3 id="总结：技术之外的挑战"><a href="#总结：技术之外的挑战" class="headerlink" title="总结：技术之外的挑战"></a><strong>总结：技术之外的挑战</strong></h3><ol>
-<li><strong>团队协作</strong>：多人开发时Git分支管理混乱（如未遵循Git Flow），需规范代码提交规范（Commitizen）和Code Review流程。  </li>
-<li><strong>技术债务</strong>：快速迭代中积累的临时方案（如硬编码参数）需定期重构，SonarQube扫描代码异味。  </li>
-<li><strong>用户培训</strong>：商家对管理端功能不熟悉，需提供操作手册+录屏教程，并嵌入“新手引导”浮层。</li>
-</ol>
 
                 
               </div>
