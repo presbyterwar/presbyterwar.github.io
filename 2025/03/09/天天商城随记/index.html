@@ -27,7 +27,7 @@
 <meta property="og:description" content="1. 服务注册与动态配置（Nacos）使用场景在微服务架构的电商平台中，各服务模块（如用户服务、订单服务、商品服务等）需要高效地发现彼此并进行通信。同时，为了应对高并发请求，需要对服务进行负载均衡，避免某些服务实例过载。此外，配置信息（如数据库连接、服务超时时间等）需要动态更新，而无需重启服务。Nacos作为服务注册与配置管理工具，结合OpenFeign和Ribbon，能够很好地满足这些需求。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-09T01:51:02.000Z">
-<meta property="article:modified_time" content="2025-03-19T01:45:16.662Z">
+<meta property="article:modified_time" content="2025-03-19T01:47:39.135Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -571,7 +571,7 @@
 <li>动态扩缩容：通过分片策略灵活扩展数据库节点，适应业务增长。</li>
 </ul>
 <hr>
-<h4 id="10-基于Seata-AT模式解决跨服务库存扣减与订单创建的分布式事务问题"><a href="#10-基于Seata-AT模式解决跨服务库存扣减与订单创建的分布式事务问题" class="headerlink" title="10. 基于Seata AT模式解决跨服务库存扣减与订单创建的分布式事务问题"></a><strong>10. 基于Seata AT模式解决跨服务库存扣减与订单创建的分布式事务问题</strong></h4><h3 id="使用场景-7"><a href="#使用场景-7" class="headerlink" title="使用场景"></a>使用场景</h3><p>在电商平台中，订单创建和库存扣减是两个核心操作，通常涉及多个微服务。例如，订单服务负责创建订单，而库存服务负责扣减库存。这两个操作需要在一个事务中完成，以确保数据的一致性。如果订单创建成功但库存扣减失败，或者反之，会导致数据不一致的问题。Seata的AT（Automatic Transaction）模式能够很好地解决这种跨服务的分布式事务问题，通过两阶段提交的方式确保事务的原子性。</p>
+<h2 id="10-基于Seata-AT模式解决跨服务库存扣减与订单创建的分布式事务问题"><a href="#10-基于Seata-AT模式解决跨服务库存扣减与订单创建的分布式事务问题" class="headerlink" title="10. 基于Seata AT模式解决跨服务库存扣减与订单创建的分布式事务问题"></a><strong>10. 基于Seata AT模式解决跨服务库存扣减与订单创建的分布式事务问题</strong></h2><h3 id="使用场景-7"><a href="#使用场景-7" class="headerlink" title="使用场景"></a>使用场景</h3><p>在电商平台中，订单创建和库存扣减是两个核心操作，通常涉及多个微服务。例如，订单服务负责创建订单，而库存服务负责扣减库存。这两个操作需要在一个事务中完成，以确保数据的一致性。如果订单创建成功但库存扣减失败，或者反之，会导致数据不一致的问题。Seata的AT（Automatic Transaction）模式能够很好地解决这种跨服务的分布式事务问题，通过两阶段提交的方式确保事务的原子性。</p>
 <hr>
 <h3 id="实现方法-7"><a href="#实现方法-7" class="headerlink" title="实现方法"></a>实现方法</h3><h4 id="1-引入Seata依赖"><a href="#1-引入Seata依赖" class="headerlink" title="1. 引入Seata依赖"></a>1. <strong>引入Seata依赖</strong></h4><p><strong>技术选型：</strong> 使用Seata作为分布式事务解决方案。</p>
 <p><strong>具体实现：</strong><br>在<code>pom.xml</code>文件中引入Seata的Spring Cloud集成依赖：</p>
