@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2025/03/06/%E6%A0%A1%E5%9B%AD%E9%97%AA%E9%80%81%E9%A1%B9%E7%9B%AE%E7%AC%94%E8%AE%B0/%E9%A1%B9%E7%9B%AE%E6%A8%A1%E5%9D%97.png">
 <meta property="article:published_time" content="2025-03-06T13:26:17.000Z">
-<meta property="article:modified_time" content="2025-03-24T07:36:58.042Z">
+<meta property="article:modified_time" content="2025-03-25T09:34:42.170Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2025/03/06/%E6%A0%A1%E5%9B%AD%E9%97%AA%E9%80%81%E9%A1%B9%E7%9B%AE%E7%AC%94%E8%AE%B0/%E9%A1%B9%E7%9B%AE%E6%A8%A1%E5%9D%97.png">
@@ -224,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          8.9k 字
+          11k 字
         
       </span>
     
@@ -235,7 +235,7 @@
         
         
         
-          74 分钟
+          91 分钟
         
       </span>
     
@@ -735,6 +735,233 @@
 </li>
 </ul>
 <hr>
+<h3 id="技术路线：用户下单到商家通知全流程分层实现"><a href="#技术路线：用户下单到商家通知全流程分层实现" class="headerlink" title="技术路线：用户下单到商家通知全流程分层实现"></a>技术路线：用户下单到商家通知全流程分层实现</h3><hr>
+<h4 id="1-用户端交互（微信小程序）"><a href="#1-用户端交互（微信小程序）" class="headerlink" title="1. 用户端交互（微信小程序）"></a><strong>1. 用户端交互（微信小程序）</strong></h4><ul>
+<li><strong>前端技术栈</strong>：微信小程序原生框架 + WXML&#x2F;WXSS + JavaScript  </li>
+<li><strong>流程</strong>：  <ul>
+<li>用户登录：调用微信授权接口获取<code>openid</code>，结合后端生成的<strong>JWT令牌</strong>完成身份绑定。  </li>
+<li>点餐下单：用户选择菜品后，前端调用后端<code>/order/create</code>接口提交订单数据（菜品ID、数量、地址等）。  </li>
+<li>支付流程：对接微信支付API，完成支付后回调后端<code>/order/pay/callback</code>接口更新订单状态为“已支付”。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="2-网关层（Nginx反向代理）"><a href="#2-网关层（Nginx反向代理）" class="headerlink" title="2. 网关层（Nginx反向代理）"></a><strong>2. 网关层（Nginx反向代理）</strong></h4><ul>
+<li><strong>功能</strong>：  <ul>
+<li>反向代理：将用户请求分发至后端集群，提升接口可用性。  </li>
+<li>负载均衡：采用轮询策略分配流量，避免单节点压力过大。  </li>
+<li>跨域处理：通过配置<code>Access-Control-Allow-*</code>头部解决前后端跨域问题。  </li>
+<li>静态资源托管：部署前端页面及Swagger API文档。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="3-控制层（SpringBoot-RestController）"><a href="#3-控制层（SpringBoot-RestController）" class="headerlink" title="3. 控制层（SpringBoot RestController）"></a><strong>3. 控制层（SpringBoot RestController）</strong></h4><ul>
+<li><strong>核心组件</strong>：  <ul>
+<li><strong>JWT校验</strong>：通过拦截器对非登录接口（如<code>/order/**</code>）进行令牌合法性验证，解析用户信息并存入<code>ThreadLocal</code>上下文。  </li>
+<li><strong>请求处理</strong>：  <ul>
+<li>接收小程序端订单创建请求，校验参数合法性（如库存、用户余额）。  </li>
+<li>支付回调接口更新订单状态，并触发后续业务逻辑（如通知商家）。</li>
+</ul>
+</li>
+<li><strong>API文档</strong>：集成Swagger3，自动生成RESTful接口文档，供前端和测试团队使用。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="4-业务层（Spring-Service）"><a href="#4-业务层（Spring-Service）" class="headerlink" title="4. 业务层（Spring Service）"></a><strong>4. 业务层（Spring Service）</strong></h4><ul>
+<li><p><strong>订单服务（OrderService）</strong>：  </p>
+<ul>
+<li><strong>事务管理</strong>：使用<code>@Transactional</code>保证订单创建、库存扣减、支付状态更新的原子性。  </li>
+<li><strong>缓存优化</strong>：通过<code>SpringCache</code>注解（如<code>@Cacheable</code>）缓存分类菜品数据，减少MySQL查询压力。  </li>
+<li><strong>异步处理</strong>：支付成功后，通过<strong>WebSocket</strong>立即推送订单信息至商家端；非核心逻辑（如订单日志记录）使用<code>@Async</code>异步执行。</li>
+</ul>
+</li>
+<li><p><strong>消息推送服务（WebSocketService）</strong>：  </p>
+<ul>
+<li>建立长连接：商家管理端通过<code>ws://</code>协议与后端建立WebSocket连接，绑定商家ID。  </li>
+<li>实时通知：订单支付成功后，调用<code>convertAndSendToUser(商家ID, 订单详情)</code>推送新订单消息。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="5-数据访问层（MyBatis-Mapper-MySQL）"><a href="#5-数据访问层（MyBatis-Mapper-MySQL）" class="headerlink" title="5. 数据访问层（MyBatis Mapper + MySQL）"></a><strong>5. 数据访问层（MyBatis Mapper + MySQL）</strong></h4><ul>
+<li><strong>数据库设计</strong>：  <ul>
+<li>订单表（<code>order</code>）：存储订单ID、用户ID、金额、状态、时间等。  </li>
+<li>订单明细表（<code>order_item</code>）：记录菜品ID、数量、价格。</li>
+</ul>
+</li>
+<li><strong>ORM操作</strong>：  <ul>
+<li>使用MyBatis动态SQL实现复杂查询（如关联查询用户历史订单）。  </li>
+<li>通过<code>&lt;resultMap&gt;</code>映射实体类，结合<code>PageHelper</code>分页插件优化查询效率。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="6-缓存与高性能优化（Redis）"><a href="#6-缓存与高性能优化（Redis）" class="headerlink" title="6. 缓存与高性能优化（Redis）"></a><strong>6. 缓存与高性能优化（Redis）</strong></h4><ul>
+<li><strong>热点数据缓存</strong>：  <ul>
+<li>菜品分类信息：缓存至Redis，设置TTL为10分钟，通过<code>SpringCache</code>实现无缝切换。  </li>
+<li>订单状态更新：使用Redis分布式锁（<code>Redisson</code>）防止并发场景下的状态覆盖。</li>
+</ul>
+</li>
+<li><strong>防重复提交</strong>：用户提交订单时，基于<code>用户ID+时间戳</code>生成Redis键，防止短时间重复请求。</li>
+</ul>
+<hr>
+<h4 id="7-实时通信与定时任务"><a href="#7-实时通信与定时任务" class="headerlink" title="7. 实时通信与定时任务"></a><strong>7. 实时通信与定时任务</strong></h4><ul>
+<li><strong>WebSocket</strong>：  <ul>
+<li>使用<code>Spring WebSocket</code>实现服务端推送，商家管理端监听<code>/topic/newOrder</code>频道接收实时订单。  </li>
+<li>断线重连：前端通过心跳机制（每30秒发送Ping）维持连接稳定性。</li>
+</ul>
+</li>
+<li><strong>SpringTask定时任务</strong>：  <ul>
+<li>订单超时处理：每5分钟扫描状态为“未支付”且创建时间超过30分钟的订单，自动取消并释放库存。  </li>
+<li>数据统计：每日凌晨生成商家销售额报表，通过POI导出Excel并邮件发送。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="8-安全与运维"><a href="#8-安全与运维" class="headerlink" title="8. 安全与运维"></a><strong>8. 安全与运维</strong></h4><ul>
+<li><strong>安全措施</strong>：  <ul>
+<li>敏感数据加密：用户密码通过MD5+盐值加密存储。  </li>
+<li>权限控制：基于AOP切面实现<code>@PreAuthorize(&quot;hasRole(&#39;MERCHANT&#39;)&quot;)</code>，拦截越权操作。</li>
+</ul>
+</li>
+<li><strong>运维监控</strong>：  <ul>
+<li>日志管理：通过Logback记录接口请求日志，ELK集群实现日志分析与异常告警。  </li>
+<li>性能监控：集成Prometheus + Grafana监控JVM内存、接口响应时间等指标。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="全流程时序图（简化版）"><a href="#全流程时序图（简化版）" class="headerlink" title="全流程时序图（简化版）"></a>全流程时序图（简化版）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">用户小程序 -&gt; Nginx -&gt; 控制层 -&gt; 业务层 -&gt; MySQL/Redis  <br>                ↓  <br>           WebSocket -&gt; 商家管理端  <br>                ↓  <br>          SpringTask -&gt; 定时扫描超时订单  <br></code></pre></td></tr></table></figure>
+
+<p><strong>总结</strong>：通过分层架构设计，结合SpringBoot、Redis、WebSocket等技术，实现了从用户下单到商家实时通知的高效链路，同时通过缓存、异步、定时任务等优化手段保障系统性能和稳定性。</p>
+<hr>
+<h3 id="1-删除用户信息技术路线"><a href="#1-删除用户信息技术路线" class="headerlink" title="1. 删除用户信息技术路线"></a><strong>1. 删除用户信息技术路线</strong></h3><h4 id="1-1-权限校验与安全控制"><a href="#1-1-权限校验与安全控制" class="headerlink" title="1.1 权限校验与安全控制"></a><strong>1.1 权限校验与安全控制</strong></h4><ul>
+<li><strong>接口设计</strong>：<code>DELETE /user/&#123;userId&#125;</code>  </li>
+<li><strong>权限控制</strong>：  <ul>
+<li>使用Spring Security或自定义AOP切面，通过<code>@PreAuthorize(&quot;hasRole(&#39;ADMIN&#39;)&quot;)</code>限制仅管理员可操作。  </li>
+<li>请求头携带JWT令牌，拦截器解析后校验用户角色。</li>
+</ul>
+</li>
+<li><strong>防越权</strong>：  <ul>
+<li>参数校验：确保路径参数<code>userId</code>与当前用户身份匹配（如普通用户只能删除自己）。</li>
+</ul>
+</li>
+</ul>
+<h4 id="1-2-业务逻辑与数据一致性"><a href="#1-2-业务逻辑与数据一致性" class="headerlink" title="1.2 业务逻辑与数据一致性"></a><strong>1.2 业务逻辑与数据一致性</strong></h4><ul>
+<li><strong>软删除实现</strong>：  <ul>
+<li>数据库表设计：用户表增加<code>is_deleted</code>字段（0-正常，1-已删除）。  </li>
+<li>SQL操作：<code>UPDATE user SET is_deleted=1 WHERE id=#&#123;userId&#125;</code>。</li>
+</ul>
+</li>
+<li><strong>关联数据处理</strong>：  <ul>
+<li>订单表标记：批量更新用户关联订单的<code>user_status</code>为“已删除”（如<code>UPDATE order SET user_status=&#39;deleted&#39; WHERE user_id=#&#123;userId&#125;</code>）。  </li>
+<li>日志异步清理：通过RabbitMQ发送消息，由独立服务异步清理用户日志（避免主业务阻塞）。</li>
+</ul>
+</li>
+</ul>
+<h4 id="1-3-缓存与事务管理"><a href="#1-3-缓存与事务管理" class="headerlink" title="1.3 缓存与事务管理"></a><strong>1.3 缓存与事务管理</strong></h4><ul>
+<li><strong>缓存清理</strong>：  <ul>
+<li>删除用户后，清除Redis中与该用户相关的缓存（如用户信息、历史订单列表）。</li>
+</ul>
+</li>
+<li><strong>事务保证</strong>：  <ul>
+<li>使用<code>@Transactional</code>注解，确保用户标记删除与订单状态更新的原子性。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="2-商家端修改菜品信息技术路线"><a href="#2-商家端修改菜品信息技术路线" class="headerlink" title="2. 商家端修改菜品信息技术路线"></a><strong>2. 商家端修改菜品信息技术路线</strong></h3><h4 id="2-1-接口与权限设计"><a href="#2-1-接口与权限设计" class="headerlink" title="2.1 接口与权限设计"></a><strong>2.1 接口与权限设计</strong></h4><ul>
+<li><strong>接口设计</strong>：<code>PUT /dish/&#123;dishId&#125;</code>  </li>
+<li><strong>权限控制</strong>：  <ul>
+<li>AOP切面校验商家身份：从<code>ThreadLocal</code>中获取当前用户角色，仅允许<code>MERCHANT</code>操作。  </li>
+<li>数据归属校验：确保修改的菜品属于当前商家（如<code>SELECT merchant_id FROM dish WHERE id=#&#123;dishId&#125;</code>）。</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-2-业务逻辑与缓存同步"><a href="#2-2-业务逻辑与缓存同步" class="headerlink" title="2.2 业务逻辑与缓存同步"></a><strong>2.2 业务逻辑与缓存同步</strong></h4><ul>
+<li><strong>数据库操作</strong>：  <ul>
+<li>更新菜品基本信息：<code>UPDATE dish SET name=#&#123;name&#125;, price=#&#123;price&#125; WHERE id=#&#123;dishId&#125;</code>。  </li>
+<li>库存联动更新：若修改库存，需同步更新<code>inventory</code>表（事务保证一致性）。</li>
+</ul>
+</li>
+<li><strong>缓存更新</strong>：  <ul>
+<li>使用<code>@CacheEvict</code>注解清除Redis中该菜品的缓存（如<code>key=&quot;dish::#&#123;dishId&#125;&quot;</code>）。  </li>
+<li>异步刷新分类缓存：通过消息队列通知其他服务更新分类菜品列表。</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-3-日志与版本控制"><a href="#2-3-日志与版本控制" class="headerlink" title="2.3 日志与版本控制"></a><strong>2.3 日志与版本控制</strong></h4><ul>
+<li><strong>操作日志</strong>：  <ul>
+<li>通过AOP记录修改前后的菜品数据，存储至<code>dish_audit_log</code>表。</li>
+</ul>
+</li>
+<li><strong>乐观锁防并发</strong>：  <ul>
+<li>数据库表增加<code>version</code>字段，更新时校验版本号（<code>UPDATE ... WHERE id=#&#123;dishId&#125; AND version=#&#123;oldVersion&#125;</code>）。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="3-修改订单状态技术路线"><a href="#3-修改订单状态技术路线" class="headerlink" title="3. 修改订单状态技术路线"></a><strong>3. 修改订单状态技术路线</strong></h3><h4 id="3-1-状态机设计与接口规范"><a href="#3-1-状态机设计与接口规范" class="headerlink" title="3.1 状态机设计与接口规范"></a><strong>3.1 状态机设计与接口规范</strong></h4><ul>
+<li><strong>接口设计</strong>：<code>PATCH /order/&#123;orderId&#125;/status</code>  </li>
+<li><strong>状态流转规则</strong>：  <ul>
+<li>定义合法状态变更（如“未支付”→“已支付”→“已完成”或“已取消”）。  </li>
+<li>使用状态模式（如<code>OrderState</code>接口+具体状态类）封装校验逻辑。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-2-业务逻辑与消息通知"><a href="#3-2-业务逻辑与消息通知" class="headerlink" title="3.2 业务逻辑与消息通知"></a><strong>3.2 业务逻辑与消息通知</strong></h4><ul>
+<li><strong>核心流程</strong>：  <ol>
+<li>校验当前状态是否允许修改（如已完成的订单不可再变更）。  </li>
+<li>更新订单状态：<code>UPDATE order SET status=#&#123;newStatus&#125; WHERE id=#&#123;orderId&#125;</code>。  </li>
+<li>触发关联操作：  <ul>
+<li>若状态变更为“已取消”，调用库存服务回滚库存（通过Feign调用）。  </li>
+<li>若状态变更为“已完成”，发送MQ消息通知用户（短信&#x2F;小程序模板消息）。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><strong>分布式事务</strong>：  <ul>
+<li>使用Seata AT模式，保证订单状态更新与库存回滚的事务性。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-3-并发控制与幂等性"><a href="#3-3-并发控制与幂等性" class="headerlink" title="3.3 并发控制与幂等性"></a><strong>3.3 并发控制与幂等性</strong></h4><ul>
+<li><strong>分布式锁</strong>：  <ul>
+<li>使用Redis锁（<code>Redisson</code>）防止同时修改同一订单（锁键：<code>order:update:$&#123;orderId&#125;</code>）。</li>
+</ul>
+</li>
+<li><strong>幂等设计</strong>：  <ul>
+<li>请求参数增加唯一请求ID，数据库记录已处理请求，避免重复提交。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="技术路线对比与总结"><a href="#技术路线对比与总结" class="headerlink" title="技术路线对比与总结"></a><strong>技术路线对比与总结</strong></h3><table>
+<thead>
+<tr>
+<th><strong>操作类型</strong></th>
+<th><strong>技术共性</strong></th>
+<th><strong>特殊处理</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>删除用户</strong></td>
+<td>JWT鉴权、AOP权限控制、事务管理</td>
+<td>软删除设计、关联数据异步清理</td>
+</tr>
+<tr>
+<td><strong>修改菜品</strong></td>
+<td>缓存更新、乐观锁、操作日志</td>
+<td>分类缓存联动刷新、库存事务联动</td>
+</tr>
+<tr>
+<td><strong>修改订单状态</strong></td>
+<td>状态机、分布式事务、消息通知</td>
+<td>分布式锁防并发、幂等性设计</td>
+</tr>
+</tbody></table>
 
                 
               </div>

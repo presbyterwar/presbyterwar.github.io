@@ -27,7 +27,7 @@
 <meta property="og:description" content="项目介绍：天天商城微服务项目，是基于电商业务场景构建的一套现代化分布式系统，旨在为企业提供一个完整且可扩展的线上商城解决方案。该项目通过将商城业务拆分为多个独立的微服务，每个服务专注于特定的业务功能，如用户管理服务负责处理用户注册、登录、个人信息管理等相关操作；商品服务主要对商品的添加、修改、查询、上下架等业务逻辑进行管理；订单服务则专注于处理订单的创建、支付、状态更新等流程。各服务之间通过轻量级">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-09T01:51:02.000Z">
-<meta property="article:modified_time" content="2025-03-24T07:39:51.907Z">
+<meta property="article:modified_time" content="2025-03-25T09:38:33.324Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          9.5k 字
+          11k 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          80 分钟
+          90 分钟
         
       </span>
     
@@ -641,6 +641,130 @@
 <li><strong>Arthas在线诊断</strong>：通过 <code>trace</code> 命令追踪方法调用链耗时，定位慢SQL或锁竞争问题。  </li>
 <li>优化手段：调整JVM参数（如堆内存分配）、优化SQL索引、引入本地缓存等。</li>
 </ul>
+<hr>
+<h3 id="技术路线：用户登录-→-商品查询-→-下单-→-故障处理与保护措施"><a href="#技术路线：用户登录-→-商品查询-→-下单-→-故障处理与保护措施" class="headerlink" title="技术路线：用户登录 → 商品查询 → 下单 → 故障处理与保护措施"></a><strong>技术路线：用户登录 → 商品查询 → 下单 → 故障处理与保护措施</strong></h3><hr>
+<h4 id="1-用户登录与鉴权"><a href="#1-用户登录与鉴权" class="headerlink" title="1. 用户登录与鉴权"></a><strong>1. 用户登录与鉴权</strong></h4><ul>
+<li><p><strong>技术实现</strong>：  </p>
+<ol>
+<li><strong>JWT令牌生成</strong>：用户通过手机号&#x2F;密码或第三方登录（如微信）后，后端生成包含用户ID、角色的JWT令牌，并设置有效期（如24小时）。  </li>
+<li><strong>权限校验</strong>：网关层（Spring Cloud Gateway）通过全局过滤器拦截请求，验证JWT合法性，并将用户信息存入请求头传递至下游服务。  </li>
+<li><strong>分布式会话管理</strong>：用户登录状态缓存至Redis，键为<code>user:session:$&#123;userId&#125;</code>，实现多服务间状态共享。</li>
+</ol>
+</li>
+<li><p><strong>容错设计</strong>：  </p>
+<ul>
+<li><strong>熔断降级</strong>：登录接口集成Sentinel，配置QPS阈值（如1000&#x2F;s），超限后返回友好提示，避免认证服务过载。  </li>
+<li><strong>多副本部署</strong>：认证服务（Auth Service）通过Nacos注册为集群，网关层通过Ribbon实现负载均衡。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="2-商品查询与多级缓存优化"><a href="#2-商品查询与多级缓存优化" class="headerlink" title="2. 商品查询与多级缓存优化"></a><strong>2. 商品查询与多级缓存优化</strong></h4><ul>
+<li><p><strong>技术实现</strong>：  </p>
+<ol>
+<li><strong>Elasticsearch搜索</strong>：  <ul>
+<li>商品数据同步至ES，使用IK分词器+拼音插件支持“智能搜索”（如“苹果”匹配“iPhone”）。  </li>
+<li>查询接口（<code>/product/search</code>）通过<code>RestHighLevelClient</code>实现关键词匹配、分页与排序。</li>
+</ul>
+</li>
+<li><strong>多级缓存架构</strong>：  <ul>
+<li><strong>本地缓存</strong>：使用Caffeine缓存热点商品数据（如Top 1000商品），TTL为5分钟，过期后异步刷新。  </li>
+<li><strong>分布式缓存</strong>：Redis集群缓存商品详情（Key格式：<code>product:detail:$&#123;productId&#125;</code>），通过Lua脚本保证原子操作（如库存扣减）。</li>
+</ul>
+</li>
+<li><strong>缓存穿透&#x2F;击穿防护</strong>：  <ul>
+<li><strong>布隆过滤器</strong>：查询前校验商品ID是否存在，拦截非法请求。  </li>
+<li><strong>空值缓存</strong>：对不存在的商品ID缓存空值（TTL 2分钟），减少数据库压力。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p><strong>容错设计</strong>：  </p>
+<ul>
+<li><strong>服务降级</strong>：若ES查询超时（如500ms），降级为数据库查询并记录日志。  </li>
+<li><strong>缓存雪崩防护</strong>：为Redis缓存设置随机过期时间（如5分钟±30秒）。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="3-下单流程与库存扣减"><a href="#3-下单流程与库存扣减" class="headerlink" title="3. 下单流程与库存扣减"></a><strong>3. 下单流程与库存扣减</strong></h4><ul>
+<li><p><strong>技术实现</strong>：  </p>
+<ol>
+<li><strong>预检库存</strong>：  <ul>
+<li>前端提交订单前，调用<code>/product/checkStock</code>接口校验库存是否充足（Redis原子操作<code>DECR</code>）。</li>
+</ul>
+</li>
+<li><strong>创建订单</strong>：  <ul>
+<li>请求网关 → 订单服务（Order Service）生成订单号，通过Seata AT模式开启分布式事务。  </li>
+<li><strong>数据库操作</strong>：  <ul>
+<li>订单表插入订单主数据（状态为“待支付”）。  </li>
+<li>订单明细表插入商品信息。  </li>
+<li>库存表扣减库存（<code>UPDATE inventory SET stock=stock-1 WHERE product_id=xxx AND stock&gt;0</code>）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>支付回调</strong>：  <ul>
+<li>对接微信&#x2F;支付宝支付，支付成功后回调<code>/order/pay/callback</code>接口，更新订单状态为“已支付”。</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p><strong>容错设计</strong>：  </p>
+<ul>
+<li><strong>分布式锁</strong>：使用Redisson锁（<code>lock.tryLock(3, TimeUnit.SECONDS)</code>）防止超卖。  </li>
+<li><strong>最终一致性</strong>：若库存扣减失败，通过RabbitMQ延迟消息触发补偿逻辑（如释放已占库存）。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="4-故障场景处理与保护措施"><a href="#4-故障场景处理与保护措施" class="headerlink" title="4. 故障场景处理与保护措施"></a><strong>4. 故障场景处理与保护措施</strong></h4><h5 id="场景1：商品售罄（库存不足）"><a href="#场景1：商品售罄（库存不足）" class="headerlink" title="场景1：商品售罄（库存不足）"></a><strong>场景1：商品售罄（库存不足）</strong></h5><ul>
+<li><strong>处理方案</strong>：  <ul>
+<li><strong>预占库存</strong>：下单时通过Redis预扣库存（<code>DECR</code>），支付完成后实际扣减数据库库存。若超时未支付，通过延迟队列释放预占库存。  </li>
+<li><strong>友好提示</strong>：前端拦截并提示“库存不足”，结合Sentinel限流防止恶意请求。</li>
+</ul>
+</li>
+</ul>
+<h5 id="场景2：服务器宕机-x2F-网络分区"><a href="#场景2：服务器宕机-x2F-网络分区" class="headerlink" title="场景2：服务器宕机&#x2F;网络分区"></a><strong>场景2：服务器宕机&#x2F;网络分区</strong></h5><ul>
+<li><strong>处理方案</strong>：  <ul>
+<li><strong>服务熔断</strong>：订单服务集成Sentinel，若错误率超过阈值（如50%），触发熔断并降级为返回“系统繁忙，请稍后重试”。  </li>
+<li><strong>事务回滚</strong>：Seata AT模式自动回滚未完成的分布式事务（如订单创建成功但库存扣减失败）。  </li>
+<li><strong>消息可靠性</strong>：  <ul>
+<li><strong>生产者确认</strong>：订单服务发送MQ消息时，开启Confirm模式，确保消息到达Broker。  </li>
+<li><strong>消费者手动ACK</strong>：库存回滚服务消费消息后手动确认，避免消息丢失。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="场景3：重复下单-x2F-幂等性"><a href="#场景3：重复下单-x2F-幂等性" class="headerlink" title="场景3：重复下单&#x2F;幂等性"></a><strong>场景3：重复下单&#x2F;幂等性</strong></h5><ul>
+<li><strong>处理方案</strong>：  <ul>
+<li><strong>幂等令牌</strong>：前端提交订单时生成唯一请求ID（如UUID），服务端通过Redis SETNX校验是否已处理。  </li>
+<li><strong>数据库唯一索引</strong>：订单表的<code>order_no</code>字段添加唯一索引，防止重复订单。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h4 id="5-订单状态回滚与补偿"><a href="#5-订单状态回滚与补偿" class="headerlink" title="5. 订单状态回滚与补偿"></a><strong>5. 订单状态回滚与补偿</strong></h4><ul>
+<li><strong>技术实现</strong>：  <ol>
+<li><strong>超时未支付</strong>：  <ul>
+<li>订单创建后，发送延迟消息至RabbitMQ死信队列（TTL 30分钟），消费者监听并关闭订单，释放库存。</li>
+</ul>
+</li>
+<li><strong>手动取消订单</strong>：  <ul>
+<li>用户主动取消时，调用<code>/order/cancel</code>接口，通过Seata保证订单状态更新与库存回滚的原子性。</li>
+</ul>
+</li>
+<li><strong>分布式事务最终一致性</strong>：  <ul>
+<li>若服务宕机导致部分操作失败，通过定时任务扫描“待支付”订单，触发补偿逻辑（如调用库存服务回滚）。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h3 id="技术架构图（简化版）"><a href="#技术架构图（简化版）" class="headerlink" title="技术架构图（简化版）"></a><strong>技术架构图（简化版）</strong></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">用户端 → 网关层 → [订单服务 → Seata] ↔ [库存服务]  <br>                  ↓              ↑  <br>               [RabbitMQ] ← [定时任务]  <br>                  ↓  <br>           [Elasticsearch]  <br>                  ↓  <br>           [Redis/Caffeine]  <br></code></pre></td></tr></table></figure>
+
 
                 
               </div>
