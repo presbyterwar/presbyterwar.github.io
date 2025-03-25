@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2025/03/06/%E6%A0%A1%E5%9B%AD%E9%97%AA%E9%80%81%E9%A1%B9%E7%9B%AE%E7%AC%94%E8%AE%B0/%E9%A1%B9%E7%9B%AE%E6%A8%A1%E5%9D%97.png">
 <meta property="article:published_time" content="2025-03-06T13:26:17.000Z">
-<meta property="article:modified_time" content="2025-03-25T09:34:42.170Z">
+<meta property="article:modified_time" content="2025-03-25T12:58:48.002Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/2025/03/06/%E6%A0%A1%E5%9B%AD%E9%97%AA%E9%80%81%E9%A1%B9%E7%9B%AE%E7%AC%94%E8%AE%B0/%E9%A1%B9%E7%9B%AE%E6%A8%A1%E5%9D%97.png">
@@ -235,7 +235,7 @@
         
         
         
-          91 分钟
+          96 分钟
         
       </span>
     
@@ -835,7 +835,7 @@
 <hr>
 <h3 id="全流程时序图（简化版）"><a href="#全流程时序图（简化版）" class="headerlink" title="全流程时序图（简化版）"></a>全流程时序图（简化版）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">用户小程序 -&gt; Nginx -&gt; 控制层 -&gt; 业务层 -&gt; MySQL/Redis  <br>                ↓  <br>           WebSocket -&gt; 商家管理端  <br>                ↓  <br>          SpringTask -&gt; 定时扫描超时订单  <br></code></pre></td></tr></table></figure>
 
-<p><strong>总结</strong>：通过分层架构设计，结合SpringBoot、Redis、WebSocket等技术，实现了从用户下单到商家实时通知的高效链路，同时通过缓存、异步、定时任务等优化手段保障系统性能和稳定性。</p>
+<h3 id="总结-5"><a href="#总结-5" class="headerlink" title="总结"></a><strong>总结</strong></h3><p>用户下单流程基于分层架构设计，从前端微信小程序发起请求，经<strong>Nginx网关层</strong>实现负载均衡与跨域处理，到<strong>SpringBoot控制层</strong>完成JWT鉴权与参数校验；业务层通过<strong>Spring事务管理</strong>保障订单创建、库存扣减与支付回调的原子性，并借助<strong>Redis缓存</strong>优化高频数据访问，结合<strong>WebSocket</strong>实时推送订单至商家端；数据层使用<strong>MyBatis</strong>操作MySQL实现持久化，通过<strong>分库分表</strong>与<strong>PageHelper</strong>提升查询效率。面对高并发与故障场景，引入<strong>Seata分布式事务</strong>确保一致性，<strong>RabbitMQ延迟队列</strong>处理超时订单，<strong>Sentinel熔断降级</strong>防护服务雪崩，同时通过<strong>分布式锁</strong>与<strong>幂等设计</strong>避免重复操作。整体架构通过分层解耦、异步处理与多级容错机制，实现了高性能、高可用与安全可靠的下单链路。</p>
 <hr>
 <h3 id="1-删除用户信息技术路线"><a href="#1-删除用户信息技术路线" class="headerlink" title="1. 删除用户信息技术路线"></a><strong>1. 删除用户信息技术路线</strong></h3><h4 id="1-1-权限校验与安全控制"><a href="#1-1-权限校验与安全控制" class="headerlink" title="1.1 权限校验与安全控制"></a><strong>1.1 权限校验与安全控制</strong></h4><ul>
 <li><strong>接口设计</strong>：<code>DELETE /user/&#123;userId&#125;</code>  </li>
@@ -962,6 +962,9 @@
 <td>分布式锁防并发、幂等性设计</td>
 </tr>
 </tbody></table>
+<h3 id="用户管理技术路线总结"><a href="#用户管理技术路线总结" class="headerlink" title="用户管理技术路线总结"></a><strong>用户管理技术路线总结</strong></h3><p>用户管理模块通过<strong>Spring Security</strong>与自定义<strong>AOP切面</strong>实现权限分层控制，确保管理员权限操作（如删除用户）的合法性；采用<strong>软删除设计</strong>（标记<code>is_deleted</code>字段）保留数据可追溯性，并通过<strong>RabbitMQ消息队列</strong>异步清理关联日志，避免主业务阻塞。安全层面，用户密码经<strong>MD5+盐值加密</strong>存储，敏感操作记录审计日志；数据一致性上，利用<strong>Redis</strong>主动清除用户相关缓存（如订单列表、个人资料），确保多端数据实时同步，同时结合<strong>JWT令牌校验</strong>防止越权访问，构建安全高效的用户管理体系。  </p>
+<hr>
+<h3 id="修改订单-x2F-菜品技术路线总结"><a href="#修改订单-x2F-菜品技术路线总结" class="headerlink" title="修改订单&#x2F;菜品技术路线总结"></a><strong>修改订单&#x2F;菜品技术路线总结</strong></h3><p>订单与菜品修改功能以<strong>事务管理</strong>为核心，通过<code>@Transactional</code>注解保障订单状态更新与库存扣减的原子性，并引入<strong>乐观锁</strong>（版本号校验）解决并发修改冲突。缓存层面，采用<code>@CacheEvict</code>主动清除Redis旧数据，结合<strong>RabbitMQ</strong>异步刷新分类缓存，提升查询效率；实时性上，基于<strong>WebSocket</strong>推送订单变更消息至用户端或商家端，并通过<strong>Redisson分布式锁</strong>防止超卖问题。此外，操作日志通过AOP记录前后快照，支持审计追溯，<strong>Sentinel熔断机制</strong>与<strong>Seata事务回滚</strong>则确保高并发与故障场景下的系统稳定性，实现高可靠、低延迟的业务流程。</p>
 
                 
               </div>

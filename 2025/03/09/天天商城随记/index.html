@@ -27,7 +27,7 @@
 <meta property="og:description" content="项目介绍：天天商城微服务项目，是基于电商业务场景构建的一套现代化分布式系统，旨在为企业提供一个完整且可扩展的线上商城解决方案。该项目通过将商城业务拆分为多个独立的微服务，每个服务专注于特定的业务功能，如用户管理服务负责处理用户注册、登录、个人信息管理等相关操作；商品服务主要对商品的添加、修改、查询、上下架等业务逻辑进行管理；订单服务则专注于处理订单的创建、支付、状态更新等流程。各服务之间通过轻量级">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-09T01:51:02.000Z">
-<meta property="article:modified_time" content="2025-03-25T09:38:33.324Z">
+<meta property="article:modified_time" content="2025-03-25T13:02:27.275Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -233,7 +233,7 @@
         
         
         
-          90 分钟
+          92 分钟
         
       </span>
     
@@ -765,6 +765,7 @@
 <hr>
 <h3 id="技术架构图（简化版）"><a href="#技术架构图（简化版）" class="headerlink" title="技术架构图（简化版）"></a><strong>技术架构图（简化版）</strong></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plaintext">用户端 → 网关层 → [订单服务 → Seata] ↔ [库存服务]  <br>                  ↓              ↑  <br>               [RabbitMQ] ← [定时任务]  <br>                  ↓  <br>           [Elasticsearch]  <br>                  ↓  <br>           [Redis/Caffeine]  <br></code></pre></td></tr></table></figure>
 
+<h3 id="天天商城技术路线总结"><a href="#天天商城技术路线总结" class="headerlink" title="天天商城技术路线总结"></a><strong>天天商城技术路线总结</strong></h3><p>天天商城基于分层架构设计，通过<strong>Spring Cloud Gateway</strong>实现网关层流量管控与负载均衡，结合<strong>Sentinel熔断降级</strong>和<strong>JWT鉴权</strong>保障接口安全；控制层依托<strong>SpringBoot</strong>规范化请求处理与参数校验，集成<strong>Swagger3</strong>生成接口文档；业务层采用<strong>微服务拆分</strong>（订单、库存、支付服务）与<strong>Seata分布式事务</strong>，确保核心链路（如“下单-扣库存-支付”）的原子性，并通过<strong>RabbitMQ异步解耦</strong>非关键操作（日志、通知）；数据层借助<strong>MySQL分库分表</strong>应对高并发写入，<strong>MyBatis-Plus</strong>简化ORM操作，<strong>Elasticsearch</strong>实现商品智能搜索；缓存层构建<strong>多级缓存体系</strong>（Caffeine本地缓存+Redis集群），结合<strong>布隆过滤器</strong>与<strong>空值缓存</strong>防护穿透问题；容错层通过<strong>SkyWalking链路追踪</strong>与<strong>ELK日志分析</strong>实现系统可观测性，结合<strong>Redisson分布式锁</strong>与<strong>最终一致性模型</strong>保障高并发场景下的数据可靠。</p>
 
                 
               </div>
