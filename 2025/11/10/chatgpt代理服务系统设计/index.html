@@ -26,10 +26,12 @@
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="现在让你设计一个Chatgpt的代理服务，它需要购买API key，假设买了1w个API key回来，为了防止被封号，每一个key最多分给5个用户使用，国内用户来访问代理服务的时候就可以注册一个账号，他可能携带一个user_Id来聊天。怎么设计这样一个分布式代理服务，满足配额要求且考虑一定程度上提升性能。  一、设计思路与要实现的工件设计一个基于Spring Boot的分布式代理服务，核心架构如下">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2025/11/10/chatgpt%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E8%AE%BE%E8%AE%A1%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
 <meta property="article:published_time" content="2025-11-10T02:44:01.000Z">
-<meta property="article:modified_time" content="2025-11-10T02:54:32.979Z">
+<meta property="article:modified_time" content="2025-11-10T03:24:56.673Z">
 <meta property="article:author" content="presbyter">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/2025/11/10/chatgpt%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E8%AE%BE%E8%AE%A1%E6%B5%81%E7%A8%8B%E5%9B%BE.png">
   
   
   
@@ -222,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.1k 字
+          2k 字
         
       </span>
     
@@ -233,7 +235,7 @@
         
         
         
-          18 分钟
+          17 分钟
         
       </span>
     
@@ -278,29 +280,7 @@
                 <p>现在让你设计一个Chatgpt的代理服务，它需要购买API key，假设买了1w个API key回来，为了防止被封号，每一个key最多分给5个用户使用，国内用户来访问代理服务的时候就可以注册一个账号，他可能携带一个user_Id来聊天。怎么设计这样一个分布式代理服务，满足配额要求且考虑一定程度上提升性能。</p>
 <hr>
 <h2 id="一、设计思路与要实现的工件"><a href="#一、设计思路与要实现的工件" class="headerlink" title="一、设计思路与要实现的工件"></a>一、设计思路与要实现的工件</h2><p>设计一个基于Spring Boot的分布式代理服务，核心架构如下：</p>
-<pre><code class=" mermaid">flowchart TD
-    Client[国内用户客户端&lt;br&gt;携带user_id]
-    subgraph A [代理服务集群]
-        B[Gateway网关]
-        C[认证/限流模块]
-        D[路由服务&lt;br&gt;Key分配管理器]
-    end
-
-    subgraph E [数据与状态存储]
-        F[Redis&lt;br&gt;用户-Key映射/计数器]
-        G[MySQL&lt;br&gt;Key库存/用户配额]
-    end
-
-    H[OpenAI API]
-
-    Client --&gt; B
-    B --&gt; C
-    C --&gt; D
-    D &lt;-.-&gt; F
-    D -- 获取可用Key --&gt; G
-    D --&gt; H
-</code></pre>
-
+<p><img src="/2025/11/10/chatgpt%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1/%E8%AE%BE%E8%AE%A1%E6%B5%81%E7%A8%8B%E5%9B%BE.png" srcset="/img/loading.gif" lazyload title="系统设计流程图"></p>
 <p>为了实现上图架构，需要完成以下核心工作：</p>
 <p><strong>1. 数据存储设计</strong></p>
 <ul>
